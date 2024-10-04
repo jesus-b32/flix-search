@@ -8,15 +8,38 @@ import {
   DropdownMenuTrigger,
 } from "../components/ui/dropdown-menu";
 import { Button } from "../components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "../components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetTitle,
+  SheetDescription,
+} from "../components/ui/sheet";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuIndicator,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  NavigationMenuViewport,
+  navigationMenuTriggerStyle,
+} from "../components/ui/navigation-menu";
 
-import { CircleUser, Search, Clapperboard, Menu } from "lucide-react";
+import {
+  CircleUser,
+  Search,
+  Clapperboard,
+  Menu,
+  ChevronDown,
+} from "lucide-react";
 
 import Link from "next/link";
 
 export default function TopNav() {
   return (
-    <header className="bg-background sticky top-0 flex h-16 items-center gap-4 border-b px-4 md:px-6">
+    <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
       <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
         <Link
           href="#"
@@ -25,35 +48,106 @@ export default function TopNav() {
           <Clapperboard className="h-6 w-6" />
           <span className="sr-only">Flix Search</span>
         </Link>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <span className="flex flex-row items-center">
+              <p className="text-muted-foreground transition-colors hover:text-foreground">
+                Discover Movies
+              </p>
+              <ChevronDown className="ml-2 h-4 w-4" />
+            </span>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem>
+              <Link
+                href="#"
+                className="text-muted-foreground hover:text-foreground"
+              >
+                Popular
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link
+                href="#"
+                className="text-muted-foreground hover:text-foreground"
+              >
+                Top Rated
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link
+                href="#"
+                className="text-muted-foreground hover:text-foreground"
+              >
+                Now Playing
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link
+                href="#"
+                className="text-muted-foreground hover:text-foreground"
+              >
+                Upcoming
+              </Link>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <span className="flex flex-row items-center">
+              <p className="text-muted-foreground transition-colors hover:text-foreground">
+                Discover TV Series
+              </p>
+              <ChevronDown className="ml-2 h-4 w-4" />
+            </span>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem>
+              <Link
+                href="#"
+                className="text-muted-foreground hover:text-foreground"
+              >
+                Popular
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link
+                href="#"
+                className="text-muted-foreground hover:text-foreground"
+              >
+                Top Rated
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link
+                href="#"
+                className="text-muted-foreground hover:text-foreground"
+              >
+                On the Air
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link
+                href="#"
+                className="text-muted-foreground hover:text-foreground"
+              >
+                Airing Today
+              </Link>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
         <Link
           href="#"
-          className="text-muted-foreground hover:text-foreground transition-colors"
+          className="text-muted-foreground transition-colors hover:text-foreground"
         >
-          Dashboard
+          Signup
         </Link>
         <Link
           href="#"
-          className="text-muted-foreground hover:text-foreground transition-colors"
+          className="text-muted-foreground transition-colors hover:text-foreground"
         >
-          Orders
-        </Link>
-        <Link
-          href="#"
-          className="text-muted-foreground hover:text-foreground transition-colors"
-        >
-          Products
-        </Link>
-        <Link
-          href="#"
-          className="text-muted-foreground hover:text-foreground transition-colors"
-        >
-          Customers
-        </Link>
-        <Link
-          href="#"
-          className="text-foreground hover:text-foreground transition-colors"
-        >
-          Settings
+          Login
         </Link>
       </nav>
       <Sheet>
@@ -64,6 +158,11 @@ export default function TopNav() {
           </Button>
         </SheetTrigger>
         <SheetContent side="left">
+          {/* added title and description for screen readers accessibility */}
+          <SheetTitle className="sr-only">Navigation menu</SheetTitle>
+          <SheetDescription className="sr-only">
+            Open navigation menu
+          </SheetDescription>
           <nav className="grid gap-6 text-lg font-medium">
             <Link
               href="#"
@@ -72,32 +171,123 @@ export default function TopNav() {
               <Clapperboard className="h-6 w-6" />
               <span className="sr-only">Flix Search</span>
             </Link>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <span className="flex flex-row items-center">
+                  <p className="text-muted-foreground transition-colors hover:text-foreground">
+                    Discover Movies
+                  </p>
+                  <ChevronDown className="ml-2 h-4 w-4" />
+                </span>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem>
+                  <Link
+                    href="#"
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    Popular
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link
+                    href="#"
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    Top Rated
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link
+                    href="#"
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    Now Playing
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link
+                    href="#"
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    Upcoming
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <span className="flex flex-row items-center">
+                  <p className="text-muted-foreground transition-colors hover:text-foreground">
+                    Discover TV Series
+                  </p>
+                  <ChevronDown className="ml-2 h-4 w-4" />
+                </span>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem>
+                  <Link
+                    href="#"
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    Popular
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link
+                    href="#"
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    Top Rated
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link
+                    href="#"
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    On the Air
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link
+                    href="#"
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    Airing Today
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <NavigationMenu>
+              <NavigationMenuList>
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger>Item One</NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="grid w-[75px] gap-3 p-4 md:w-[100px] md:grid-cols-2 lg:w-[150px]">
+                      <li>
+                        <Link href="#">Link</Link>
+                      </li>
+                      <li>
+                        <Link href="#">Link2</Link>
+                      </li>
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
+
             <Link
               href="#"
               className="text-muted-foreground hover:text-foreground"
             >
-              Dashboard
+              Signup
             </Link>
             <Link
               href="#"
               className="text-muted-foreground hover:text-foreground"
             >
-              Orders
-            </Link>
-            <Link
-              href="#"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              Products
-            </Link>
-            <Link
-              href="#"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              Customers
-            </Link>
-            <Link href="#" className="hover:text-foreground">
-              Settings
+              Login
             </Link>
           </nav>
         </SheetContent>
@@ -105,7 +295,7 @@ export default function TopNav() {
       <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
         <form className="ml-auto flex-1 sm:flex-initial">
           <div className="relative">
-            <Search className="text-muted-foreground absolute left-2.5 top-2.5 h-4 w-4" />
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
               placeholder="Search products..."
