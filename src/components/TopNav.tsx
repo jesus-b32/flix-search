@@ -42,7 +42,7 @@ export default function TopNav() {
     <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
       <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
         <Link
-          href="#"
+          href="/"
           className="flex items-center gap-2 text-lg font-semibold md:text-base"
         >
           <Clapperboard className="h-6 w-6" />
@@ -138,13 +138,13 @@ export default function TopNav() {
           </DropdownMenuContent>
         </DropdownMenu>
         <Link
-          href="#"
+          href="/signup"
           className="text-muted-foreground transition-colors hover:text-foreground"
         >
           Signup
         </Link>
         <Link
-          href="#"
+          href="/login"
           className="text-muted-foreground transition-colors hover:text-foreground"
         >
           Login
@@ -278,13 +278,13 @@ export default function TopNav() {
             </NavigationMenu>
 
             <Link
-              href="#"
+              href="/signup"
               className="text-muted-foreground hover:text-foreground"
             >
               Signup
             </Link>
             <Link
-              href="#"
+              href="/login"
               className="text-muted-foreground hover:text-foreground"
             >
               Login

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Input } from "../components/ui/input";
+import { Input } from "~/components/ui/input";
 
 export default function HomePage() {
   return (
@@ -23,7 +23,7 @@ export default function HomePage() {
           alt="Image of some streaming providers"
         />
         <h3 className="text-center text-2xl">
-          Movie and TV Show Seaching made Easy
+          Movie and TV Show Searching made Easy
         </h3>
         <p className="text-center">
           Flix Search helps you find which streaming services have your favorite
