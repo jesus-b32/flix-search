@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Input } from "~/components/ui/input";
+import { Input } from "@/components/ui/input";
 
 export default function HomePage() {
   return (
