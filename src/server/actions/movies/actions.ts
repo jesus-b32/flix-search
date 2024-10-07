@@ -1,4 +1,4 @@
-"user server";
+"use server";
 
 import { getData } from "../tmdapi";
 import type { movieDetails, movieSearchResult, movieProviders } from "./types";
@@ -9,13 +9,32 @@ import type { movieDetails, movieSearchResult, movieProviders } from "./types";
  * @param page - The page number of the results
  * @returns - The search results from the TMDB API or an error if the request fails
  */
-export async function searchMovies(searchTerm: string, page: number) {
-  const results = await getData<movieSearchResult>(
-    `/search/movie?query=${searchTerm}&include_adult=false&language=en-US&page=${page}`,
-  );
+export async function searchMovies(searchTerm: string, page = 1) {
+  try {
+    const results = await getData<movieSearchResult>(
+      `/search/movie?query=${searchTerm}&include_adult=false&language=en-US&page=${page}`,
+    );
 
-  return results;
+    if (results instanceof Error) {
+      return results;
+    }
+
+    return results;
+  } catch (error) {
+    throw new Error(`Failed to fetch data: ${error}`);
+  }
 }
+// export async function searchMovies(searchTerm: string, page = 1) {
+//   try {
+//     const results = await getData<movieSearchResult>(
+//       `/search/movie?query=${searchTerm}&include_adult=false&language=en-US&page=${page}`,
+//     );
+
+//     return results;
+//   } catch (error) {
+//     throw new Error(`Failed to fetch data: ${error}`);
+//   }
+// }
 
 /**
  * Get the top level details of a movie by ID along with the recommendations and watch providers information

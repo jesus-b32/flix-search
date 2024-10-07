@@ -15,12 +15,20 @@ const options = {
  * @param path The path to query from base url, must be a valid TMDB API endpoint
  * @returns The JSON response from the API, or throws an error if the request fails
  */
-export async function getData<T>(path: string): Promise<T> {
-  const response = await fetch(`${baseUrl}${path}`, options);
+export async function getData<T>(path: string): Promise<T | Error> {
+  try {
+    const response = await fetch(`${baseUrl}${path}`, options);
 
-  if (!response.ok) {
-    throw new Error(`Failed to fetch ${path}, status ${response.status}`);
+    if (!response.ok) {
+      const error = (await response.json()) as Error;
+      return new Error(
+        `Response status: ${response.status} - ${error.name}: ${error.message}`,
+      );
+    }
+
+    const data = (await response.json()) as T;
+    return data;
+  } catch (error) {
+    return error as Error;
   }
-
-  return (await response.json()) as T;
 }
