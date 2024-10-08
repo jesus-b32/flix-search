@@ -27,12 +27,6 @@ export type movieSearchResult = {
   total_results: number;
 };
 
-// export type movieSearchError = {
-//   success: false;
-//   status_code: number;
-//   status_message: string;
-// };
-
 type WatchProviderDetail = {
   logo_path: string;
   provider_id: number;
