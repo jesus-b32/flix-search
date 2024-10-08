@@ -17,8 +17,8 @@ export default async function SearchPage({
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
-      <h1 className="text-2xl font-bold">{`Movie Search Results for: ${searchTerm}`}</h1>
-      <div className="flex w-full flex-col items-center justify-center">
+      <h1 className="my-5 text-2xl font-bold">{`Movie Search Results for: ${searchTerm}`}</h1>
+      <div className="mb-5 flex w-full flex-col items-center justify-center">
         {/* <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3"> */}
         {movies.results.map((movie) => (
           <SearchResultCards key={movie.id} {...movie} />
