@@ -24,17 +24,6 @@ export async function searchMovies(searchTerm: string, page = 1) {
     throw new Error(`Failed to fetch data: ${error}`);
   }
 }
-// export async function searchMovies(searchTerm: string, page = 1) {
-//   try {
-//     const results = await getData<movieSearchResult>(
-//       `/search/movie?query=${searchTerm}&include_adult=false&language=en-US&page=${page}`,
-//     );
-
-//     return results;
-//   } catch (error) {
-//     throw new Error(`Failed to fetch data: ${error}`);
-//   }
-// }
 
 /**
  * Get the top level details of a movie by ID along with the recommendations and watch providers information
