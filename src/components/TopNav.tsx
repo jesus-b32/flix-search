@@ -1,4 +1,3 @@
-import { Input } from "../components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,7 +6,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../components/ui/dropdown-menu";
-import { Button } from "../components/ui/button";
+
 import {
   Sheet,
   SheetContent,
@@ -15,6 +14,7 @@ import {
   SheetTitle,
   SheetDescription,
 } from "../components/ui/sheet";
+
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -27,19 +27,10 @@ import {
   navigationMenuTriggerStyle,
 } from "../components/ui/navigation-menu";
 
-import {
-  CircleUser,
-  // Search as SearchIcon,
-  Clapperboard,
-  Menu,
-  ChevronDown,
-} from "lucide-react";
-
-// import { Search } as  from "lucide-react";
-
+import { CircleUser, Clapperboard, Menu, ChevronDown } from "lucide-react";
 import Search from "./client/Search";
-
 import Link from "next/link";
+import { Button } from "../components/ui/button";
 
 export default function TopNav() {
   return (
@@ -297,9 +288,7 @@ export default function TopNav() {
         </SheetContent>
       </Sheet>
       <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
-        <div className="ml-auto flex-1 sm:flex-initial">
-          <Search />
-        </div>
+        <div className="ml-auto flex-1 sm:flex-initial">{/* <Search /> */}</div>
         {/* <form className="ml-auto flex-1 sm:flex-initial">
           <div className="relative">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />

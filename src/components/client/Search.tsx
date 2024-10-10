@@ -5,49 +5,123 @@ import React from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Search as SearchIcon } from "lucide-react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
+
+// This form schema ensures that the search term is not empty and media type fields is either movies or tv-shows
+const formSchema = z.object({
+  searchTerm: z.string().min(1, {
+    message: "Search term is required",
+  }),
+  mediaType: z.enum(["movie", "tv-show"], {
+    required_error: "You need to select a type",
+  }),
+});
 
 export default function Search() {
   const router = useRouter();
   // lets you read the current URL's query string.
   const searchParams = useSearchParams();
 
-  function handleSubmit(e: React.SyntheticEvent) {
-    e.preventDefault();
+  // `useForm` hook from react-hook-form to manage the form state and validation.
+  // https://react-hook-form.com/api/useform
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      searchTerm: "",
+      mediaType: "movie",
+    },
+  });
 
-    //provide type for e.target
-    const target = e.target as typeof e.target & {
-      searchTerm: { value: string };
-    };
-    const searchTerm = target.searchTerm.value;
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    const searchTerm = values.searchTerm;
+    const mediaType = values.mediaType;
 
     //create a url friendly search params
     const params = new URLSearchParams(searchParams);
-    if (searchTerm) {
-      params.set("search", searchTerm);
-    } else {
-      params.delete("search");
+    params.set("search", searchTerm);
+
+    if (mediaType === "movie") {
+      router.push(`/search/movie/?${params.toString()}`);
+    } else if (mediaType === "tv-show") {
+      router.push(`/search/tv/?${params.toString()}`);
     }
-    target.searchTerm.value = "";
-    //navigate to search page with search params
-    router.push(`/search/movie/?${params.toString()}`);
   }
+
   return (
-    <>
+    <Form {...form}>
       <form
-        onSubmit={handleSubmit}
-        className="flex flex-row items-center gap-3 rounded-md p-2"
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="mx-auto mt-5 max-w-md space-y-3"
       >
-        <Input
-          type="text"
-          name="searchTerm"
-          required
-          className="text-black"
-          placeholder="Search Movies and Series"
+        <div className="flex space-x-2">
+          <FormField
+            control={form.control}
+            name="searchTerm"
+            render={({ field }) => (
+              <FormItem className="flex-grow">
+                <FormControl>
+                  <Input
+                    placeholder="Search Movies & TV Shows"
+                    {...field}
+                    className="text-black"
+                    aria-label="search term"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit">
+            <SearchIcon size={20} />
+          </Button>
+        </div>
+        <FormField
+          control={form.control}
+          name="mediaType"
+          render={({ field }) => (
+            <FormItem className="space-y-3">
+              <FormControl>
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  className="flex justify-center space-x-4"
+                >
+                  <FormItem className="flex items-center space-x-2">
+                    <FormControl>
+                      <RadioGroupItem
+                        value="movie"
+                        className="border-white text-white"
+                      />
+                    </FormControl>
+                    <span>Movie</span>
+                  </FormItem>
+                  <FormItem className="flex items-center space-x-2">
+                    <FormControl>
+                      <RadioGroupItem
+                        value="tv-show"
+                        className="border-white text-white"
+                      />
+                    </FormControl>
+                    <span>TV Show</span>
+                  </FormItem>
+                </RadioGroup>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-        <Button type="submit">
-          <SearchIcon size={20} />
-        </Button>
       </form>
-    </>
+    </Form>
   );
 }
