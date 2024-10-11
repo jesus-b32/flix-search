@@ -11,11 +11,17 @@ import {
 import { ImageOff } from "lucide-react";
 
 import type { movieSearchResult } from "@/server/actions/movies/types";
+import type { tvSearchResult } from "@/server/actions/tv/types";
 
+/**
+ * Returns a card with the details of a movie or tv show that was searched
+ * @param movie or tv show
+ * @returns client component
+ */
 export default function SearchResultCards({
   cinema,
 }: {
-  cinema: movieSearchResult["results"][0];
+  cinema: movieSearchResult["results"][0] | tvSearchResult["results"][0];
 }) {
   /**
    * Card Responsive:
@@ -42,9 +48,13 @@ export default function SearchResultCards({
       </div>
       <div className="flex w-full flex-col sm:h-[278px] sm:w-2/3">
         <CardHeader className="text-center sm:text-left">
-          <CardTitle>{cinema?.title}</CardTitle>
+          <CardTitle>
+            {"title" in cinema ? cinema?.title : cinema?.name}
+          </CardTitle>
           <CardDescription>
-            {cinema?.release_date || "No Release Date"}
+            {"release_date" in cinema
+              ? cinema?.release_date || "No Release Date"
+              : cinema?.first_air_date || "No First Air Date"}
           </CardDescription>
         </CardHeader>
         <CardContent className="text-center sm:text-left">
