@@ -1,5 +1,5 @@
 import { searchTvShows } from "@/server/actions/tv/actions";
-import SearchResultCards from "@/components/client/SearchResultCards";
+import SearchResultCards from "@/components/SearchResultCards";
 import PaginationComponent from "@/components/client/Pagination";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
