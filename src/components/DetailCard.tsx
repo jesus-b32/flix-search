@@ -7,7 +7,6 @@ import {
 } from "@/components/ui/card";
 
 import { ImageOff } from "lucide-react";
-import Link from "next/link";
 import type { movieDetails } from "@/server/actions/movies/types";
 import type { tvDetails } from "@/server/actions/tv/types";
 

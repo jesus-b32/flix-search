@@ -1,5 +1,6 @@
 import { getMovieDetails } from "@/server/actions/movies/actions";
 import DetailCard from "@/components/DetailCard";
+import JustWatchAttribution from "@/components/JustWatchAttribution";
 
 export default async function MovieDetails({
   params,
@@ -18,6 +19,7 @@ export default async function MovieDetails({
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
       <DetailCard details={movie} />
+      <JustWatchAttribution title={movie.title} />
     </div>
   );
 }
