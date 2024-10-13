@@ -25,11 +25,11 @@ export default async function MovieDetails({
   const streamingProviders = await getMovieProviders();
   const countries = await getCountries();
   // get the selected streaming provider from the search params
-  // if not provided, default to 8(Netflix)
+  // if not provided, default to '8'(Netflix)
   const selectedStreamingProvider =
-    Number(searchParams?.streamingProvider) || 8;
+    searchParams?.streamingProvider || "netflix";
 
-  const country = searchParams?.country || "US";
+  const selectedCountry = searchParams?.country || "US";
 
   if (movie instanceof Error) {
     throw new Error(`Failed to fetch movie data: ${movie}`);
@@ -47,8 +47,13 @@ export default async function MovieDetails({
     <div className="flex min-h-screen flex-col items-center justify-center">
       <DetailCard details={movie} />
       <JustWatchAttribution title={movie.title} />
-      {/* <AvailabilityByProvider /> */}
-      {/* <SelectSearch /> */}
+      <AvailabilityByProvider
+        // list of streaming providers for combo box
+        streamingProviderList={streamingProviders}
+        // will have countries that match the selected streaming provider
+        watchProviders={movie["watch/providers"].results}
+        selectedStreamingProvider={selectedStreamingProvider}
+      />
     </div>
   );
 }

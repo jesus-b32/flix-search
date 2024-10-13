@@ -100,7 +100,7 @@ export type movieDetails = {
     name: string;
   }[];
   "watch/providers": {
-    results?: watchProviders;
+    results: watchProviders; // make it optional?
   };
   recommendations: MovieRecommendations;
 };

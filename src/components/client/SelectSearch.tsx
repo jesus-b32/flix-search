@@ -23,36 +23,15 @@ import type {
   streamingProviderList,
 } from "@/server/actions/types";
 
-const frameworks = [
-  {
-    value: "next.js",
-    label: "Next.js",
-  },
-  {
-    value: "sveltekit",
-    label: "SvelteKit",
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
-  },
-];
-
 export default function SelectSearch({
   data,
+  defaultValue,
 }: {
   data: countryList | streamingProviderList;
+  defaultValue: string;
 }) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
+  const [value, setValue] = React.useState(defaultValue);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -63,36 +42,75 @@ export default function SelectSearch({
           aria-expanded={open}
           className="w-[200px] justify-between"
         >
-          {value
-            ? frameworks.find((framework) => framework.value === value)?.label
-            : "Select framework..."}
+          {"results" in data
+            ? value
+              ? data.results.find(
+                  (provider) => provider.provider_name.toLowerCase() === value,
+                )?.provider_name
+              : "Select Streaming Provider..."
+            : value
+              ? data.find(
+                  (country) => country.native_name.toLowerCase() === value,
+                )?.native_name
+              : "Select Country..."}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search framework..." />
+          <CommandInput
+            placeholder={
+              "results" in data ? "Select streaming provider" : "Select country"
+            }
+          />
           <CommandList>
-            <CommandEmpty>No framework found.</CommandEmpty>
+            <CommandEmpty>
+              {"results" in data
+                ? "No streaming providers found"
+                : "No countries found"}
+            </CommandEmpty>
             <CommandGroup>
-              {frameworks.map((framework) => (
-                <CommandItem
-                  key={framework.value}
-                  value={framework.value}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
-                    setOpen(false);
-                  }}
-                >
-                  <Check
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      value === framework.value ? "opacity-100" : "opacity-0",
-                    )}
-                  />
-                  {framework.label}
-                </CommandItem>
-              ))}
+              {"results" in data
+                ? data.results.map((provider) => (
+                    <CommandItem
+                      key={provider.provider_id}
+                      value={provider.provider_name.toLowerCase()}
+                      onSelect={(currentValue) => {
+                        setValue(currentValue === value ? "" : currentValue);
+                        setOpen(false);
+                      }}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          value === provider.provider_name.toLowerCase()
+                            ? "opacity-100"
+                            : "opacity-0",
+                        )}
+                      />
+                      {provider.provider_name}
+                    </CommandItem>
+                  ))
+                : data.map((country) => (
+                    <CommandItem
+                      key={country.iso_3166_1}
+                      value={country.native_name.toLowerCase()}
+                      onSelect={(currentValue) => {
+                        setValue(currentValue === value ? "" : currentValue);
+                        setOpen(false);
+                      }}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          value === country.native_name.toLowerCase()
+                            ? "opacity-100"
+                            : "opacity-0",
+                        )}
+                      />
+                      {country.native_name}
+                    </CommandItem>
+                  ))}
             </CommandGroup>
           </CommandList>
         </Command>
