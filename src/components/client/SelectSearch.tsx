@@ -18,7 +18,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import type { countries } from "@/server/actions/types";
+import type {
+  countryList,
+  streamingProviderList,
+} from "@/server/actions/types";
 
 const frameworks = [
   {
@@ -43,7 +46,11 @@ const frameworks = [
   },
 ];
 
-export default function SelectSearch({ data }: { data: countries }) {
+export default function SelectSearch({
+  data,
+}: {
+  data: countryList | streamingProviderList;
+}) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
 

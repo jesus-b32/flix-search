@@ -7,6 +7,10 @@
 
 import type { watchProviders } from "../types";
 
+/**
+ * type for list of movie search results
+ * @see https://developer.themoviedb.org/reference/search-movie
+ */
 export type movieSearchResult = {
   page: number;
   results: {
@@ -29,6 +33,10 @@ export type movieSearchResult = {
   total_results: number;
 };
 
+/**
+ * type for list of movie recommendations. This is appended to response of movie details API endpoint
+ * @see https://developer.themoviedb.org/reference/movie-recommendations
+ */
 type MovieRecommendations = {
   page: number;
   results: {
@@ -52,6 +60,10 @@ type MovieRecommendations = {
   total_results: number;
 };
 
+/**
+ * type for movie details
+ * @see https://developer.themoviedb.org/reference/movie-details
+ */
 export type movieDetails = {
   id: number;
   title: string;
@@ -91,18 +103,4 @@ export type movieDetails = {
     results?: watchProviders;
   };
   recommendations: MovieRecommendations;
-};
-
-/**
- * type for list of the watch provider data we have available for movies
- * see https://developer.themoviedb.org/reference/watch-providers-movie-list
- */
-export type movieProviders = {
-  results: {
-    // need to add a display_priorities field?
-    display_priority: number;
-    logo_path: string;
-    provider_id: number;
-    provider_name: string;
-  }[];
 };

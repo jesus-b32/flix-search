@@ -1,7 +1,8 @@
 "use server";
 
 import { getData } from "../tmdapi";
-import type { movieDetails, movieSearchResult, movieProviders } from "./types";
+import type { movieDetails, movieSearchResult } from "./types";
+import type { streamingProviderList } from "../types";
 
 /**
  * Search for movies by their original, translated and alternative titles.
@@ -43,7 +44,7 @@ export async function getMovieDetails(movieId: number) {
  * @returns
  */
 export async function getMovieProviders() {
-  const results = await getData<movieProviders>(
+  const results = await getData<streamingProviderList>(
     `/watch/providers/movie?language=en-US`,
   );
 

@@ -1,7 +1,8 @@
 "use server";
 
 import { getData } from "../tmdapi";
-import type { tvDetails, tvSearchResult, tvProviders } from "./types";
+import type { tvDetails, tvSearchResult } from "./types";
+import type { streamingProviderList } from "../types";
 
 /**
  * Search for tv shows by their original, translated and alternative titles.
@@ -43,7 +44,7 @@ export async function getTvShowDetails(seriesId: number) {
  * @returns
  */
 export async function getTvProviders() {
-  const results = await getData<tvProviders>(
+  const results = await getData<streamingProviderList>(
     `/watch/providers/tv?language=en-US`,
   );
 

@@ -1,10 +1,18 @@
-export type countries = {
+/**
+ * type for list of countries using in TMDB API
+ * @see https://developer.themoviedb.org/reference/configuration-countries
+ */
+export type countryList = {
   iso_3166_1: string;
   english_name: string;
   native_name: string;
 }[];
 
-//object type for streaming options like rent, buy, etc
+/**
+ * type for streaming option details for movies and tv shows inside rent, buy, flatrate, ads, etc
+ * @see https://developer.themoviedb.org/reference/movie-watch-providers
+ * @see https://developer.themoviedb.org/reference/tv-series-watch-providers
+ */
 type WatchProviderDetail = {
   logo_path: string;
   provider_id: number;
@@ -12,7 +20,11 @@ type WatchProviderDetail = {
   display_priority: number;
 };
 
-// object type for each country in watch provider endpoint
+/**
+ * type for each country object in watch provider endpoint for movies and tv shows
+ * @see https://developer.themoviedb.org/reference/movie-watch-providers
+ * @see https://developer.themoviedb.org/reference/tv-series-watch-providers
+ */
 type WatchProviderCountry = {
   link: string;
   flatrate: WatchProviderDetail[];
@@ -23,8 +35,9 @@ type WatchProviderCountry = {
 };
 
 /**
- * list of watch provider countries
- * @see https://developer.themoviedb.org/reference/configuration-countries
+ * type for results object in watch provider endpoint for movies and tv shows
+ * @see https://developer.themoviedb.org/reference/movie-watch-providers
+ * @see https://developer.themoviedb.org/reference/tv-series-watch-providers
  */
 export type watchProviders = {
   AD: WatchProviderCountry;
@@ -275,4 +288,19 @@ export type watchProviders = {
   ZA: WatchProviderCountry;
   ZM: WatchProviderCountry;
   ZW: WatchProviderCountry;
+};
+
+/**
+ * type for list of the watch provider data TMDB has for movies and tv shows
+ * @see https://developer.themoviedb.org/reference/watch-providers-movie-list
+ * @see https://developer.themoviedb.org/reference/watch-provider-tv-list
+ */
+export type streamingProviderList = {
+  results: {
+    // need to add a display_priorities field?
+    display_priority: number;
+    logo_path: string;
+    provider_id: number;
+    provider_name: string;
+  }[];
 };
