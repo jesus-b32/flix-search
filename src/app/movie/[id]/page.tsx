@@ -5,6 +5,7 @@ import {
 import DetailCard from "@/components/DetailCard";
 import JustWatchAttribution from "@/components/JustWatchAttribution";
 import { getCountries } from "@/server/actions/actions";
+import SelectSearch from "@/components/client/SelectSearch";
 
 export default async function MovieDetails({
   params,
@@ -15,6 +16,7 @@ export default async function MovieDetails({
   };
   searchParams: {
     streamingProvider: string;
+    country: string;
   };
 }) {
   const movieId = Number(params.id);
@@ -25,6 +27,8 @@ export default async function MovieDetails({
   // if not provided, default to 8(Netflix)
   const selectedStreamingProvider =
     Number(searchParams?.streamingProvider) || 8;
+
+  const country = searchParams?.country || "US";
 
   if (movie instanceof Error) {
     throw new Error(`Failed to fetch movie data: ${movie}`);
@@ -42,6 +46,7 @@ export default async function MovieDetails({
     <div className="flex min-h-screen flex-col items-center justify-center">
       <DetailCard details={movie} />
       <JustWatchAttribution title={movie.title} />
+      {/* <SelectSearch /> */}
     </div>
   );
 }

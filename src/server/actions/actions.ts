@@ -1,4 +1,4 @@
-"user server";
+"use server";
 
 import { getData } from "./tmdapi";
 import type { countries } from "./types";
