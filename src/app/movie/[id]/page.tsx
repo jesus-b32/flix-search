@@ -5,7 +5,6 @@ import {
 import DetailCard from "@/components/DetailCard";
 import JustWatchAttribution from "@/components/JustWatchAttribution";
 import { getCountries } from "@/server/actions/actions";
-import SelectSearch from "@/components/client/SelectSearch";
 import AvailabilityByProvider from "@/components/AvailabilityByProvider";
 
 export default async function MovieDetails({
@@ -26,8 +25,7 @@ export default async function MovieDetails({
   const countries = await getCountries();
   // get the selected streaming provider from the search params
   // if not provided, default to '8'(Netflix)
-  const selectedStreamingProvider =
-    searchParams?.streamingProvider || "netflix";
+  const selectedStreamingProvider = searchParams?.streamingProvider || "8";
 
   const selectedCountry = searchParams?.country || "US";
 
@@ -51,7 +49,7 @@ export default async function MovieDetails({
         // list of streaming providers for combo box
         streamingProviderList={streamingProviders}
         // will have countries that match the selected streaming provider
-        watchProviders={movie["watch/providers"].results}
+        details={movie}
         selectedStreamingProvider={selectedStreamingProvider}
       />
     </div>

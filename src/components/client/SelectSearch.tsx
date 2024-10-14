@@ -23,6 +23,8 @@ import type {
   streamingProviderList,
 } from "@/server/actions/types";
 
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
+
 export default function SelectSearch({
   data,
   defaultValue,
@@ -31,7 +33,11 @@ export default function SelectSearch({
   defaultValue: string;
 }) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState(defaultValue);
+  const [value, setValue] = React.useState("");
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -46,8 +52,9 @@ export default function SelectSearch({
             ? value
               ? data.results.find(
                   (provider) => provider.provider_name.toLowerCase() === value,
+                  // (provider) => provider.provider_id.toString() === value,
                 )?.provider_name
-              : "Select Streaming Provider..."
+              : "Select Streaming Provider"
             : value
               ? data.find(
                   (country) => country.native_name.toLowerCase() === value,
@@ -76,8 +83,14 @@ export default function SelectSearch({
                       key={provider.provider_id}
                       value={provider.provider_name.toLowerCase()}
                       onSelect={(currentValue) => {
+                        const params = new URLSearchParams(searchParams);
+                        params.set(
+                          "streamingProvider",
+                          provider.provider_id.toString(),
+                        );
                         setValue(currentValue === value ? "" : currentValue);
                         setOpen(false);
+                        router.push(`${pathname}?${params.toString()}`);
                       }}
                     >
                       <Check
