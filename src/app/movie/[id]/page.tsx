@@ -50,7 +50,8 @@ export default async function MovieDetails({
         streamingProviderList={streamingProviders}
         // will have countries that match the selected streaming provider
         details={movie}
-        selectedStreamingProvider={selectedStreamingProvider}
+        selectedStreamingProviderId={selectedStreamingProvider}
+        countries={countries}
       />
     </div>
   );
