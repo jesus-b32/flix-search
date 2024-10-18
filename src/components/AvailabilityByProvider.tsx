@@ -50,10 +50,7 @@ export default function AvailabilityByProvider({
             <span className="text-xl font-semibold">
               Select Streaming Provider:
             </span>
-            <SelectSearch
-              data={streamingProviderList}
-              defaultValue={selectedStreamingProviderId}
-            />
+            <SelectSearch data={streamingProviderList} />
           </div>
           <div className="mt-6 flex w-full flex-col">
             <h2 className="mb-3 text-2xl font-bold">

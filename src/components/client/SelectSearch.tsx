@@ -27,10 +27,8 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
 export default function SelectSearch({
   data,
-  defaultValue,
 }: {
   data: countryList | streamingProviderList;
-  defaultValue: string;
 }) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
@@ -54,7 +52,7 @@ export default function SelectSearch({
                   (provider) => provider.provider_name.toLowerCase() === value,
                   // (provider) => provider.provider_id.toString() === value,
                 )?.provider_name
-              : "Select Streaming Provider"
+              : "Select Provider"
             : value
               ? data.find(
                   (country) => country.native_name.toLowerCase() === value,

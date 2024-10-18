@@ -43,31 +43,35 @@ export default function AvailabilityByCountry({
         <>
           <div className="flex w-full items-center justify-center gap-4 lg:justify-start">
             <span className="text-xl font-semibold">Select Country:</span>
-            <SelectSearch data={countries} defaultValue={selectedCountry} />
+            <SelectSearch data={countries} />
           </div>
           <div className="mt-6 flex w-full flex-col">
             <h2 className="mb-3 text-2xl font-bold">
               {`${title} is available from the following providers in ${selectedCountryName}:`}
             </h2>
-            {/* <div className=""> */}
             {Object.entries(watchProviderCountry).map(
               ([providerType, providerDetails]) =>
                 typeof providerDetails !== "string" ? (
-                  <div key={providerType} className="flex flex-col gap-4">
-                    <h3 className="text-xl font-bold">{providerType}</h3>
-                    <div className="grid grid-cols-1 justify-items-center gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+                  <div key={providerType} className="mt-4 flex flex-col gap-4">
+                    <h3 className="text-center text-xl font-bold md:text-left">
+                      {providerType === "flatrate"
+                        ? "Stream"
+                        : providerType.charAt(0).toUpperCase() +
+                          providerType.slice(1)}
+                    </h3>
+                    <div className="grid grid-cols-1 justify-items-center gap-4 sm:grid-cols-2 md:grid-cols-3 md:justify-items-start lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
                       {providerDetails.map((provider) => (
                         <Card
                           key={provider.provider_id}
-                          className="flex h-52 w-40 flex-col items-center"
+                          className="flex h-60 w-36 flex-col items-center"
                         >
                           <div className="flex justify-center">
                             <img
                               alt="provider logo"
-                              src={`https://image.tmdb.org/t/p/w342${
+                              src={`https://image.tmdb.org/t/p/w92${
                                 provider.logo_path
                               }`}
-                              className="h-auto w-40 border border-black object-cover"
+                              className="h-auto w-36 border border-black object-cover"
                             />
                           </div>
                           <div className="flex flex-col flex-wrap">
@@ -83,7 +87,6 @@ export default function AvailabilityByCountry({
                   </div>
                 ) : null,
             )}
-            {/* </div> */}
           </div>
         </>
       )}
