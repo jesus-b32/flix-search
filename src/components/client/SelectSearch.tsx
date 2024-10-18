@@ -109,8 +109,11 @@ export default function SelectSearch({
                       key={country.iso_3166_1}
                       value={country.native_name.toLowerCase()}
                       onSelect={(currentValue) => {
+                        const params = new URLSearchParams(searchParams);
+                        params.set("country", country.iso_3166_1);
                         setValue(currentValue === value ? "" : currentValue);
                         setOpen(false);
+                        router.push(`${pathname}?${params.toString()}`);
                       }}
                     >
                       <Check

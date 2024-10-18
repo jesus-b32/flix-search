@@ -6,6 +6,7 @@ import DetailCard from "@/components/DetailCard";
 import JustWatchAttribution from "@/components/JustWatchAttribution";
 import { getCountries } from "@/server/actions/actions";
 import AvailabilityByProvider from "@/components/AvailabilityByProvider";
+import AvailabilityByCountry from "@/components/AvailabilityByCountry";
 
 export default async function MovieDetails({
   params,
@@ -51,6 +52,11 @@ export default async function MovieDetails({
         // will have countries that match the selected streaming provider
         details={movie}
         selectedStreamingProviderId={selectedStreamingProvider}
+        countries={countries}
+      />
+      <AvailabilityByCountry
+        details={movie}
+        selectedCountry={selectedCountry}
         countries={countries}
       />
     </div>

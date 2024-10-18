@@ -138,7 +138,7 @@ export type tvDetails = {
   origin_country: string[];
   type: string;
   "watch/providers": {
-    results?: watchProviders;
+    results: watchProviders;
   };
   recommendations: TvRecommendations;
 };
