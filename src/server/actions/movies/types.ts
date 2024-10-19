@@ -37,7 +37,7 @@ export type movieSearchResult = {
  * type for list of movie recommendations. This is appended to response of movie details API endpoint
  * @see https://developer.themoviedb.org/reference/movie-recommendations
  */
-type MovieRecommendations = {
+export type MovieRecommendations = {
   page: number;
   results: {
     id: number;

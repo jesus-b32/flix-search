@@ -7,6 +7,7 @@ import JustWatchAttribution from "@/components/JustWatchAttribution";
 import { getCountries } from "@/server/actions/actions";
 import AvailabilityByProvider from "@/components/AvailabilityByProvider";
 import AvailabilityByCountry from "@/components/AvailabilityByCountry";
+import Recommendations from "@/components/Recommendations";
 
 export default async function MovieDetails({
   params,
@@ -59,6 +60,7 @@ export default async function MovieDetails({
         selectedCountry={selectedCountry}
         countries={countries}
       />
+      <Recommendations recommendations={movie.recommendations} />
     </div>
   );
 }

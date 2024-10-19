@@ -37,7 +37,7 @@ export type tvSearchResult = {
  * type for list of tv recommendations. This is appended to response of tv details API endpoint
  * @see https://developer.themoviedb.org/reference/tv-series-recommendations
  */
-type TvRecommendations = {
+export type TvRecommendations = {
   page: number;
   results: {
     id: number;
