@@ -25,6 +25,14 @@ import type {
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
+/**
+ * A component that renders a searchable and selectable popover list for either
+ * streaming providers or countries. It allows users to filter and select
+ * options from the provided data, updating the URL search parameters based on
+ * the selection.
+ * @param data - An array of either country objects or streaming provider objects.
+ * @returns A React component for selecting and searching through the given data.
+ */
 export default function SelectSearch({
   data,
 }: {

@@ -15,7 +15,7 @@ import Link from "next/link";
 /**
  * Returns a card with the details of a movie or tv show that was searched
  * @param movie or tv show
- * @returns client component
+ * @returns - A list card with title, poster image, and overview for movies or TV shows related to the search
  */
 export default function SearchResultCards({
   cinema,

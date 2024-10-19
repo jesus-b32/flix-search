@@ -28,6 +28,16 @@ const formSchema = z.object({
   }),
 });
 
+/**
+ * A form to search for movies and TV shows.
+ *
+ * The form is validated using the `formSchema` defined above. The search term
+ * must not be empty, and the media type must be either "movie" or "tv-show".
+ *
+ * When the form is submitted, the current URL is replaced with a new URL that
+ * includes the search term in the query string. The path of the
+ * new URL is determined by the media type.
+ */
 export default function Search() {
   const router = useRouter();
   // lets you read the current URL's query string.

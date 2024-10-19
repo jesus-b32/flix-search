@@ -14,11 +14,11 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 
 /**
  * Creates server component that displays all countries with availability of movie or TV show based on selected streaming provider
- * @param {streamingProviderList} streamingProviderList - list of available streaming providers
- * @param {movieDetails | tvDetails} details - movie or tv detail object
- * @param {string} selectedStreamingProviderId - id of selected streaming provider
- * @param {countryList} countries - list of available countries used in the TMDB API
- * @returns {JSX.Element} - server component that displays country flags with the country name in a card
+ * @param streamingProviderList - list of available streaming providers
+ * @param details - movie or tv detail object
+ * @param selectedStreamingProviderId - id of selected streaming provider
+ * @param countries - list of available countries used in the TMDB API
+ * @returns - server component that displays country flags with the country name in a card
  */
 export default function AvailabilityByProvider({
   streamingProviderList,

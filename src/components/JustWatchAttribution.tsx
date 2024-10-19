@@ -1,3 +1,8 @@
+/**
+ * Renders an attribution component that attributes the source of the movie and TV show data to JustWatch.
+ * @param title - The title of the movie or TV show.
+ * @returns The rendered JSX element.
+ */
 export default function JustWatchAttribution({ title }: { title: string }) {
   return (
     <div className="mt-5 flex w-10/12 flex-col items-center justify-center lg:items-start">

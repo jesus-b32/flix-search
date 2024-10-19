@@ -11,10 +11,10 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 
 /**
  * Creates server component that displays all countries with availability of movie or TV show based on selected streaming provider
- * @param {movieDetails | tvDetails} details - movie or tv detail object
- * @param {string} selectedCountry - iso_3166_1 code of selected country
- * @param {countryList} countries - list of available countries used in the TMDB API
- * @returns {JSX.Element} - server component that displays country flags with the country name in a card
+ * @param  details - movie or tv detail object
+ * @param selectedCountry - iso_3166_1 code of selected country
+ * @param countries - list of available countries used in the TMDB API
+ * @returns - server component that displays country flags with the country name in a card
  */
 export default function AvailabilityByCountry({
   details,

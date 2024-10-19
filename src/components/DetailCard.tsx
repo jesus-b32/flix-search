@@ -10,6 +10,11 @@ import { ImageOff } from "lucide-react";
 import type { movieDetails } from "@/server/actions/movies/types";
 import type { tvDetails } from "@/server/actions/tv/types";
 
+/**
+ * Creates a server component that displays a movie or TV show's details
+ * @param  details - movie or TV show details object
+ * @returns - server component that displays the details in a card
+ */
 export default function DetailCard({
   details,
 }: {
