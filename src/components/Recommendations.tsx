@@ -19,7 +19,7 @@ export default function Recommendations({
       <h2 className="mb-3 w-full text-center text-2xl font-semibold md:w-10/12 md:text-left">
         Recommendations:
       </h2>
-      <ScrollArea className="w-full whitespace-nowrap rounded-md border">
+      <ScrollArea className="w-full whitespace-nowrap rounded-none border md:rounded-md">
         <div className="flex w-max space-x-4 p-4">
           {recommendations.results.map((recommendation) => (
             <Link

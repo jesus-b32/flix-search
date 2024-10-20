@@ -34,19 +34,19 @@ export default function AvailabilityByCountry({
   )?.native_name;
 
   return (
-    <div className="flex w-10/12 flex-col items-center justify-center py-6 lg:w-10/12 lg:justify-start">
+    <div className="flex w-full flex-col items-center justify-center py-6 md:w-10/12 md:justify-start">
       {!watchProviders ? null : Object.keys(watchProviders).length === 0 ? (
         <h1 className="text-2xl font-bold">
           {`No Streaming data available for ${title}`}
         </h1>
       ) : (
         <>
-          <div className="flex w-full items-center justify-center gap-4 lg:justify-start">
+          <div className="flex w-full flex-col items-center justify-center gap-4 md:flex-row md:justify-start">
             <span className="text-xl font-semibold">Select Country:</span>
             <SelectSearch data={countries} />
           </div>
           <div className="mt-6 flex w-full flex-col">
-            <h2 className="mb-3 text-2xl font-bold">
+            <h2 className="mb-3 px-6 text-2xl font-bold md:px-0">
               {`${title} is available from the following providers in ${selectedCountryName}:`}
             </h2>
             {Object.entries(watchProviderCountry).map(

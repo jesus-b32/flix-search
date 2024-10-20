@@ -43,7 +43,7 @@ export async function getTvShowDetails(seriesId: number) {
  * Returns a list of the watch provider (OTT/streaming) data we have available for tv series.
  * @returns
  */
-export async function getTvProviders() {
+export async function getTvShowProviders() {
   const results = await getData<streamingProviderList>(
     `/watch/providers/tv?language=en-US`,
   );
