@@ -5,7 +5,7 @@
  */
 export default function JustWatchAttribution({ title }: { title: string }) {
   return (
-    <div className="mt-5 flex w-10/12 flex-col items-center justify-center lg:items-start">
+    <div className="mt-6 flex w-10/12 flex-col items-center justify-center py-6 lg:items-start">
       <h2 className="text-2xl font-semibold">
         {`Discover where you can stream ${title}`} with{" "}
         <img

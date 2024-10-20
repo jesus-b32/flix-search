@@ -44,7 +44,7 @@ export default async function MovieDetails({
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center">
+    <div className="flex min-h-screen flex-col items-center justify-center divide-y-2 divide-slate-300">
       <DetailCard details={movie} />
       <JustWatchAttribution title={movie.title} />
       <AvailabilityByProvider

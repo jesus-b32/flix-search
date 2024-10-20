@@ -4,17 +4,22 @@ import type { MovieRecommendations } from "@/server/actions/movies/types";
 import type { TvRecommendations } from "@/server/actions/tv/types";
 import Link from "next/link";
 
+/**
+ * Displays recommendations based on the provided list of movie or TV show recommendations.
+ *
+ * @param recommendations - List of movie or TV show recommendations
+ */
 export default function Recommendations({
   recommendations,
 }: {
   recommendations: MovieRecommendations | TvRecommendations;
 }) {
   return (
-    <>
-      <h2 className="mt-6 w-full text-center text-2xl font-semibold md:w-10/12 md:text-left">
+    <div className="w-full flex-col py-6 md:w-10/12">
+      <h2 className="mb-3 w-full text-center text-2xl font-semibold md:w-10/12 md:text-left">
         Recommendations:
       </h2>
-      <ScrollArea className="my-6 w-full whitespace-nowrap rounded-md border md:w-10/12">
+      <ScrollArea className="w-full whitespace-nowrap rounded-md border">
         <div className="flex w-max space-x-4 p-4">
           {recommendations.results.map((recommendation) => (
             <Link
@@ -48,6 +53,6 @@ export default function Recommendations({
         </div>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
-    </>
+    </div>
   );
 }

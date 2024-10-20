@@ -34,7 +34,7 @@ export default function AvailabilityByCountry({
   )?.native_name;
 
   return (
-    <div className="mt-6 flex w-10/12 flex-col items-center justify-center lg:w-10/12 lg:justify-start">
+    <div className="flex w-10/12 flex-col items-center justify-center py-6 lg:w-10/12 lg:justify-start">
       {!watchProviders ? null : Object.keys(watchProviders).length === 0 ? (
         <h1 className="text-2xl font-bold">
           {`No Streaming data available for ${title}`}
