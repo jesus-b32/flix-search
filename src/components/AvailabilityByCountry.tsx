@@ -63,7 +63,7 @@ export default function AvailabilityByCountry({
                       {providerDetails.map((provider) => (
                         <Card
                           key={provider.provider_id}
-                          className="flex h-60 w-36 flex-col items-center"
+                          className="flex h-60 w-36 flex-col items-center border-none"
                         >
                           <div className="flex justify-center">
                             <img

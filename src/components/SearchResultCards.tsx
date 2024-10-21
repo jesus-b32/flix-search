@@ -32,8 +32,8 @@ export default function SearchResultCards({
    *   Main text content (inside `CardContent`)
    */
   return (
-    <Card className="flex w-full flex-col items-center overflow-hidden border-none sm:w-10/12 sm:flex-row sm:items-stretch">
-      <div className="flex w-full justify-center sm:w-1/3 sm:justify-start">
+    <Card className="flex w-full flex-col items-center border-none md:w-10/12 md:flex-row">
+      <div className="flex h-[278px] w-[185px] justify-center md:justify-start">
         {/* imagge is 185x278 */}
         {"title" in cinema ? (
           <Link href={`/movie/${cinema.id}`}>
@@ -41,10 +41,10 @@ export default function SearchResultCards({
               <img
                 src={`https://image.tmdb.org/t/p/w185${cinema.poster_path}`}
                 alt="Movie or show image"
-                className="h-auto w-full max-w-[185px] rounded-l-lg"
+                className="h-full w-full rounded-none md:rounded-l-lg"
               />
             ) : (
-              <ImageOff className="h-auto w-[185px] rounded-l-lg" />
+              <ImageOff className="h-full w-full rounded-none md:rounded-l-lg" />
             )}
           </Link>
         ) : (
@@ -53,16 +53,16 @@ export default function SearchResultCards({
               <img
                 src={`https://image.tmdb.org/t/p/w185${cinema.poster_path}`}
                 alt="Movie or show image"
-                className="h-auto w-full max-w-[185px] rounded-l-lg"
+                className="h-full w-full rounded-none md:rounded-l-lg"
               />
             ) : (
-              <ImageOff className="h-auto w-[185px] rounded-l-lg" />
+              <ImageOff className="h-full w-full rounded-none md:rounded-l-lg" />
             )}
           </Link>
         )}
       </div>
-      <div className="flex w-full flex-col sm:h-[278px] sm:w-2/3">
-        <CardHeader className="text-center sm:text-left">
+      <div className="flex h-fit w-full flex-col md:h-[278px] md:w-2/3">
+        <CardHeader className="text-center md:text-left">
           <CardTitle>
             {"title" in cinema ? (
               <Link href={`/movie/${cinema.id}`}>{cinema?.title}</Link>
@@ -76,7 +76,7 @@ export default function SearchResultCards({
               : cinema?.first_air_date || "No First Air Date"}
           </CardDescription>
         </CardHeader>
-        <CardContent className="text-center sm:text-left">
+        <CardContent className="text-center md:text-left">
           <p className="line-clamp-6">{cinema?.overview || "No Overview"}</p>
         </CardContent>
       </div>

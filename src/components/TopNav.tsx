@@ -18,13 +18,9 @@ import {
 import {
   NavigationMenu,
   NavigationMenuContent,
-  NavigationMenuIndicator,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  NavigationMenuViewport,
-  navigationMenuTriggerStyle,
 } from "../components/ui/navigation-menu";
 
 import { CircleUser, Clapperboard, Menu, ChevronDown } from "lucide-react";
@@ -34,13 +30,13 @@ import SearchPopover from "./SearchPopover";
 
 export default function TopNav() {
   return (
-    <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
+    <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 text-black md:px-6">
       <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
         <Link
           href="/"
           className="flex items-center gap-2 text-lg font-semibold md:text-base"
         >
-          <Clapperboard className="h-6 w-6 text-black" />
+          <Clapperboard className="h-6 w-6" />
           <span className="sr-only">Flix Search</span>
         </Link>
         <DropdownMenu>
@@ -49,7 +45,7 @@ export default function TopNav() {
               <p className="text-muted-foreground transition-colors hover:text-foreground">
                 Discover Movies
               </p>
-              <ChevronDown className="ml-2 h-4 w-4 text-black" />
+              <ChevronDown className="ml-2 h-4 w-4" />
             </span>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
@@ -94,7 +90,7 @@ export default function TopNav() {
               <p className="text-muted-foreground transition-colors hover:text-foreground">
                 Discover TV Series
               </p>
-              <ChevronDown className="ml-2 h-4 w-4 text-black" />
+              <ChevronDown className="ml-2 h-4 w-4" />
             </span>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -148,21 +144,18 @@ export default function TopNav() {
       <Sheet>
         <SheetTrigger asChild>
           <Button variant="outline" size="icon" className="shrink-0 md:hidden">
-            <Menu className="h-5 w-5 text-black" />
+            <Menu className="h-5 w-5" />
             <span className="sr-only">Toggle navigation menu</span>
           </Button>
         </SheetTrigger>
-        <SheetContent side="left">
+        <SheetContent side="left" className="text-black">
           {/* added title and description for screen readers accessibility */}
           <SheetTitle className="sr-only">Navigation menu</SheetTitle>
           <SheetDescription className="sr-only">
             Open navigation menu
           </SheetDescription>
           <nav className="grid gap-6 text-lg font-medium">
-            <Link
-              href="#"
-              className="flex items-center gap-2 text-lg font-semibold"
-            >
+            <Link href="/" className="w-fit">
               <Clapperboard className="h-6 w-6" />
               <span className="sr-only">Flix Search</span>
             </Link>
@@ -288,7 +281,7 @@ export default function TopNav() {
         </SheetContent>
       </Sheet>
       <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
-        <div className="ml-auto flex-1 sm:flex-initial">
+        <div className="ml-auto flex-initial">
           <SearchPopover />
         </div>
         <DropdownMenu>

@@ -19,7 +19,7 @@ export default function Recommendations({
       <h2 className="mb-3 w-full text-center text-2xl font-semibold md:w-10/12 md:text-left">
         Recommendations:
       </h2>
-      <ScrollArea className="w-full whitespace-nowrap rounded-none border md:rounded-md">
+      <ScrollArea className="w-full whitespace-nowrap rounded-none border-none bg-slate-700 md:rounded-lg">
         <div className="flex w-max space-x-4 p-4">
           {recommendations.results.map((recommendation) => (
             <Link
@@ -30,7 +30,7 @@ export default function Recommendations({
                   : `/tv/${recommendation.id}`
               }
             >
-              <Card className="flex h-[300px] w-[154px] flex-col">
+              <Card className="flex h-[300px] w-[154px] flex-col border-none">
                 <div className="flex h-auto w-full justify-center">
                   <img
                     src={`https://image.tmdb.org/t/p/w154${recommendation.poster_path}`}

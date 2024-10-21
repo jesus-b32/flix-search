@@ -68,7 +68,7 @@ export default function AvailabilityByProvider({
                               selectedStreamingProviderId ? (
                                 <Card
                                   key={country}
-                                  className="flex h-48 w-40 flex-col items-center"
+                                  className="flex h-48 w-40 flex-col items-center border-none"
                                 >
                                   <div className="flex justify-center">
                                     <img
