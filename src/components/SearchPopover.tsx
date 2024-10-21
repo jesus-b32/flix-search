@@ -15,7 +15,7 @@ export default function SearchPopover() {
           <SearchIcon size={20} />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-screen rounded-none border-none bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
+      <PopoverContent className="w-screen rounded-none border-none bg-slate-600">
         <Search />
       </PopoverContent>
     </Popover>

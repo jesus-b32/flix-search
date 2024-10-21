@@ -30,7 +30,7 @@ import SearchPopover from "./SearchPopover";
 
 export default function TopNav() {
   return (
-    <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 text-black md:px-6">
+    <header className="sticky top-0 flex h-16 items-center gap-4 bg-background bg-slate-600 px-4 text-black md:px-6">
       <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
         <Link
           href="/"
@@ -41,10 +41,8 @@ export default function TopNav() {
         </Link>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <span className="flex flex-row items-center">
-              <p className="text-muted-foreground transition-colors hover:text-foreground">
-                Discover Movies
-              </p>
+            <span className="flex cursor-pointer flex-row items-center">
+              <p className="">Discover Movies</p>
               <ChevronDown className="ml-2 h-4 w-4" />
             </span>
           </DropdownMenuTrigger>
@@ -86,10 +84,8 @@ export default function TopNav() {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <span className="flex flex-row items-center">
-              <p className="text-muted-foreground transition-colors hover:text-foreground">
-                Discover TV Series
-              </p>
+            <span className="flex cursor-pointer flex-row items-center">
+              <p>Discover TV Series</p>
               <ChevronDown className="ml-2 h-4 w-4" />
             </span>
           </DropdownMenuTrigger>
@@ -128,27 +124,20 @@ export default function TopNav() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        <Link
-          href="/signup"
-          className="text-muted-foreground transition-colors hover:text-foreground"
-        >
-          Signup
-        </Link>
-        <Link
-          href="/login"
-          className="text-muted-foreground transition-colors hover:text-foreground"
-        >
-          Login
-        </Link>
+        <Link href="/signup">Signup</Link>
+        <Link href="/login">Login</Link>
       </nav>
       <Sheet>
         <SheetTrigger asChild>
-          <Button variant="outline" size="icon" className="shrink-0 md:hidden">
+          <Button size="icon" className="shrink-0 md:hidden">
             <Menu className="h-5 w-5" />
             <span className="sr-only">Toggle navigation menu</span>
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="text-black">
+        <SheetContent
+          side="left"
+          className="border-none bg-slate-600 text-black"
+        >
           {/* added title and description for screen readers accessibility */}
           <SheetTitle className="sr-only">Navigation menu</SheetTitle>
           <SheetDescription className="sr-only">
@@ -161,7 +150,7 @@ export default function TopNav() {
             </Link>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <span className="flex flex-row items-center">
+                <span className="flex cursor-pointer flex-row items-center">
                   <p className="text-muted-foreground transition-colors hover:text-foreground">
                     Discover Movies
                   </p>
@@ -205,7 +194,7 @@ export default function TopNav() {
             </DropdownMenu>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <span className="flex flex-row items-center">
+                <span className="flex cursor-pointer flex-row items-center">
                   <p className="text-muted-foreground transition-colors hover:text-foreground">
                     Discover TV Series
                   </p>
@@ -286,7 +275,7 @@ export default function TopNav() {
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="secondary" size="icon" className="rounded-full">
+            <Button size="icon" className="rounded-full">
               <CircleUser className="h-5 w-5" />
               <span className="sr-only">Toggle user menu</span>
             </Button>
