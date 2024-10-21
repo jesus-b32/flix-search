@@ -49,7 +49,7 @@ export default function SelectSearch({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant="outline"
+          variant="secondary"
           role="combobox"
           aria-expanded={open}
           className="w-[200px] justify-between"
@@ -58,7 +58,6 @@ export default function SelectSearch({
             ? value
               ? data.results.find(
                   (provider) => provider.provider_name.toLowerCase() === value,
-                  // (provider) => provider.provider_id.toString() === value,
                 )?.provider_name
               : "Select Provider"
             : value

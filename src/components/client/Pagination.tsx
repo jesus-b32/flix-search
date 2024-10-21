@@ -63,7 +63,11 @@ export default function PaginationComponent({
           } else if (page === currentPage) {
             return (
               <PaginationItem key={page}>
-                <PaginationLink href={createPageURL(page)} isActive>
+                <PaginationLink
+                  href={createPageURL(page)}
+                  isActive
+                  className="text-black"
+                >
                   {page}
                 </PaginationLink>
               </PaginationItem>

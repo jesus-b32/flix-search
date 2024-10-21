@@ -28,9 +28,9 @@ import {
 } from "../components/ui/navigation-menu";
 
 import { CircleUser, Clapperboard, Menu, ChevronDown } from "lucide-react";
-import Search from "./client/Search";
 import Link from "next/link";
 import { Button } from "../components/ui/button";
+import SearchPopover from "./SearchPopover";
 
 export default function TopNav() {
   return (
@@ -40,7 +40,7 @@ export default function TopNav() {
           href="/"
           className="flex items-center gap-2 text-lg font-semibold md:text-base"
         >
-          <Clapperboard className="h-6 w-6" />
+          <Clapperboard className="h-6 w-6 text-black" />
           <span className="sr-only">Flix Search</span>
         </Link>
         <DropdownMenu>
@@ -49,7 +49,7 @@ export default function TopNav() {
               <p className="text-muted-foreground transition-colors hover:text-foreground">
                 Discover Movies
               </p>
-              <ChevronDown className="ml-2 h-4 w-4" />
+              <ChevronDown className="ml-2 h-4 w-4 text-black" />
             </span>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
@@ -94,7 +94,7 @@ export default function TopNav() {
               <p className="text-muted-foreground transition-colors hover:text-foreground">
                 Discover TV Series
               </p>
-              <ChevronDown className="ml-2 h-4 w-4" />
+              <ChevronDown className="ml-2 h-4 w-4 text-black" />
             </span>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -148,7 +148,7 @@ export default function TopNav() {
       <Sheet>
         <SheetTrigger asChild>
           <Button variant="outline" size="icon" className="shrink-0 md:hidden">
-            <Menu className="h-5 w-5" />
+            <Menu className="h-5 w-5 text-black" />
             <span className="sr-only">Toggle navigation menu</span>
           </Button>
         </SheetTrigger>
@@ -288,17 +288,9 @@ export default function TopNav() {
         </SheetContent>
       </Sheet>
       <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
-        <div className="ml-auto flex-1 sm:flex-initial">{/* <Search /> */}</div>
-        {/* <form className="ml-auto flex-1 sm:flex-initial">
-          <div className="relative">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search products..."
-              className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
-            />
-          </div>
-        </form> */}
+        <div className="ml-auto flex-1 sm:flex-initial">
+          <SearchPopover />
+        </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="secondary" size="icon" className="rounded-full">

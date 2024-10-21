@@ -26,7 +26,7 @@ export default async function SearchPage({
       <Button asChild className="mb-5">
         <Link href={`/search/tv/?search=${searchTerm}`}>TV Show Search</Link>
       </Button>
-      <div className="mb-5 flex w-full flex-col items-center justify-center">
+      <div className="mb-5 flex w-full flex-col items-center justify-center gap-y-6">
         {movies.results.map((movie) => (
           <SearchResultCards key={movie.id} cinema={movie} />
         ))}

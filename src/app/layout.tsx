@@ -15,7 +15,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
-      <body>
+      <body className="bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
         <TopNav />
         {children}
       </body>

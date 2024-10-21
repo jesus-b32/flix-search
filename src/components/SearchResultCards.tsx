@@ -32,7 +32,7 @@ export default function SearchResultCards({
    *   Main text content (inside `CardContent`)
    */
   return (
-    <Card className="flex w-full flex-col items-center overflow-hidden sm:w-10/12 sm:flex-row sm:items-stretch">
+    <Card className="flex w-full flex-col items-center overflow-hidden border-none sm:w-10/12 sm:flex-row sm:items-stretch">
       <div className="flex w-full justify-center sm:w-1/3 sm:justify-start">
         {/* imagge is 185x278 */}
         {"title" in cinema ? (
@@ -41,10 +41,10 @@ export default function SearchResultCards({
               <img
                 src={`https://image.tmdb.org/t/p/w185${cinema.poster_path}`}
                 alt="Movie or show image"
-                className="h-auto w-full max-w-[185px] object-cover"
+                className="h-auto w-full max-w-[185px] rounded-l-lg"
               />
             ) : (
-              <ImageOff className="h-auto w-[185px] object-cover" />
+              <ImageOff className="h-auto w-[185px] rounded-l-lg" />
             )}
           </Link>
         ) : (
@@ -53,10 +53,10 @@ export default function SearchResultCards({
               <img
                 src={`https://image.tmdb.org/t/p/w185${cinema.poster_path}`}
                 alt="Movie or show image"
-                className="h-auto w-full max-w-[185px] object-cover"
+                className="h-auto w-full max-w-[185px] rounded-l-lg"
               />
             ) : (
-              <ImageOff className="h-auto w-[185px] object-cover" />
+              <ImageOff className="h-auto w-[185px] rounded-l-lg" />
             )}
           </Link>
         )}

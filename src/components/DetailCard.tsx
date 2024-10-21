@@ -21,7 +21,7 @@ export default function DetailCard({
   details: movieDetails | tvDetails;
 }) {
   return (
-    <Card className="mt-6 flex h-fit w-full flex-col items-center rounded-none md:flex-row md:items-start">
+    <Card className="mt-6 flex h-fit w-full flex-col items-center rounded-none border-none md:flex-row md:items-start">
       <div className="flex justify-center md:h-[513px] md:w-[342px] md:justify-start">
         {/* imagge is 342x513 */}
         {details?.poster_path ? (
