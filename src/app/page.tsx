@@ -2,8 +2,8 @@ import Search from "@/components/client/Search";
 
 export default function HomePage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center text-white">
-      <div className="mt-4 flex flex-col items-center justify-center gap-6">
+    <main className="flex min-h-screen flex-col items-center text-white">
+      <div className="mt-4 flex flex-col items-center gap-6">
         <h1 className="text-center text-5xl font-extrabold tracking-tight sm:text-[5rem]">
           <span className="text-[hsl(280,100%,70%)]">Welcome</span> to Flix
           Search
@@ -14,16 +14,16 @@ export default function HomePage() {
       {/* search bar component for movies and series searching*/}
       <Search />
 
-      <div className="mt-4 flex w-10/12 flex-col items-center justify-center gap-6">
+      <div className="my-6 flex w-10/12 flex-col items-center gap-4">
         <img
           src="/streamingProviders.jpg"
-          className="h-auto w-full object-cover"
+          className="h-auto w-full"
           alt="Image of some streaming providers"
         />
-        <h3 className="text-center text-2xl">
+        <h2 className="text-center text-2xl font-semibold">
           Movie and TV Show Searching made Easy
-        </h3>
-        <p className="text-left">
+        </h2>
+        <p className="text-center text-xl">
           Flix Search helps you find which streaming services have your favorite
           movies and series with a simple search.
         </p>

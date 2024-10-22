@@ -44,7 +44,7 @@ export default async function TvDetails({
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center divide-y-2 divide-slate-300">
+    <div className="flex min-h-screen flex-col items-center divide-y-2 divide-slate-300">
       <DetailCard details={TvShow} />
       <JustWatchAttribution title={TvShow.name} />
       <AvailabilityByProvider
