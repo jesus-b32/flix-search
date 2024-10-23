@@ -28,7 +28,7 @@ const sortOptions = [
   { value: "rating-desc", label: "Rating (High to Low)" },
 ];
 
-export default function MovieFilter() {
+export default function FilterSort() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -143,7 +143,7 @@ export default function MovieFilter() {
                   Filters & Sort
                 </Button>
               </SheetTrigger>
-              <SheetContent>
+              <SheetContent side="left" className="text-black">
                 <SheetHeader>
                   <SheetTitle>Filter Movies</SheetTitle>
                   <SheetDescription>
