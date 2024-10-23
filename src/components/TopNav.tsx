@@ -15,15 +15,7 @@ import {
   SheetDescription,
 } from "../components/ui/sheet";
 
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "../components/ui/navigation-menu";
-
-import { CircleUser, Clapperboard, Menu, ChevronDown } from "lucide-react";
+import { CircleUser, Clapperboard, Menu } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../components/ui/button";
 import SearchPopover from "./SearchPopover";
@@ -39,91 +31,8 @@ export default function TopNav() {
           <Clapperboard className="h-6 w-6" />
           <span className="sr-only">Flix Search</span>
         </Link>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <span className="flex cursor-pointer flex-row items-center">
-              <p className="">Discover Movies</p>
-              <ChevronDown className="ml-2 h-4 w-4" />
-            </span>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem>
-              <Link
-                href="#"
-                className="text-muted-foreground hover:text-foreground"
-              >
-                Popular
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link
-                href="#"
-                className="text-muted-foreground hover:text-foreground"
-              >
-                Top Rated
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link
-                href="#"
-                className="text-muted-foreground hover:text-foreground"
-              >
-                Now Playing
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link
-                href="#"
-                className="text-muted-foreground hover:text-foreground"
-              >
-                Upcoming
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <span className="flex cursor-pointer flex-row items-center">
-              <p>Discover TV Series</p>
-              <ChevronDown className="ml-2 h-4 w-4" />
-            </span>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>
-              <Link
-                href="#"
-                className="text-muted-foreground hover:text-foreground"
-              >
-                Popular
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link
-                href="#"
-                className="text-muted-foreground hover:text-foreground"
-              >
-                Top Rated
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link
-                href="#"
-                className="text-muted-foreground hover:text-foreground"
-              >
-                On the Air
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link
-                href="#"
-                className="text-muted-foreground hover:text-foreground"
-              >
-                Airing Today
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Link href="/movie">Discover Movies</Link>
+        <Link href="/tv">Discover TV Shows</Link>
         <Link href="/signup">Signup</Link>
         <Link href="/login">Login</Link>
       </nav>
@@ -148,112 +57,18 @@ export default function TopNav() {
               <Clapperboard className="h-6 w-6" />
               <span className="sr-only">Flix Search</span>
             </Link>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <span className="flex cursor-pointer flex-row items-center">
-                  <p className="text-muted-foreground transition-colors hover:text-foreground">
-                    Discover Movies
-                  </p>
-                  <ChevronDown className="ml-2 h-4 w-4" />
-                </span>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem>
-                  <Link
-                    href="#"
-                    className="text-muted-foreground hover:text-foreground"
-                  >
-                    Popular
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link
-                    href="#"
-                    className="text-muted-foreground hover:text-foreground"
-                  >
-                    Top Rated
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link
-                    href="#"
-                    className="text-muted-foreground hover:text-foreground"
-                  >
-                    Now Playing
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link
-                    href="#"
-                    className="text-muted-foreground hover:text-foreground"
-                  >
-                    Upcoming
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <span className="flex cursor-pointer flex-row items-center">
-                  <p className="text-muted-foreground transition-colors hover:text-foreground">
-                    Discover TV Series
-                  </p>
-                  <ChevronDown className="ml-2 h-4 w-4" />
-                </span>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem>
-                  <Link
-                    href="#"
-                    className="text-muted-foreground hover:text-foreground"
-                  >
-                    Popular
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link
-                    href="#"
-                    className="text-muted-foreground hover:text-foreground"
-                  >
-                    Top Rated
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link
-                    href="#"
-                    className="text-muted-foreground hover:text-foreground"
-                  >
-                    On the Air
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link
-                    href="#"
-                    className="text-muted-foreground hover:text-foreground"
-                  >
-                    Airing Today
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <NavigationMenu>
-              <NavigationMenuList>
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger>Item One</NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <ul className="grid w-[75px] gap-3 p-4 md:w-[100px] md:grid-cols-2 lg:w-[150px]">
-                      <li>
-                        <Link href="#">Link</Link>
-                      </li>
-                      <li>
-                        <Link href="#">Link2</Link>
-                      </li>
-                    </ul>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-              </NavigationMenuList>
-            </NavigationMenu>
-
+            <Link
+              href="/movie"
+              className="text-muted-foreground hover:text-foreground"
+            >
+              Discover Movies
+            </Link>
+            <Link
+              href="/tv"
+              className="text-muted-foreground hover:text-foreground"
+            >
+              Discover TV Shows
+            </Link>
             <Link
               href="/signup"
               className="text-muted-foreground hover:text-foreground"

@@ -50,3 +50,17 @@ export async function getMovieProviders() {
 
   return results;
 }
+
+/**
+ * Allows user to filter and sort the list of movies.
+ * Returns a list of movies that match the user's sorting and filtering options.
+ * @returns
+ */
+export async function discoverMovies(queryParams: string) {
+  const results = await getData<streamingProviderList>(
+    `discover/movie?include_adult=false&include_video=false&language=en-US&page=1&${queryParams}`,
+    // `discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc&${queryParams}`
+  );
+
+  return results;
+}
