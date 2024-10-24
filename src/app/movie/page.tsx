@@ -34,12 +34,12 @@ export default async function DiscoverMoviePage({
   return (
     <div className="flex min-h-screen flex-col items-center">
       <h1 className="my-5 text-2xl font-bold">Discover Movies</h1>
-      <div className="flex w-full flex-col items-center gap-y-6 lg:w-10/12 lg:flex-row lg:items-start lg:gap-x-4">
-        <div className="h-fit w-full md:w-10/12 lg:fixed lg:w-60">
+      <div className="flex w-full flex-col gap-y-6 md:items-center lg:w-11/12 lg:flex-row lg:items-start lg:gap-x-4">
+        <div className="h-fit w-full items-start md:w-10/12 lg:w-60">
           <FilterSort />
         </div>
 
-        <div className="mb-5 flex w-full flex-col items-center gap-y-6 lg:items-end">
+        <div className="mb-5 flex w-full flex-col items-center gap-y-6 lg:w-3/4">
           {movies.results.map((movie) => (
             <SearchResultCards key={movie.id} cinema={movie} />
           ))}
@@ -49,3 +49,8 @@ export default async function DiscoverMoviePage({
     </div>
   );
 }
+
+//  <div className="flex w-full flex-col items-center gap-y-6 lg:w-10/12 lg:flex-row lg:items-start lg:gap-x-4"></div>
+// <div className="h-fit w-full md:w-10/12 lg:fixed lg:w-60">
+//   <FilterSort />
+// </div>;
