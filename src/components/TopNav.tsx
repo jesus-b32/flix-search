@@ -31,8 +31,10 @@ export default function TopNav() {
           <Clapperboard className="h-6 w-6" />
           <span className="sr-only">Flix Search</span>
         </Link>
-        <Link href="/movie">Discover Movies</Link>
-        <Link href="/tv">Discover TV Shows</Link>
+        <Link href="/movie?sort_by=popularity.desc&page=1">
+          Discover Movies
+        </Link>
+        <Link href="/tv?sort_by=popularity.desc&page=1">Discover TV Shows</Link>
         <Link href="/signup">Signup</Link>
         <Link href="/login">Login</Link>
       </nav>
@@ -58,13 +60,13 @@ export default function TopNav() {
               <span className="sr-only">Flix Search</span>
             </Link>
             <Link
-              href="/movie"
+              href="/movie?sort_by=popularity.desc&page=1"
               className="text-muted-foreground hover:text-foreground"
             >
               Discover Movies
             </Link>
             <Link
-              href="/tv"
+              href="/tv?sort_by=popularity.desc&page=1"
               className="text-muted-foreground hover:text-foreground"
             >
               Discover TV Shows

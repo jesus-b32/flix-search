@@ -37,7 +37,12 @@ export default function PaginationComponent({
   const createPageURL = (pageNumber: number) => {
     //create a url friendly search params
     const params = new URLSearchParams(searchParams);
-    params.set("search", searchTerm);
+    if (searchTerm === "") {
+      params.delete("search");
+    } else {
+      params.set("search", searchTerm);
+    }
+    // params.set("search", searchTerm);
     params.set("page", pageNumber.toString());
     return `${pathname}?${params.toString()}`;
   };

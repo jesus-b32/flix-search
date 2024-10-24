@@ -10,21 +10,21 @@ export default async function DiscoverMoviePage({
 }: {
   searchParams: Record<string, string | string[] | undefined>;
 }) {
-  const params = new URLSearchParams();
+  /**
+   * Convert searchParams to URLSearchParams
+   * Remove undefined values, convert arrays to comma-separated strings, and append to URLSearchParams.
+   * @see https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams
+   */
+  const params = new URLSearchParams(
+    Object.entries(searchParams).reduce((acc, [key, value]) => {
+      if (value !== undefined) {
+        acc.append(key, Array.isArray(value) ? value.join(",") : value);
+      }
+      return acc;
+    }, new URLSearchParams()),
+  );
 
-  // console.log("searchParams: ", searchParams);
-  // console.log("URLSearchParams: ", params);
-
-  // no search params in URL
-  if (Object.keys(searchParams).length === 0) {
-    // console.log("No search params");
-    params.append("page", "1");
-    params.append("sort_by", "popularity.desc");
-  }
-
-  // console.log("params after append: ", params);
-  // console.log("New Params: ", params.toString());
-
+  console.log("params: ", params.toString());
   const movies = await discoverMovies(params.toString());
 
   if (movies instanceof Error) {
