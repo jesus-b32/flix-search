@@ -126,10 +126,10 @@ export default function FilterSort() {
   );
 
   return (
-    <div className="relative">
-      <Card className="mx-auto w-full max-w-sm lg:mx-0">
+    <>
+      <Card className="w-full">
         <CardHeader>
-          <CardTitle>Filter Movies</CardTitle>
+          <CardTitle className="text-center">Filter Movies</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="hidden lg:block">
@@ -166,6 +166,6 @@ export default function FilterSort() {
           </Button>
         </div>
       )}
-    </div>
+    </>
   );
 }

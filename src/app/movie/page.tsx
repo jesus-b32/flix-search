@@ -34,12 +34,12 @@ export default async function DiscoverMoviePage({
   return (
     <div className="flex min-h-screen flex-col items-center">
       <h1 className="my-5 text-2xl font-bold">Discover Movies</h1>
-      <div className="flex w-full flex-col justify-items-start gap-y-6 lg:w-10/12 lg:flex-row lg:gap-x-4">
-        <div className="">
+      <div className="flex w-full flex-col items-center gap-y-6 lg:w-10/12 lg:flex-row lg:items-start lg:gap-x-4">
+        <div className="h-fit w-full md:w-10/12 lg:fixed lg:w-60">
           <FilterSort />
         </div>
 
-        <div className="mb-5 flex w-full flex-col items-center gap-y-6">
+        <div className="mb-5 flex w-full flex-col items-center gap-y-6 lg:items-end">
           {movies.results.map((movie) => (
             <SearchResultCards key={movie.id} cinema={movie} />
           ))}
