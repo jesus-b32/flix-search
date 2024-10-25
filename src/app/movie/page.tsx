@@ -4,6 +4,9 @@ import PaginationComponent from "@/components/client/Pagination";
 import Link from "next/link";
 // import { Button } from "@/components/ui/button";
 import FilterSort from "@/components/client/FilterSort";
+import { languagesList } from "@/server/actions/types";
+import { getGenreMovies } from "@/server/actions/movies/actions";
+import { getLanguages } from "@/server/actions/actions";
 
 export default async function DiscoverMoviePage({
   searchParams,
@@ -26,9 +29,17 @@ export default async function DiscoverMoviePage({
 
   console.log("params: ", params.toString());
   const movies = await discoverMovies(params.toString());
+  const genres = await getGenreMovies();
+  const languages = await getLanguages();
 
   if (movies instanceof Error) {
-    throw new Error(`Failed to fetch data: ${movies}`);
+    throw new Error(`Failed to fetch movie data: ${movies}`);
+  }
+  if (genres instanceof Error) {
+    throw new Error(`Failed to fetch genre data: ${genres}`);
+  }
+  if (languages instanceof Error) {
+    throw new Error(`Failed to fetch language data: ${languages}`);
   }
 
   return (
@@ -36,7 +47,7 @@ export default async function DiscoverMoviePage({
       <h1 className="my-5 text-2xl font-bold">Discover Movies</h1>
       <div className="flex w-full flex-col gap-y-6 md:items-center lg:w-11/12 lg:flex-row lg:items-start lg:gap-x-4">
         <div className="h-fit w-full items-start md:w-10/12 lg:w-60">
-          <FilterSort />
+          <FilterSort genreList={genres} languageList={languages} />
         </div>
 
         <div className="mb-5 flex w-full flex-col items-center gap-y-6 lg:w-3/4">

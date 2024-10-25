@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+// import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Sheet,
   SheetContent,
@@ -17,34 +17,58 @@ import {
 } from "@/components/ui/sheet";
 import { SlidersHorizontal } from "lucide-react";
 
-const genres = ["Action", "Comedy", "Drama", "Sci-Fi", "Horror"];
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+import type { genresList, languagesList } from "@/server/actions/types";
+
 const ratings = ["G", "PG", "PG-13", "R"];
 const sortOptions = [
-  { value: "title-asc", label: "Title (A-Z)" },
-  { value: "title-desc", label: "Title (Z-A)" },
-  { value: "year-asc", label: "Year (Oldest)" },
-  { value: "year-desc", label: "Year (Newest)" },
-  { value: "rating-asc", label: "Rating (Low to High)" },
-  { value: "rating-desc", label: "Rating (High to Low)" },
+  { value: "popularity.asc", label: "Popularity (Low - High)" },
+  { value: "popularity.desc", label: "Popularity (High - Low)" },
+  { value: "vote_average.asc", label: "Rating (Low - High)" },
+  { value: "vote_average.desc", label: "Rating (High - Low)" },
+  { value: "primary_release_date.asc", label: "Release Date (Oldest)" },
+  { value: "primary_release_date.desc", label: "Release Date (Newest)" },
+  { value: "title.asc", label: "Title (A-Z)" },
+  { value: "title.desc", label: "Title (Z-A)" },
 ];
 
-export default function FilterSort() {
+export default function FilterSort({
+  genreList,
+  languageList,
+}: {
+  genreList: genresList;
+  languageList: languagesList;
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
 
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [selectedRatings, setSelectedRatings] = useState<string[]>([]);
-  const [sortBy, setSortBy] = useState("title-asc");
+  const [sortBy, setSortBy] = useState("popularity.desc");
+  const [originalLanguage, setOriginaLanguage] = useState("");
   const [isChanged, setIsChanged] = useState(false);
 
   useEffect(() => {
-    const genresParam = searchParams.get("genres");
+    const genresParam = searchParams.get("with_genres");
     const ratingsParam = searchParams.get("ratings");
-    const sortParam = searchParams.get("sort");
+    const sortParam = searchParams.get("sort_by");
+    const languageParam = searchParams.get("with_original_language");
 
+    /**
+     * If param exists, create an array of selected genres and set it in state
+     */
     if (genresParam) setSelectedGenres(genresParam.split(","));
     if (ratingsParam) setSelectedRatings(ratingsParam.split(","));
     if (sortParam) setSortBy(sortParam);
+    if (languageParam) setOriginaLanguage(languageParam);
   }, [searchParams]);
 
   const handleGenreChange = (genre: string) => {
@@ -68,37 +92,72 @@ export default function FilterSort() {
     setIsChanged(true);
   };
 
-  const handleSearch = () => {
-    const params = new URLSearchParams();
-    if (selectedGenres.length) params.set("genres", selectedGenres.join(","));
-    if (selectedRatings.length)
-      params.set("ratings", selectedRatings.join(","));
-    params.set("sort", sortBy);
+  const handleOriginalLanguageChange = (value: string) => {
+    setOriginaLanguage(value);
+    setIsChanged(true);
+  };
 
-    router.push(`?${params.toString()}`);
+  /**
+   * Constructs a URLSearchParams object from the selected genres, ratings,
+   * and sort options, then updates the browser's URL with these parameters.
+   * Resets the isChanged state to false after the search is executed.
+   */
+  const handleSearch = () => {
+    const params = new URLSearchParams(searchParams);
+    if (selectedGenres.length) {
+      params.set("with_genres", selectedGenres.join(","));
+    } else {
+      params.delete("with_genres");
+    }
+    if (selectedRatings.length) {
+      params.set("ratings", selectedRatings.join(","));
+    } else {
+      params.delete("ratings");
+    }
+    params.set("sort_by", sortBy);
+    if (originalLanguage)
+      params.set("with_original_language", originalLanguage);
+    params.set("page", "1");
+
+    router.push(`${pathname}?${params.toString()}`);
     setIsChanged(false);
   };
 
   const FilterContent = () => (
-    <div className="space-y-6">
-      <div>
-        <h3 className="mb-4 text-sm font-medium">Genres</h3>
-        <div className="space-y-2">
-          {genres.map((genre) => (
-            <div key={genre} className="flex items-center space-x-2">
+    <div className="w-full space-y-6 divide-y-2">
+      <div className="">
+        <h3 className="my-4 ml-4 font-semibold">Sort By</h3>
+        <Select value={sortBy} onValueChange={handleSortChange}>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select a sorting option" />
+          </SelectTrigger>
+          <SelectContent>
+            {sortOptions.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="">
+        <h3 className="my-4 ml-4 font-semibold">Genres</h3>
+        <div className="ml-4 space-y-2">
+          {genreList.genres.map((genre) => (
+            <div key={genre.id} className="flex items-center space-x-2">
               <Checkbox
-                id={`genre-${genre}`}
-                checked={selectedGenres.includes(genre)}
-                onCheckedChange={() => handleGenreChange(genre)}
+                id={genre.id.toString()}
+                checked={selectedGenres.includes(genre.id.toString())}
+                onCheckedChange={() => handleGenreChange(genre.id.toString())}
               />
-              <Label htmlFor={`genre-${genre}`}>{genre}</Label>
+              <Label htmlFor={genre.id.toString()}>{genre.name}</Label>
             </div>
           ))}
         </div>
       </div>
-      <div>
-        <h3 className="mb-4 text-sm font-medium">Ratings</h3>
-        <div className="space-y-2">
+      <div className="pb-6">
+        <h3 className="my-4 ml-4 font-semibold">Ratings</h3>
+        <div className="ml-4 space-y-2">
           {ratings.map((rating) => (
             <div key={rating} className="flex items-center space-x-2">
               <Checkbox
@@ -111,27 +170,34 @@ export default function FilterSort() {
           ))}
         </div>
       </div>
-      <div>
-        <h3 className="mb-4 text-sm font-medium">Sort By</h3>
-        <RadioGroup value={sortBy} onValueChange={handleSortChange}>
-          {sortOptions.map((option) => (
-            <div key={option.value} className="flex items-center space-x-2">
-              <RadioGroupItem value={option.value} id={option.value} />
-              <Label htmlFor={option.value}>{option.label}</Label>
-            </div>
-          ))}
-        </RadioGroup>
+      <div className="">
+        <h3 className="my-4 ml-4 font-semibold">Language</h3>
+        <Select
+          value={originalLanguage}
+          onValueChange={handleOriginalLanguageChange}
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select Language" />
+          </SelectTrigger>
+          <SelectContent>
+            {languageList.map((language) => (
+              <SelectItem key={language.iso_639_1} value={language.iso_639_1}>
+                {language.english_name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
     </div>
   );
 
   return (
     <>
-      <Card className="w-full">
+      <Card className="w-full divide-y-2">
         <CardHeader>
-          <CardTitle className="text-center">Filter Movies</CardTitle>
+          <CardTitle className="text-center font-bold">Filter Movies</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0">
           <div className="hidden lg:block">
             <FilterContent />
           </div>

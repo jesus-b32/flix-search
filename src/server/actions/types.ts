@@ -304,3 +304,27 @@ export type streamingProviderList = {
     provider_name: string;
   }[];
 };
+
+/**
+ * type for list of genre data TMDB has for movies and tv shows
+ * @see https://developer.themoviedb.org/reference/genre-movie-list
+ * @see https://developer.themoviedb.org/reference/genre-tv-list
+ */
+export type genresList = {
+  genres: {
+    id: number;
+    name: string;
+  }[];
+};
+
+/**
+ * type for list of languages used throughout TMDB
+ * @see https://developer.themoviedb.org/reference/configuration-languages
+ */
+export type languagesList = [
+  {
+    iso_639_1: string;
+    english_name: string;
+    name: string;
+  },
+];
