@@ -27,15 +27,26 @@ export default function AvailabilityByCountry({
 }) {
   const title = "title" in details ? details.title : details.name;
   const watchProviders = details["watch/providers"].results;
+  const availableCountries = Object.keys(watchProviders);
+
+  // filter countries based on available countries
+  const filteredCountries = countries.filter((country) =>
+    availableCountries.includes(country.iso_3166_1),
+  ) as countryList;
+
   const watchProviderCountry =
-    watchProviders[selectedCountry as keyof typeof watchProviders];
-  const selectedCountryName = countries.find(
-    (country) => country.iso_3166_1 === selectedCountry,
-  )?.native_name;
+    watchProviders?.[selectedCountry as keyof typeof watchProviders] ??
+    watchProviders[availableCountries[0] as keyof typeof watchProviders];
+
+  const selectedCountryName = availableCountries.includes(selectedCountry)
+    ? countries.find((country) => country.iso_3166_1 === selectedCountry)
+        ?.native_name
+    : countries.find((country) => country.iso_3166_1 === availableCountries[0])
+        ?.native_name;
 
   return (
     <div className="flex w-full flex-col items-center justify-center py-6 md:w-10/12 md:justify-start">
-      {!watchProviders ? null : Object.keys(watchProviders).length === 0 ? (
+      {availableCountries.length === 0 ? (
         <h1 className="text-2xl font-bold">
           {`No Streaming data available for ${title}`}
         </h1>
@@ -43,7 +54,7 @@ export default function AvailabilityByCountry({
         <>
           <div className="flex w-full flex-col items-center justify-center gap-4 md:flex-row md:justify-start">
             <span className="text-xl font-semibold">Select Country:</span>
-            <SelectSearch data={countries} />
+            <SelectSearch data={filteredCountries} />
           </div>
           <div className="mt-6 flex w-full flex-col">
             <h2 className="mb-3 px-6 text-2xl font-bold md:px-0">
