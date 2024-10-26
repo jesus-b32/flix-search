@@ -1,10 +1,10 @@
-import { discoverMovies } from "@/server/actions/movies/actions";
+// client and server Components
 import SearchResultCards from "@/components/SearchResultCards";
 import PaginationComponent from "@/components/client/Pagination";
-import Link from "next/link";
-// import { Button } from "@/components/ui/button";
 import FilterSort from "@/components/client/FilterSort";
-import { languagesList } from "@/server/actions/types";
+
+// Server Actions
+import { discoverMovies } from "@/server/actions/movies/actions";
 import { getGenreMovies } from "@/server/actions/movies/actions";
 import { getLanguages } from "@/server/actions/actions";
 
@@ -27,7 +27,6 @@ export default async function DiscoverMoviePage({
     }, new URLSearchParams()),
   );
 
-  console.log("params: ", params.toString());
   const movies = await discoverMovies(params.toString());
   const genres = await getGenreMovies();
   const languages = await getLanguages();
@@ -41,6 +40,13 @@ export default async function DiscoverMoviePage({
   if (languages instanceof Error) {
     throw new Error(`Failed to fetch language data: ${languages}`);
   }
+
+  // Add "All Languages" option to the top of languages list
+  languages.unshift({
+    iso_639_1: "all",
+    name: "All Languages",
+    english_name: "All Languages",
+  });
 
   return (
     <div className="flex min-h-screen flex-col items-center">

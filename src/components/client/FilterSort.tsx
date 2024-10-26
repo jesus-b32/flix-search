@@ -2,11 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
+
+// UI Components
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-// import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Sheet,
   SheetContent,
@@ -15,8 +16,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { SlidersHorizontal } from "lucide-react";
-
+import { SlidersHorizontal, Check, ChevronsUpDown } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -24,10 +24,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
+// type definitions
 import type { genresList, languagesList } from "@/server/actions/types";
 
-const ratings = ["G", "PG", "PG-13", "R"];
+//sorting options for TMDB API
 const sortOptions = [
   { value: "popularity.asc", label: "Popularity (Low - High)" },
   { value: "popularity.desc", label: "Popularity (High - Low)" },
@@ -50,15 +65,19 @@ export default function FilterSort({
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
+  // State of different sorting and filtering options
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
-  const [selectedRatings, setSelectedRatings] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState("popularity.desc");
-  const [originalLanguage, setOriginaLanguage] = useState("");
-  const [isChanged, setIsChanged] = useState(false);
+  const [originalLanguage, setOriginaLanguage] = useState("all");
 
+  //state that tracks if filter or sorting options have been changed
+  const [isChanged, setIsChanged] = useState(false);
+  // open state of language select
+  const [open, setOpen] = useState(false);
+
+  // Whenever search params in URL changes, get the new sorting and filter options from the URL search params and update the state of those values if the search parameter exists
   useEffect(() => {
     const genresParam = searchParams.get("with_genres");
-    const ratingsParam = searchParams.get("ratings");
     const sortParam = searchParams.get("sort_by");
     const languageParam = searchParams.get("with_original_language");
 
@@ -66,11 +85,16 @@ export default function FilterSort({
      * If param exists, create an array of selected genres and set it in state
      */
     if (genresParam) setSelectedGenres(genresParam.split(","));
-    if (ratingsParam) setSelectedRatings(ratingsParam.split(","));
     if (sortParam) setSortBy(sortParam);
     if (languageParam) setOriginaLanguage(languageParam);
   }, [searchParams]);
 
+  /**
+   * Updates the selected genres by toggling the given genre in the list of
+   * selected genres. If the genre is already in the list, it is removed; if it is
+   * not in the list, it is added.
+   * @param {string} genre - The genre to be toggled.
+   */
   const handleGenreChange = (genre: string) => {
     setSelectedGenres((prev) =>
       prev.includes(genre) ? prev.filter((g) => g !== genre) : [...prev, genre],
@@ -78,29 +102,22 @@ export default function FilterSort({
     setIsChanged(true);
   };
 
-  const handleRatingChange = (rating: string) => {
-    setSelectedRatings((prev) =>
-      prev.includes(rating)
-        ? prev.filter((r) => r !== rating)
-        : [...prev, rating],
-    );
-    setIsChanged(true);
-  };
-
+  /**
+   * Updates the sortBy state with the provided value and sets the isChanged
+   * state to true, indicating that a change has been made to the sorting options.
+   * @param {string} value - The new sorting option to be applied.
+   */
   const handleSortChange = (value: string) => {
     setSortBy(value);
     setIsChanged(true);
   };
 
-  const handleOriginalLanguageChange = (value: string) => {
-    setOriginaLanguage(value);
-    setIsChanged(true);
-  };
-
   /**
-   * Constructs a URLSearchParams object from the selected genres, ratings,
-   * and sort options, then updates the browser's URL with these parameters.
-   * Resets the isChanged state to false after the search is executed.
+   * Handles the search by updating the URL search parameters with the current
+   * values of selected genres, sort by, and original language. If the selected
+   * genres array is empty, the "with_genres" parameter is removed from the search
+   * params. The "page" parameter is always set to 1.
+   * When the search is handled, the isChanged state is set to false.
    */
   const handleSearch = () => {
     const params = new URLSearchParams(searchParams);
@@ -109,20 +126,92 @@ export default function FilterSort({
     } else {
       params.delete("with_genres");
     }
-    if (selectedRatings.length) {
-      params.set("ratings", selectedRatings.join(","));
-    } else {
-      params.delete("ratings");
-    }
-    params.set("sort_by", sortBy);
-    if (originalLanguage)
+
+    if (originalLanguage && originalLanguage !== "all") {
       params.set("with_original_language", originalLanguage);
+    } else {
+      params.delete("with_original_language");
+    }
+
+    params.set("sort_by", sortBy);
     params.set("page", "1");
 
     router.push(`${pathname}?${params.toString()}`);
     setIsChanged(false);
   };
 
+  /**
+   * A component that renders a searchable and selectable popover list for
+   * languages. It allows users to filter and select languages from the
+   * provided languageList, updating the originalLanguage state and the
+   * URL search parameters.
+   * @returns A React component for selecting and searching through the given
+   * languageList.
+   */
+  const LanguageSelect = () => (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="secondary"
+          role="combobox"
+          aria-expanded={open}
+          className="w-[200px] justify-between"
+        >
+          {
+            languageList.find(
+              (language) => language.iso_639_1 === originalLanguage,
+            )?.english_name
+          }
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[200px] p-0">
+        <Command>
+          <CommandInput placeholder={"Select language..."} />
+          <CommandList>
+            <CommandEmpty>{"No languages found"}</CommandEmpty>
+            <CommandGroup>
+              {languageList.map((language) => (
+                <CommandItem
+                  key={language.iso_639_1}
+                  value={language.english_name.toLowerCase()}
+                  onSelect={(currentValue) => {
+                    setOriginaLanguage(
+                      languageList.find(
+                        (language) =>
+                          language.english_name.toLowerCase() === currentValue,
+                      )?.iso_639_1 ?? "",
+                    );
+                    setOpen(false);
+                    setIsChanged(true);
+                  }}
+                >
+                  <Check
+                    className={cn(
+                      "mr-2 h-4 w-4",
+                      originalLanguage === language.english_name.toLowerCase()
+                        ? "opacity-100"
+                        : "opacity-0",
+                    )}
+                  />
+                  {language.english_name}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+
+  /**
+   * The content of the filter sheet. It contains 3 sections for sorting,
+   * selecting genres, and selecting the original language. The sorting options
+   * are given as an array of objects with a value and label property.
+   * The genre list is given as an array of objects with an id and name
+   * property. The original language is given as a string.
+   * @returns The content of the filter sheet.
+   */
   const FilterContent = () => (
     <div className="w-full space-y-6 divide-y-2">
       <div className="">
@@ -156,37 +245,8 @@ export default function FilterSort({
         </div>
       </div>
       <div className="pb-6">
-        <h3 className="my-4 ml-4 font-semibold">Ratings</h3>
-        <div className="ml-4 space-y-2">
-          {ratings.map((rating) => (
-            <div key={rating} className="flex items-center space-x-2">
-              <Checkbox
-                id={`rating-${rating}`}
-                checked={selectedRatings.includes(rating)}
-                onCheckedChange={() => handleRatingChange(rating)}
-              />
-              <Label htmlFor={`rating-${rating}`}>{rating}</Label>
-            </div>
-          ))}
-        </div>
-      </div>
-      <div className="">
         <h3 className="my-4 ml-4 font-semibold">Language</h3>
-        <Select
-          value={originalLanguage}
-          onValueChange={handleOriginalLanguageChange}
-        >
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select Language" />
-          </SelectTrigger>
-          <SelectContent>
-            {languageList.map((language) => (
-              <SelectItem key={language.iso_639_1} value={language.iso_639_1}>
-                {language.english_name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <LanguageSelect />
       </div>
     </div>
   );
