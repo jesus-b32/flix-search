@@ -40,7 +40,7 @@ export default function AvailabilityByProvider({
 
   return (
     <div className="flex w-full flex-col items-center justify-center py-6 md:w-10/12 md:justify-start">
-      {!watchProviders ? null : Object.keys(watchProviders).length === 0 ? (
+      {Object.keys(watchProviders).length === 0 ? (
         <h1 className="text-2xl font-bold">
           {`No Streaming data available for ${title}`}
         </h1>
@@ -57,42 +57,39 @@ export default function AvailabilityByProvider({
               {`${title} is available on ${selectedStreamingProviderName} in the following countries:`}
             </h2>
             <div className="grid grid-cols-1 justify-items-center gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
-              {!watchProviders
-                ? null
-                : Object.entries(watchProviders).map(
-                    ([country, providerCountry]) =>
-                      Object.values(providerCountry).map((providerDetails) =>
-                        typeof providerDetails !== "string"
-                          ? providerDetails.map((provider) =>
-                              provider.provider_id.toString() ===
-                              selectedStreamingProviderId ? (
-                                <Card
-                                  key={country}
-                                  className="flex h-48 w-40 flex-col items-center border-none"
-                                >
-                                  <div className="flex justify-center">
-                                    <img
-                                      alt="country flag"
-                                      src={`http://purecatamphetamine.github.io/country-flag-icons/3x2/${country}.svg`}
-                                      className="h-auto w-40 rounded-t-lg border-b border-slate-300 object-cover"
-                                    />
-                                  </div>
-                                  <div className="flex flex-col flex-wrap">
-                                    <CardHeader className="px-1 pt-2">
-                                      <CardTitle className="text-center text-xl">
-                                        {countries.find(
-                                          (nation) =>
-                                            nation.iso_3166_1 === country,
-                                        )?.native_name ?? "N/A"}
-                                      </CardTitle>
-                                    </CardHeader>
-                                  </div>
-                                </Card>
-                              ) : null,
-                            )
-                          : null,
-                      ),
-                  )}
+              {Object.entries(watchProviders).map(
+                ([country, providerCountry]) =>
+                  Object.values(providerCountry).map((providerDetails) =>
+                    typeof providerDetails !== "string"
+                      ? providerDetails.map((provider) =>
+                          provider.provider_id.toString() ===
+                          selectedStreamingProviderId ? (
+                            <Card
+                              key={country}
+                              className="flex h-48 w-40 flex-col items-center border-none"
+                            >
+                              <div className="flex justify-center">
+                                <img
+                                  alt="country flag"
+                                  src={`http://purecatamphetamine.github.io/country-flag-icons/3x2/${country}.svg`}
+                                  className="h-auto w-40 rounded-t-lg border-b border-slate-300 object-cover"
+                                />
+                              </div>
+                              <div className="flex flex-col flex-wrap">
+                                <CardHeader className="px-1 pt-2">
+                                  <CardTitle className="text-center text-xl">
+                                    {countries.find(
+                                      (nation) => nation.iso_3166_1 === country,
+                                    )?.native_name ?? "N/A"}
+                                  </CardTitle>
+                                </CardHeader>
+                              </div>
+                            </Card>
+                          ) : null,
+                        )
+                      : null,
+                  ),
+              )}
             </div>
           </div>
         </>
