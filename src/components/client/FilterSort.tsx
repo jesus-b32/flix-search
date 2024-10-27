@@ -52,7 +52,7 @@ import {
 } from "lucide-react";
 
 import { format } from "date-fns";
-// import { UTCDate } from "@date-fns/utc";
+import { UTCDate } from "@date-fns/utc";
 
 //sorting options for TMDB API
 const sortOptions = [
@@ -81,8 +81,8 @@ export default function FilterSort({
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState("popularity.desc");
   const [originalLanguage, setOriginaLanguage] = useState("all");
-  const [releaseDateGte, setReleaseDateGte] = useState<string | null>(null);
-  const [releaseDateLte, setReleaseDateLte] = useState<string | null>(null);
+  const [releaseDateGte, setReleaseDateGte] = useState<Date | null>(null);
+  const [releaseDateLte, setReleaseDateLte] = useState<Date | null>(null);
 
   //state that tracks if filter or sorting options have been changed
   const [isChanged, setIsChanged] = useState(false);
@@ -97,14 +97,14 @@ export default function FilterSort({
     const releaseDateGteParam = searchParams.get("primary_release_date.gte");
     const releaseDateLteParam = searchParams.get("primary_release_date.lte");
 
-    /**
-     * If param exists, create an array of selected genres and set it in state
-     */
+    // If param exists, create an array of selected genres and set it in state
     if (genresParam) setSelectedGenres(genresParam.split(","));
     if (sortParam) setSortBy(sortParam);
     if (languageParam) setOriginaLanguage(languageParam);
-    if (releaseDateGteParam) setReleaseDateGte(releaseDateGteParam);
-    if (releaseDateLteParam) setReleaseDateLte(releaseDateLteParam);
+    if (releaseDateGteParam)
+      setReleaseDateGte(new UTCDate(releaseDateGteParam));
+    if (releaseDateLteParam)
+      setReleaseDateLte(new UTCDate(releaseDateLteParam));
   }, [searchParams]);
 
   /**
@@ -137,13 +137,6 @@ export default function FilterSort({
    * params. The "page" parameter is always set to 1.
    * When the search is handled, the isChanged state is set to false.
    */
-  console.log("release date GTE", releaseDateGte);
-
-  if (releaseDateGte) {
-    console.log("release date GTE Date format", new Date(releaseDateGte));
-  }
-  // console.log("release date GTE Date format", new Date(releaseDateGte));
-
   const handleSearch = () => {
     const params = new URLSearchParams(searchParams);
     if (selectedGenres.length) {
@@ -159,12 +152,18 @@ export default function FilterSort({
     }
 
     if (releaseDateGte) {
-      params.set("primary_release_date.gte", releaseDateGte);
+      params.set(
+        "primary_release_date.gte",
+        format(releaseDateGte, "yyyy-MM-dd"),
+      );
     } else {
       params.delete("primary_release_date.gte");
     }
     if (releaseDateLte) {
-      params.set("primary_release_date.lte", releaseDateLte);
+      params.set(
+        "primary_release_date.lte",
+        format(releaseDateLte, "yyyy-MM-dd"),
+      );
     } else {
       params.delete("primary_release_date.lte");
     }
@@ -244,10 +243,9 @@ export default function FilterSort({
     date,
     setDate,
   }: {
-    date: string | null;
-    setDate: Dispatch<SetStateAction<string | null>>;
+    date: Date | null;
+    setDate: Dispatch<SetStateAction<Date | null>>;
   }) => {
-    const dataFormat = date ? new Date(date) : null;
     return (
       <Popover>
         <PopoverTrigger asChild>
@@ -261,7 +259,7 @@ export default function FilterSort({
             <CalendarIcon />
             {date !== null ? (
               // format(April 29th, 2024) that will display when date selected
-              format(date, "yyyy-MM-dd")
+              format(date, "PPP")
             ) : (
               <span>Pick a date</span>
             )}
@@ -270,11 +268,9 @@ export default function FilterSort({
         <PopoverContent className="w-auto p-0">
           <Calendar
             mode="single"
-            // need to change timezone to UTC
-            selected={dataFormat ? dataFormat : undefined}
-            // selected={date ? new Date(date) : undefined}
+            selected={date ? date : undefined}
             onSelect={(date) => {
-              setDate(date ? format(date, "yyyy-MM-dd") : null);
+              setDate(date ? date : null);
               setIsChanged(true);
             }}
             initialFocus
