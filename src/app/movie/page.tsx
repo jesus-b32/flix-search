@@ -50,16 +50,22 @@ export default async function DiscoverMoviePage({
 
   return (
     <div className="flex min-h-screen flex-col items-center">
-      <h1 className="my-5 text-2xl font-bold">Discover Movies</h1>
+      <h1 className="my-5 text-4xl font-bold">Discover Movies</h1>
       <div className="flex w-full flex-col gap-y-6 md:items-center lg:w-11/12 lg:flex-row lg:items-start lg:gap-x-4">
         <div className="h-fit w-full items-start md:w-10/12 lg:w-60">
           <FilterSort genreList={genres} languageList={languages} />
         </div>
 
         <div className="mb-5 flex w-full flex-col items-center gap-y-6 lg:w-3/4">
-          {movies.results.map((movie) => (
-            <SearchResultCards key={movie.id} cinema={movie} />
-          ))}
+          {movies.results.length > 0 ? (
+            movies.results.map((movie) => (
+              <SearchResultCards key={movie.id} cinema={movie} />
+            ))
+          ) : (
+            <h2 className="text-2xl font-bold">
+              No movies found that match your query.
+            </h2>
+          )}
         </div>
       </div>
       <PaginationComponent totalPages={movies.total_pages} />

@@ -16,7 +16,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { SlidersHorizontal, Check, ChevronsUpDown } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -38,9 +37,22 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 
 // type definitions
 import type { genresList, languagesList } from "@/server/actions/types";
+import type { Dispatch, SetStateAction } from "react";
+
+// icons
+import {
+  SlidersHorizontal,
+  Check,
+  ChevronsUpDown,
+  Calendar as CalendarIcon,
+} from "lucide-react";
+
+import { format } from "date-fns";
+// import { UTCDate } from "@date-fns/utc";
 
 //sorting options for TMDB API
 const sortOptions = [
@@ -69,6 +81,8 @@ export default function FilterSort({
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState("popularity.desc");
   const [originalLanguage, setOriginaLanguage] = useState("all");
+  const [releaseDateGte, setReleaseDateGte] = useState<string | null>(null);
+  const [releaseDateLte, setReleaseDateLte] = useState<string | null>(null);
 
   //state that tracks if filter or sorting options have been changed
   const [isChanged, setIsChanged] = useState(false);
@@ -80,6 +94,8 @@ export default function FilterSort({
     const genresParam = searchParams.get("with_genres");
     const sortParam = searchParams.get("sort_by");
     const languageParam = searchParams.get("with_original_language");
+    const releaseDateGteParam = searchParams.get("primary_release_date.gte");
+    const releaseDateLteParam = searchParams.get("primary_release_date.lte");
 
     /**
      * If param exists, create an array of selected genres and set it in state
@@ -87,6 +103,8 @@ export default function FilterSort({
     if (genresParam) setSelectedGenres(genresParam.split(","));
     if (sortParam) setSortBy(sortParam);
     if (languageParam) setOriginaLanguage(languageParam);
+    if (releaseDateGteParam) setReleaseDateGte(releaseDateGteParam);
+    if (releaseDateLteParam) setReleaseDateLte(releaseDateLteParam);
   }, [searchParams]);
 
   /**
@@ -119,6 +137,13 @@ export default function FilterSort({
    * params. The "page" parameter is always set to 1.
    * When the search is handled, the isChanged state is set to false.
    */
+  console.log("release date GTE", releaseDateGte);
+
+  if (releaseDateGte) {
+    console.log("release date GTE Date format", new Date(releaseDateGte));
+  }
+  // console.log("release date GTE Date format", new Date(releaseDateGte));
+
   const handleSearch = () => {
     const params = new URLSearchParams(searchParams);
     if (selectedGenres.length) {
@@ -131,6 +156,17 @@ export default function FilterSort({
       params.set("with_original_language", originalLanguage);
     } else {
       params.delete("with_original_language");
+    }
+
+    if (releaseDateGte) {
+      params.set("primary_release_date.gte", releaseDateGte);
+    } else {
+      params.delete("primary_release_date.gte");
+    }
+    if (releaseDateLte) {
+      params.set("primary_release_date.lte", releaseDateLte);
+    } else {
+      params.delete("primary_release_date.lte");
     }
 
     params.set("sort_by", sortBy);
@@ -204,6 +240,49 @@ export default function FilterSort({
     </Popover>
   );
 
+  const DateSelector = ({
+    date,
+    setDate,
+  }: {
+    date: string | null;
+    setDate: Dispatch<SetStateAction<string | null>>;
+  }) => {
+    const dataFormat = date ? new Date(date) : null;
+    return (
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button
+            variant={"outline"}
+            className={cn(
+              "w-full justify-start text-left font-normal",
+              !date && "text-muted-foreground",
+            )}
+          >
+            <CalendarIcon />
+            {date !== null ? (
+              // format(April 29th, 2024) that will display when date selected
+              format(date, "yyyy-MM-dd")
+            ) : (
+              <span>Pick a date</span>
+            )}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0">
+          <Calendar
+            mode="single"
+            // need to change timezone to UTC
+            selected={dataFormat ? dataFormat : undefined}
+            // selected={date ? new Date(date) : undefined}
+            onSelect={(date) => {
+              setDate(date ? format(date, "yyyy-MM-dd") : null);
+              setIsChanged(true);
+            }}
+            initialFocus
+          />
+        </PopoverContent>
+      </Popover>
+    );
+  };
   /**
    * The content of the filter sheet. It contains 3 sections for sorting,
    * selecting genres, and selecting the original language. The sorting options
@@ -244,9 +323,20 @@ export default function FilterSort({
           ))}
         </div>
       </div>
-      <div className="pb-6">
+      <div className="">
         <h3 className="my-4 ml-4 font-semibold">Language</h3>
         <LanguageSelect />
+      </div>
+      <div className="space-y-4 pb-6">
+        <h3 className="my-4 ml-4 font-semibold">Release Date</h3>
+        <Label htmlFor="gte">From:</Label>
+        <div id="gte" className="pb-4">
+          <DateSelector date={releaseDateGte} setDate={setReleaseDateGte} />
+        </div>
+        <Label htmlFor="lte">To:</Label>
+        <div id="lte">
+          <DateSelector date={releaseDateLte} setDate={setReleaseDateLte} />
+        </div>
       </div>
     </div>
   );
