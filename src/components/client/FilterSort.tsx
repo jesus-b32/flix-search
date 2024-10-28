@@ -38,6 +38,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
+import { DualRangeSlider } from "@/components/ui/dual-range-slider";
 
 // type definitions
 import type { genresList, languagesList } from "@/server/actions/types";
@@ -83,6 +84,8 @@ export default function FilterSort({
   const [originalLanguage, setOriginaLanguage] = useState("all");
   const [releaseDateGte, setReleaseDateGte] = useState<Date | null>(null);
   const [releaseDateLte, setReleaseDateLte] = useState<Date | null>(null);
+  // runtimeGte = runtime[0]; runtimeLte = runtime[1]
+  const [runtime, setRuntime] = useState([0, 400]);
 
   //state that tracks if filter or sorting options have been changed
   const [isChanged, setIsChanged] = useState(false);
@@ -96,6 +99,8 @@ export default function FilterSort({
     const languageParam = searchParams.get("with_original_language");
     const releaseDateGteParam = searchParams.get("primary_release_date.gte");
     const releaseDateLteParam = searchParams.get("primary_release_date.lte");
+    const runtimeGteParam = searchParams.get("with_runtime.gte");
+    const runtimeLteParam = searchParams.get("with_runtime.lte");
 
     // If param exists, create an array of selected genres and set it in state
     if (genresParam) setSelectedGenres(genresParam.split(","));
@@ -105,6 +110,9 @@ export default function FilterSort({
       setReleaseDateGte(new UTCDate(releaseDateGteParam));
     if (releaseDateLteParam)
       setReleaseDateLte(new UTCDate(releaseDateLteParam));
+    if (runtimeGteParam && runtimeLteParam) {
+      setRuntime([parseInt(runtimeGteParam), parseInt(runtimeLteParam)]);
+    }
   }, [searchParams]);
 
   /**
@@ -168,6 +176,20 @@ export default function FilterSort({
       params.delete("primary_release_date.lte");
     }
 
+    if (
+      runtime.length === 2 &&
+      runtime[0] !== undefined &&
+      runtime[1] !== undefined &&
+      runtime[0] < runtime[1]
+    ) {
+      if (runtime[0] !== 0 || runtime[1] !== 400) {
+        params.set("with_runtime.gte", runtime[0].toString());
+        params.set("with_runtime.lte", runtime[1].toString());
+      } else {
+        params.delete("with_runtime.gte");
+        params.delete("with_runtime.lte");
+      }
+    }
     params.set("sort_by", sortBy);
     params.set("page", "1");
 
@@ -323,7 +345,7 @@ export default function FilterSort({
         <h3 className="my-4 ml-4 font-semibold">Language</h3>
         <LanguageSelect />
       </div>
-      <div className="space-y-4 pb-6">
+      <div className="space-y-4">
         <h3 className="my-4 ml-4 font-semibold">Release Date</h3>
         <Label htmlFor="gte">From:</Label>
         <div id="gte" className="pb-4">
@@ -333,6 +355,22 @@ export default function FilterSort({
         <div id="lte">
           <DateSelector date={releaseDateLte} setDate={setReleaseDateLte} />
         </div>
+      </div>
+      <div className="flex flex-col items-center pb-6">
+        <h3 className="mb-8 ml-4 mt-4 w-full font-semibold">Runtime</h3>
+        <DualRangeSlider
+          label={(value) => <span>{value}min</span>}
+          value={runtime}
+          onValueChange={(value) => {
+            setRuntime(value);
+            setIsChanged(true);
+          }}
+          min={0}
+          max={400}
+          step={5}
+          minStepsBetweenThumbs={10}
+          className="w-10/12"
+        />
       </div>
     </div>
   );
