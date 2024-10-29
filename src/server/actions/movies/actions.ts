@@ -43,9 +43,9 @@ export async function getMovieDetails(movieId: number) {
  * Returns a list of the watch provider (OTT/streaming) data we have available for movies.
  * @returns
  */
-export async function getMovieProviders() {
+export async function getMovieProviders(watchRegion = "") {
   const results = await getData<streamingProviderList>(
-    `/watch/providers/movie?language=en-US`,
+    `/watch/providers/movie?language=en-US&watch_region=${watchRegion}`,
   );
 
   return results;

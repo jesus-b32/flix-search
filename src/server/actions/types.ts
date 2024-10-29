@@ -328,3 +328,15 @@ export type languagesList = [
     name: string;
   },
 ];
+
+/**
+ * type for list of countries using in TMDB API
+ * @see https://developer.themoviedb.org/reference/watch-providers-available-regions
+ */
+export type watchProviderRegions = {
+  results: {
+    iso_3166_1: string;
+    english_name: string;
+    native_name: string;
+  }[];
+};

@@ -4,9 +4,15 @@ import PaginationComponent from "@/components/client/Pagination";
 import FilterSort from "@/components/client/FilterSort";
 
 // Server Actions
-import { discoverMovies } from "@/server/actions/movies/actions";
-import { getGenreMovies } from "@/server/actions/movies/actions";
-import { getLanguages } from "@/server/actions/actions";
+import {
+  discoverMovies,
+  getMovieProviders,
+  getGenreMovies,
+} from "@/server/actions/movies/actions";
+import {
+  getLanguages,
+  getWatchProviderRegions,
+} from "@/server/actions/actions";
 
 export default async function DiscoverMoviePage({
   searchParams,
@@ -30,6 +36,10 @@ export default async function DiscoverMoviePage({
   const movies = await discoverMovies(params.toString());
   const genres = await getGenreMovies();
   const languages = await getLanguages();
+  const watchProviderRegions = await getWatchProviderRegions();
+  const watchProviders = await getMovieProviders(
+    params.get("watch_region") ?? "US",
+  );
 
   if (movies instanceof Error) {
     throw new Error(`Failed to fetch movie data: ${movies}`);
@@ -39,6 +49,14 @@ export default async function DiscoverMoviePage({
   }
   if (languages instanceof Error) {
     throw new Error(`Failed to fetch language data: ${languages}`);
+  }
+  if (watchProviderRegions instanceof Error) {
+    throw new Error(
+      `Failed to fetch watch provider region data: ${watchProviderRegions}`,
+    );
+  }
+  if (watchProviders instanceof Error) {
+    throw new Error(`Failed to fetch watch provider data: ${watchProviders}`);
   }
 
   // Add "All Languages" option to the top of languages list
@@ -53,7 +71,12 @@ export default async function DiscoverMoviePage({
       <h1 className="my-5 text-4xl font-bold">Discover Movies</h1>
       <div className="flex w-full flex-col gap-y-6 md:items-center lg:w-11/12 lg:flex-row lg:items-start lg:gap-x-4">
         <div className="h-fit w-full items-start md:w-10/12 lg:w-60">
-          <FilterSort genreList={genres} languageList={languages} />
+          <FilterSort
+            genreList={genres}
+            languageList={languages}
+            watchProviderRegionList={watchProviderRegions}
+            watchProviderList={watchProviders}
+          />
         </div>
 
         <div className="mb-5 flex w-full flex-col items-center gap-y-6 lg:w-3/4">

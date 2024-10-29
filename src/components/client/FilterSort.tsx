@@ -41,7 +41,12 @@ import { Calendar } from "@/components/ui/calendar";
 import { DualRangeSlider } from "@/components/ui/dual-range-slider";
 
 // type definitions
-import type { genresList, languagesList } from "@/server/actions/types";
+import type {
+  genresList,
+  languagesList,
+  streamingProviderList,
+  watchProviderRegions,
+} from "@/server/actions/types";
 import type { Dispatch, SetStateAction } from "react";
 
 // icons
@@ -51,6 +56,8 @@ import {
   ChevronsUpDown,
   Calendar as CalendarIcon,
 } from "lucide-react";
+
+import SelectSearch from "@/components/client/SelectSearch";
 
 import { format } from "date-fns";
 import { UTCDate } from "@date-fns/utc";
@@ -70,9 +77,13 @@ const sortOptions = [
 export default function FilterSort({
   genreList,
   languageList,
+  watchProviderRegionList,
+  watchProviderList,
 }: {
   genreList: genresList;
   languageList: languagesList;
+  watchProviderRegionList: watchProviderRegions;
+  watchProviderList: streamingProviderList;
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -84,9 +95,10 @@ export default function FilterSort({
   const [originalLanguage, setOriginaLanguage] = useState("all");
   const [releaseDateGte, setReleaseDateGte] = useState<Date | null>(null);
   const [releaseDateLte, setReleaseDateLte] = useState<Date | null>(null);
+
   // runtimeGte = runtime[0]; runtimeLte = runtime[1]
   const [runtime, setRuntime] = useState([0, 400]);
-
+  const [watchProviders, setWatchProviders] = useState<string[]>([]);
   //state that tracks if filter or sorting options have been changed
   const [isChanged, setIsChanged] = useState(false);
   // open state of language select
@@ -101,6 +113,7 @@ export default function FilterSort({
     const releaseDateLteParam = searchParams.get("primary_release_date.lte");
     const runtimeGteParam = searchParams.get("with_runtime.gte");
     const runtimeLteParam = searchParams.get("with_runtime.lte");
+    const watchProviderParam = searchParams.get("with_watch_providers");
 
     // If param exists, create an array of selected genres and set it in state
     if (genresParam) setSelectedGenres(genresParam.split(","));
@@ -113,6 +126,7 @@ export default function FilterSort({
     if (runtimeGteParam && runtimeLteParam) {
       setRuntime([parseInt(runtimeGteParam), parseInt(runtimeLteParam)]);
     }
+    if (watchProviderParam) setWatchProviders(watchProviderParam.split(","));
   }, [searchParams]);
 
   /**
@@ -139,6 +153,19 @@ export default function FilterSort({
   };
 
   /**
+   * Updates the selected watch providers by toggling the given watch provider in the list of selected watch providers. If the watch provider is already in the list, it is removed; if it is not in the list, it is added.
+   * @param {string} watchProvider - The watchProvider to be toggled.
+   */
+  const handleWatchProviderChange = (watchProvider: string) => {
+    setWatchProviders((prev) =>
+      prev.includes(watchProvider)
+        ? prev.filter((w) => w !== watchProvider)
+        : [...prev, watchProvider],
+    );
+    setIsChanged(true);
+  };
+
+  /**
    * Handles the search by updating the URL search parameters with the current
    * values of selected genres, sort by, and original language. If the selected
    * genres array is empty, the "with_genres" parameter is removed from the search
@@ -147,18 +174,22 @@ export default function FilterSort({
    */
   const handleSearch = () => {
     const params = new URLSearchParams(searchParams);
+
+    // genres
     if (selectedGenres.length) {
       params.set("with_genres", selectedGenres.join(","));
     } else {
       params.delete("with_genres");
     }
 
+    // original language
     if (originalLanguage && originalLanguage !== "all") {
       params.set("with_original_language", originalLanguage);
     } else {
       params.delete("with_original_language");
     }
 
+    // release date greater than or equal
     if (releaseDateGte) {
       params.set(
         "primary_release_date.gte",
@@ -167,6 +198,8 @@ export default function FilterSort({
     } else {
       params.delete("primary_release_date.gte");
     }
+
+    // release date less than or equal
     if (releaseDateLte) {
       params.set(
         "primary_release_date.lte",
@@ -176,6 +209,7 @@ export default function FilterSort({
       params.delete("primary_release_date.lte");
     }
 
+    // runtime range
     if (
       runtime.length === 2 &&
       runtime[0] !== undefined &&
@@ -190,8 +224,19 @@ export default function FilterSort({
         params.delete("with_runtime.lte");
       }
     }
+
+    // sort by
     params.set("sort_by", sortBy);
+
+    //page number always set to 1 when submitting new filters
     params.set("page", "1");
+
+    // watch provider
+    if (watchProviders.length) {
+      params.set("with_watch_providers", watchProviders.join(","));
+    } else {
+      params.delete("with_watch_providers");
+    }
 
     router.push(`${pathname}?${params.toString()}`);
     setIsChanged(false);
@@ -205,7 +250,15 @@ export default function FilterSort({
    * @returns A React component for selecting and searching through the given
    * languageList.
    */
-  const LanguageSelect = () => (
+  const SelectList = ({
+    list,
+    currentValue,
+    setCurrentValue,
+  }: {
+    list: languagesList | watchProviderRegions;
+    currentValue: string;
+    setCurrentValue: Dispatch<SetStateAction<string>>;
+  }) => (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
@@ -214,11 +267,11 @@ export default function FilterSort({
           aria-expanded={open}
           className="w-[200px] justify-between"
         >
-          {
-            languageList.find(
-              (language) => language.iso_639_1 === originalLanguage,
-            )?.english_name
-          }
+          {"results" in list
+            ? list.results.find((region) => region.iso_3166_1 === currentValue)
+                ?.native_name
+            : list.find((language) => language.iso_639_1 === currentValue)
+                ?.english_name}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -228,32 +281,44 @@ export default function FilterSort({
           <CommandList>
             <CommandEmpty>{"No languages found"}</CommandEmpty>
             <CommandGroup>
-              {languageList.map((language) => (
-                <CommandItem
-                  key={language.iso_639_1}
-                  value={language.english_name.toLowerCase()}
-                  onSelect={(currentValue) => {
-                    setOriginaLanguage(
-                      languageList.find(
-                        (language) =>
-                          language.english_name.toLowerCase() === currentValue,
-                      )?.iso_639_1 ?? "",
-                    );
-                    setOpen(false);
-                    setIsChanged(true);
-                  }}
-                >
-                  <Check
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      originalLanguage === language.english_name.toLowerCase()
-                        ? "opacity-100"
-                        : "opacity-0",
-                    )}
-                  />
-                  {language.english_name}
-                </CommandItem>
-              ))}
+              {"results" in list
+                ? list.results.map((region) => (
+                    <CommandItem
+                      key={region.iso_3166_1}
+                      value={region.native_name.toLowerCase()}
+                      onSelect={(currentValue) => {
+                        setCurrentValue(
+                          list.results.find(
+                            (region) =>
+                              region.native_name.toLowerCase() === currentValue,
+                          )?.iso_3166_1 ?? "",
+                        );
+                        setOpen(false);
+                        setIsChanged(true);
+                      }}
+                    >
+                      {region.native_name}
+                    </CommandItem>
+                  ))
+                : list.map((language) => (
+                    <CommandItem
+                      key={language.iso_639_1}
+                      value={language.english_name.toLowerCase()}
+                      onSelect={(currentValue) => {
+                        setCurrentValue(
+                          list.find(
+                            (language) =>
+                              language.english_name.toLowerCase() ===
+                              currentValue,
+                          )?.iso_639_1 ?? "",
+                        );
+                        setOpen(false);
+                        setIsChanged(true);
+                      }}
+                    >
+                      {language.english_name}
+                    </CommandItem>
+                  ))}
             </CommandGroup>
           </CommandList>
         </Command>
@@ -343,7 +408,11 @@ export default function FilterSort({
       </div>
       <div className="">
         <h3 className="my-4 ml-4 font-semibold">Language</h3>
-        <LanguageSelect />
+        <SelectList
+          list={languageList}
+          currentValue={originalLanguage}
+          setCurrentValue={setOriginaLanguage}
+        />
       </div>
       <div className="space-y-4">
         <h3 className="my-4 ml-4 font-semibold">Release Date</h3>
@@ -356,7 +425,7 @@ export default function FilterSort({
           <DateSelector date={releaseDateLte} setDate={setReleaseDateLte} />
         </div>
       </div>
-      <div className="flex flex-col items-center pb-6">
+      <div className="flex flex-col items-center">
         <h3 className="mb-8 ml-4 mt-4 w-full font-semibold">Runtime</h3>
         <DualRangeSlider
           label={(value) => <span>{value}min</span>}
@@ -371,6 +440,10 @@ export default function FilterSort({
           minStepsBetweenThumbs={10}
           className="w-10/12"
         />
+      </div>
+      <div className="pb-6">
+        <h3 className="my-4 ml-4 font-semibold">Region</h3>
+        <SelectSearch data={watchProviderRegionList.results} />
       </div>
     </div>
   );
