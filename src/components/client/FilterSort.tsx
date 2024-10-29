@@ -39,6 +39,7 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { DualRangeSlider } from "@/components/ui/dual-range-slider";
+import MultipleSelector, { type Option } from "@/components/ui/multi-selector";
 
 // type definitions
 import type {
@@ -88,6 +89,22 @@ export default function FilterSort({
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
+
+  const OPTIONS: Option[] = [
+    { label: "nextjs", value: "Nextjs" },
+    { label: "React", value: "react" },
+    { label: "Remix", value: "remix" },
+    { label: "Vite", value: "vite" },
+    { label: "Nuxt", value: "nuxt" },
+    { label: "Vue", value: "vue" },
+    { label: "Svelte", value: "svelte" },
+    { label: "Angular", value: "angular" },
+    { label: "Ember", value: "ember" },
+    { label: "Gatsby", value: "gatsby" },
+    { label: "Astro", value: "astro" },
+  ];
+
+  const [value, setValue] = useState<Option[]>([]);
 
   // State of different sorting and filtering options
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
@@ -441,9 +458,25 @@ export default function FilterSort({
           className="w-10/12"
         />
       </div>
-      <div className="pb-6">
+      <div className="">
         <h3 className="my-4 ml-4 font-semibold">Region</h3>
         <SelectSearch data={watchProviderRegionList.results} />
+      </div>
+      <div className="w-full py-6">
+        {/* <p className="text-primary">
+          Your selection: {value.map((val) => val.label).join(", ")}
+        </p> */}
+        <MultipleSelector
+          value={value}
+          onChange={setValue}
+          defaultOptions={OPTIONS}
+          placeholder="Select frameworks"
+          emptyIndicator={
+            <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
+              no results found.
+            </p>
+          }
+        />
       </div>
     </div>
   );
