@@ -76,6 +76,7 @@ export default async function DiscoverMoviePage({
             languageList={languages}
             watchProviderRegionList={watchProviderRegions}
             watchProviderList={watchProviders}
+            mediaType="movie"
           />
         </div>
 

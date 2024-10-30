@@ -80,11 +80,13 @@ export default function FilterSort({
   languageList,
   watchProviderRegionList,
   watchProviderList,
+  mediaType,
 }: {
   genreList: genresList;
   languageList: languagesList;
   watchProviderRegionList: watchProviderRegions;
   watchProviderList: streamingProviderList;
+  mediaType: "movie" | "tv";
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -303,12 +305,7 @@ export default function FilterSort({
                       key={region.iso_3166_1}
                       value={region.native_name.toLowerCase()}
                       onSelect={(currentValue) => {
-                        setCurrentValue(
-                          list.results.find(
-                            (region) =>
-                              region.native_name.toLowerCase() === currentValue,
-                          )?.iso_3166_1 ?? "",
-                        );
+                        setCurrentValue(region.iso_3166_1);
                         setOpen(false);
                         setIsChanged(true);
                       }}
@@ -422,7 +419,7 @@ export default function FilterSort({
           ))}
         </div>
       </div>
-      <div className="">
+      <div className="w-full">
         <h3 className="my-4 ml-4 font-semibold">Language</h3>
         <SelectList
           list={languageList}
@@ -432,11 +429,15 @@ export default function FilterSort({
       </div>
       <div className="space-y-4">
         <h3 className="my-4 ml-4 font-semibold">Release Date</h3>
-        <Label htmlFor="gte">From:</Label>
+        <Label htmlFor="gte" className="ml-4">
+          From:
+        </Label>
         <div id="gte" className="pb-4">
           <DateSelector date={releaseDateGte} setDate={setReleaseDateGte} />
         </div>
-        <Label htmlFor="lte">To:</Label>
+        <Label htmlFor="lte" className="ml-4">
+          To:
+        </Label>
         <div id="lte">
           <DateSelector date={releaseDateLte} setDate={setReleaseDateLte} />
         </div>
@@ -457,11 +458,9 @@ export default function FilterSort({
           className="w-10/12"
         />
       </div>
-      <div className="">
-        <h3 className="my-4 ml-4 font-semibold">Region</h3>
+      <div className="w-full space-y-4 py-6">
+        <h3 className="ml-4 font-semibold">Where to Watch</h3>
         <SelectSearch data={watchProviderRegionList.results} />
-      </div>
-      <div className="w-full py-6">
         <MultipleSelector
           value={watchProviders}
           onChange={(value) => {
@@ -497,7 +496,7 @@ export default function FilterSort({
           <div className="lg:hidden">
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="outline" className="w-full">
+                <Button className="w-full border-none">
                   <SlidersHorizontal className="mr-2 h-4 w-4" />
                   Filters & Sort
                 </Button>
@@ -510,7 +509,7 @@ export default function FilterSort({
                     movie.
                   </SheetDescription>
                 </SheetHeader>
-                <div className="mt-4">
+                <div className="mt-4 flex h-[calc(100vh-8rem)] flex-col overflow-y-auto">
                   <FilterContent />
                 </div>
               </SheetContent>
