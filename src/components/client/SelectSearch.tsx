@@ -44,10 +44,10 @@ export default function SelectSearch({
 
   const [open, setOpen] = React.useState(false);
   const [watchRegion, setWatchRegion] = React.useState(
-    searchParams.get("watch_region") ?? "united states",
+    searchParams.get("watch_region") ?? "US",
   );
   const [watchProvider, setWatchProvider] = React.useState(
-    searchParams.get("streamingProvider") ?? "netflix",
+    searchParams.get("streamingProvider") ?? "8",
   );
 
   return (
@@ -60,13 +60,11 @@ export default function SelectSearch({
           className="w-[200px] justify-between"
         >
           {"results" in data
-            ? data.results.find(
-                (provider) =>
-                  provider.provider_name.toLowerCase() === watchProvider,
-              )?.provider_name
-            : data.find(
-                (country) => country.native_name.toLowerCase() === watchRegion,
-              )?.native_name}
+            ? (data.results.find(
+                (provider) => provider.provider_id.toString() === watchProvider,
+              )?.provider_name ?? "Select Provider")
+            : (data.find((country) => country.iso_3166_1 === watchRegion)
+                ?.native_name ?? "Select country")}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -95,9 +93,7 @@ export default function SelectSearch({
                           "streamingProvider",
                           provider.provider_id.toString(),
                         );
-                        setWatchProvider(
-                          currentValue === watchProvider ? "" : currentValue,
-                        );
+                        setWatchProvider(provider.provider_id.toString());
                         setOpen(false);
                         router.push(`${pathname}?${params.toString()}`);
                       }}
@@ -105,7 +101,7 @@ export default function SelectSearch({
                       <Check
                         className={cn(
                           "mr-2 h-4 w-4",
-                          watchProvider === provider.provider_name.toLowerCase()
+                          watchProvider === provider.provider_id.toString()
                             ? "opacity-100"
                             : "opacity-0",
                         )}
@@ -120,9 +116,7 @@ export default function SelectSearch({
                       onSelect={(currentValue) => {
                         const params = new URLSearchParams(searchParams);
                         params.set("watch_region", country.iso_3166_1);
-                        setWatchRegion(
-                          currentValue === watchRegion ? "" : currentValue,
-                        );
+                        setWatchRegion(country.iso_3166_1);
                         setOpen(false);
                         router.push(`${pathname}?${params.toString()}`);
                       }}
@@ -130,7 +124,7 @@ export default function SelectSearch({
                       <Check
                         className={cn(
                           "mr-2 h-4 w-4",
-                          watchRegion === country.native_name.toLowerCase()
+                          watchRegion === country.iso_3166_1
                             ? "opacity-100"
                             : "opacity-0",
                         )}

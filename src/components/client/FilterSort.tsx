@@ -90,22 +90,6 @@ export default function FilterSort({
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
-  const OPTIONS: Option[] = [
-    { label: "nextjs", value: "Nextjs" },
-    { label: "React", value: "react" },
-    { label: "Remix", value: "remix" },
-    { label: "Vite", value: "vite" },
-    { label: "Nuxt", value: "nuxt" },
-    { label: "Vue", value: "vue" },
-    { label: "Svelte", value: "svelte" },
-    { label: "Angular", value: "angular" },
-    { label: "Ember", value: "ember" },
-    { label: "Gatsby", value: "gatsby" },
-    { label: "Astro", value: "astro" },
-  ];
-
-  const [value, setValue] = useState<Option[]>([]);
-
   // State of different sorting and filtering options
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState("popularity.desc");
@@ -115,7 +99,11 @@ export default function FilterSort({
 
   // runtimeGte = runtime[0]; runtimeLte = runtime[1]
   const [runtime, setRuntime] = useState([0, 400]);
-  const [watchProviders, setWatchProviders] = useState<string[]>([]);
+
+  // State of watch provider options; value is provider name
+  const [watchProviders, setWatchProviders] = useState<Option[]>([]);
+  // State of selected watch provider; value is provider id
+  const [watchRegion, setWatchRegion] = useState("US");
   //state that tracks if filter or sorting options have been changed
   const [isChanged, setIsChanged] = useState(false);
   // open state of language select
@@ -131,6 +119,7 @@ export default function FilterSort({
     const runtimeGteParam = searchParams.get("with_runtime.gte");
     const runtimeLteParam = searchParams.get("with_runtime.lte");
     const watchProviderParam = searchParams.get("with_watch_providers");
+    const watchRegionParam = searchParams.get("watch_region");
 
     // If param exists, create an array of selected genres and set it in state
     if (genresParam) setSelectedGenres(genresParam.split(","));
@@ -143,8 +132,21 @@ export default function FilterSort({
     if (runtimeGteParam && runtimeLteParam) {
       setRuntime([parseInt(runtimeGteParam), parseInt(runtimeLteParam)]);
     }
-    if (watchProviderParam) setWatchProviders(watchProviderParam.split(","));
-  }, [searchParams]);
+    if (watchProviderParam) {
+      const watchProviderName = (watchProviderId: string) =>
+        watchProviderList.results.find(
+          (provider) => provider.provider_id.toString() === watchProviderId,
+        )?.provider_name ?? "N/A";
+      setWatchProviders(
+        watchProviderParam.split("|").map((watchProviderId) => ({
+          id: watchProviderId,
+          value: watchProviderName(watchProviderId),
+          label: watchProviderName(watchProviderId),
+        })),
+      );
+    }
+    if (watchRegionParam) setWatchRegion(watchRegionParam);
+  }, [searchParams, watchProviderList.results]);
 
   /**
    * Updates the selected genres by toggling the given genre in the list of
@@ -166,19 +168,6 @@ export default function FilterSort({
    */
   const handleSortChange = (value: string) => {
     setSortBy(value);
-    setIsChanged(true);
-  };
-
-  /**
-   * Updates the selected watch providers by toggling the given watch provider in the list of selected watch providers. If the watch provider is already in the list, it is removed; if it is not in the list, it is added.
-   * @param {string} watchProvider - The watchProvider to be toggled.
-   */
-  const handleWatchProviderChange = (watchProvider: string) => {
-    setWatchProviders((prev) =>
-      prev.includes(watchProvider)
-        ? prev.filter((w) => w !== watchProvider)
-        : [...prev, watchProvider],
-    );
     setIsChanged(true);
   };
 
@@ -250,9 +239,19 @@ export default function FilterSort({
 
     // watch provider
     if (watchProviders.length) {
-      params.set("with_watch_providers", watchProviders.join(","));
+      params.set(
+        "with_watch_providers",
+        watchProviders.map((watchProvider) => watchProvider.id).join("|"),
+      );
     } else {
       params.delete("with_watch_providers");
+    }
+
+    // watch_region
+    if (watchRegion) {
+      params.set("watch_region", watchRegion);
+    } else {
+      params.delete("watch_region");
     }
 
     router.push(`${pathname}?${params.toString()}`);
@@ -463,14 +462,18 @@ export default function FilterSort({
         <SelectSearch data={watchProviderRegionList.results} />
       </div>
       <div className="w-full py-6">
-        {/* <p className="text-primary">
-          Your selection: {value.map((val) => val.label).join(", ")}
-        </p> */}
         <MultipleSelector
-          value={value}
-          onChange={setValue}
-          defaultOptions={OPTIONS}
-          placeholder="Select frameworks"
+          value={watchProviders}
+          onChange={(value) => {
+            setWatchProviders(value);
+            setIsChanged(true);
+          }}
+          defaultOptions={watchProviderList.results.map((provider) => ({
+            label: provider.provider_name,
+            value: provider.provider_name.toLowerCase(),
+            id: provider.provider_id.toString(),
+          }))}
+          placeholder="Watch Providers"
           emptyIndicator={
             <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
               no results found.
