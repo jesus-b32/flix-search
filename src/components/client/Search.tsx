@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
@@ -40,8 +40,6 @@ const formSchema = z.object({
  */
 export default function Search() {
   const router = useRouter();
-  // lets you read the current URL's query string.
-  const searchParams = useSearchParams();
 
   // `useForm` hook from react-hook-form to manage the form state and validation.
   // https://react-hook-form.com/api/useform
@@ -58,7 +56,7 @@ export default function Search() {
     const mediaType = values.mediaType;
 
     //create a url friendly search params
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams();
     params.set("search", searchTerm);
 
     if (mediaType === "movie") {

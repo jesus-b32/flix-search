@@ -2,7 +2,7 @@
 
 import { getData } from "../tmdapi";
 import type { tvDetails, tvSearchResult } from "./types";
-import type { streamingProviderList } from "../types";
+import type { streamingProviderList, genresList } from "../types";
 
 /**
  * Search for tv shows by their original, translated and alternative titles.
@@ -43,10 +43,31 @@ export async function getTvShowDetails(seriesId: number) {
  * Returns a list of the watch provider (OTT/streaming) data we have available for tv series.
  * @returns
  */
-export async function getTvShowProviders() {
+export async function getTvShowProviders(watchRegion = "") {
   const results = await getData<streamingProviderList>(
-    `/watch/providers/tv?language=en-US`,
+    `/watch/providers/tv?language=en-US&watch_region=${watchRegion}`,
   );
+
+  return results;
+}
+
+/**
+ * Allows user to filter and sort the list of tv show.
+ * Returns a list of tv shows that match the user's sorting and filtering options.
+ */
+export async function discoverTvShow(queryParams: string) {
+  const results = await getData<tvSearchResult>(
+    `/discover/tv?include_adult=false&include_video=false&language=en-US&page=1&${queryParams}`,
+  );
+
+  return results;
+}
+
+/**
+ * Returns a list of genres used in the TMDB API for tv shows.
+ */
+export async function getGenreTvShows() {
+  const results = await getData<genresList>(`/genre/tv/list?language=en`);
 
   return results;
 }

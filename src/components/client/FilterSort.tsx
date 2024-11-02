@@ -63,18 +63,6 @@ import SelectSearch from "@/components/client/SelectSearch";
 import { format } from "date-fns";
 import { UTCDate } from "@date-fns/utc";
 
-//sorting options for TMDB API
-const sortOptions = [
-  { value: "popularity.asc", label: "Popularity (Low - High)" },
-  { value: "popularity.desc", label: "Popularity (High - Low)" },
-  { value: "vote_average.asc", label: "Rating (Low - High)" },
-  { value: "vote_average.desc", label: "Rating (High - Low)" },
-  { value: "primary_release_date.asc", label: "Release Date (Oldest)" },
-  { value: "primary_release_date.desc", label: "Release Date (Newest)" },
-  { value: "title.asc", label: "Title (A-Z)" },
-  { value: "title.desc", label: "Title (Z-A)" },
-];
-
 export default function FilterSort({
   genreList,
   languageList,
@@ -91,6 +79,36 @@ export default function FilterSort({
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
+
+  //sorting options for TMDB API
+  const sortOptions =
+    mediaType === "movie"
+      ? [
+          { value: "popularity.asc", label: "Popularity (Low - High)" },
+          { value: "popularity.desc", label: "Popularity (High - Low)" },
+          { value: "vote_average.asc", label: "Rating (Low - High)" },
+          { value: "vote_average.desc", label: "Rating (High - Low)" },
+          { value: "primary_release_date.asc", label: "Release Date (Oldest)" },
+          {
+            value: "primary_release_date.desc",
+            label: "Release Date (Newest)",
+          },
+          { value: "title.asc", label: "Title (A-Z)" },
+          { value: "title.desc", label: "Title (Z-A)" },
+        ]
+      : [
+          { value: "popularity.asc", label: "Popularity (Low - High)" },
+          { value: "popularity.desc", label: "Popularity (High - Low)" },
+          { value: "vote_average.asc", label: "Rating (Low - High)" },
+          { value: "vote_average.desc", label: "Rating (High - Low)" },
+          { value: "primary_release_date.asc", label: "Release Date (Oldest)" },
+          {
+            value: "primary_release_date.desc",
+            label: "Release Date (Newest)",
+          },
+          { value: "title.asc", label: "Title (A-Z)" },
+          { value: "title.desc", label: "Title (Z-A)" },
+        ];
 
   // State of different sorting and filtering options
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
@@ -116,24 +134,12 @@ export default function FilterSort({
     const genresParam = searchParams.get("with_genres");
     const sortParam = searchParams.get("sort_by");
     const languageParam = searchParams.get("with_original_language");
-    const releaseDateGteParam = searchParams.get("primary_release_date.gte");
-    const releaseDateLteParam = searchParams.get("primary_release_date.lte");
-    const runtimeGteParam = searchParams.get("with_runtime.gte");
-    const runtimeLteParam = searchParams.get("with_runtime.lte");
-    const watchProviderParam = searchParams.get("with_watch_providers");
     const watchRegionParam = searchParams.get("watch_region");
-
+    const watchProviderParam = searchParams.get("with_watch_providers");
     // If param exists, create an array of selected genres and set it in state
     if (genresParam) setSelectedGenres(genresParam.split(","));
     if (sortParam) setSortBy(sortParam);
     if (languageParam) setOriginaLanguage(languageParam);
-    if (releaseDateGteParam)
-      setReleaseDateGte(new UTCDate(releaseDateGteParam));
-    if (releaseDateLteParam)
-      setReleaseDateLte(new UTCDate(releaseDateLteParam));
-    if (runtimeGteParam && runtimeLteParam) {
-      setRuntime([parseInt(runtimeGteParam), parseInt(runtimeLteParam)]);
-    }
     if (watchProviderParam) {
       const watchProviderName = (watchProviderId: string) =>
         watchProviderList.results.find(
@@ -148,7 +154,35 @@ export default function FilterSort({
       );
     }
     if (watchRegionParam) setWatchRegion(watchRegionParam);
-  }, [searchParams, watchProviderList.results]);
+
+    if (mediaType === "movie") {
+      const releaseDateGteParam = searchParams.get("primary_release_date.gte");
+      const releaseDateLteParam = searchParams.get("primary_release_date.lte");
+      const runtimeGteParam = searchParams.get("with_runtime.gte");
+      const runtimeLteParam = searchParams.get("with_runtime.lte");
+
+      if (releaseDateGteParam)
+        setReleaseDateGte(new UTCDate(releaseDateGteParam));
+      if (releaseDateLteParam)
+        setReleaseDateLte(new UTCDate(releaseDateLteParam));
+      if (runtimeGteParam && runtimeLteParam) {
+        setRuntime([parseInt(runtimeGteParam), parseInt(runtimeLteParam)]);
+      }
+    } else {
+      const releaseDateGteParam = searchParams.get("primary_release_date.gte");
+      const releaseDateLteParam = searchParams.get("primary_release_date.lte");
+      const runtimeGteParam = searchParams.get("with_runtime.gte");
+      const runtimeLteParam = searchParams.get("with_runtime.lte");
+
+      if (releaseDateGteParam)
+        setReleaseDateGte(new UTCDate(releaseDateGteParam));
+      if (releaseDateLteParam)
+        setReleaseDateLte(new UTCDate(releaseDateLteParam));
+      if (runtimeGteParam && runtimeLteParam) {
+        setRuntime([parseInt(runtimeGteParam), parseInt(runtimeLteParam)]);
+      }
+    }
+  }, [searchParams, watchProviderList.results, mediaType]);
 
   /**
    * Updates the selected genres by toggling the given genre in the list of

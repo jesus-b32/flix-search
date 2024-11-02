@@ -50,6 +50,8 @@ export default function SelectSearch({
     searchParams.get("streamingProvider") ?? "8",
   );
 
+  const pageParam = searchParams.get("page");
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -115,6 +117,7 @@ export default function SelectSearch({
                       value={country.native_name.toLowerCase()}
                       onSelect={(currentValue) => {
                         const params = new URLSearchParams(searchParams);
+                        if (searchParams.get("page")) params.set("page", "1");
                         params.set("watch_region", country.iso_3166_1);
                         setWatchRegion(country.iso_3166_1);
                         setOpen(false);
