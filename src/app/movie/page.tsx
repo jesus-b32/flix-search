@@ -87,7 +87,7 @@ export default async function DiscoverMoviePage({
             ))
           ) : (
             <h2 className="text-2xl font-bold">
-              No movies found that match your query.
+              No movies found that match your selected filter options.
             </h2>
           )}
         </div>

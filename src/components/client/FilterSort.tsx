@@ -53,7 +53,6 @@ import type { Dispatch, SetStateAction } from "react";
 // icons
 import {
   SlidersHorizontal,
-  Check,
   ChevronsUpDown,
   Calendar as CalendarIcon,
 } from "lucide-react";
@@ -101,13 +100,13 @@ export default function FilterSort({
           { value: "popularity.desc", label: "Popularity (High - Low)" },
           { value: "vote_average.asc", label: "Rating (Low - High)" },
           { value: "vote_average.desc", label: "Rating (High - Low)" },
-          { value: "primary_release_date.asc", label: "Release Date (Oldest)" },
+          { value: "first_air_date.asc", label: "Air Date (Oldest)" },
           {
-            value: "primary_release_date.desc",
-            label: "Release Date (Newest)",
+            value: "first_air_date.desc",
+            label: "Air Date (Newest)",
           },
-          { value: "title.asc", label: "Title (A-Z)" },
-          { value: "title.desc", label: "Title (Z-A)" },
+          { value: "name.asc", label: "Name (A-Z)" },
+          { value: "name.desc", label: "Name (Z-A)" },
         ];
 
   // State of different sorting and filtering options
@@ -136,6 +135,8 @@ export default function FilterSort({
     const languageParam = searchParams.get("with_original_language");
     const watchRegionParam = searchParams.get("watch_region");
     const watchProviderParam = searchParams.get("with_watch_providers");
+    const runtimeGteParam = searchParams.get("with_runtime.gte");
+    const runtimeLteParam = searchParams.get("with_runtime.lte");
     // If param exists, create an array of selected genres and set it in state
     if (genresParam) setSelectedGenres(genresParam.split(","));
     if (sortParam) setSortBy(sortParam);
@@ -154,33 +155,26 @@ export default function FilterSort({
       );
     }
     if (watchRegionParam) setWatchRegion(watchRegionParam);
+    if (runtimeGteParam && runtimeLteParam) {
+      setRuntime([parseInt(runtimeGteParam), parseInt(runtimeLteParam)]);
+    }
 
     if (mediaType === "movie") {
       const releaseDateGteParam = searchParams.get("primary_release_date.gte");
       const releaseDateLteParam = searchParams.get("primary_release_date.lte");
-      const runtimeGteParam = searchParams.get("with_runtime.gte");
-      const runtimeLteParam = searchParams.get("with_runtime.lte");
 
       if (releaseDateGteParam)
         setReleaseDateGte(new UTCDate(releaseDateGteParam));
       if (releaseDateLteParam)
         setReleaseDateLte(new UTCDate(releaseDateLteParam));
-      if (runtimeGteParam && runtimeLteParam) {
-        setRuntime([parseInt(runtimeGteParam), parseInt(runtimeLteParam)]);
-      }
     } else {
-      const releaseDateGteParam = searchParams.get("primary_release_date.gte");
-      const releaseDateLteParam = searchParams.get("primary_release_date.lte");
-      const runtimeGteParam = searchParams.get("with_runtime.gte");
-      const runtimeLteParam = searchParams.get("with_runtime.lte");
+      const firstAirDateGteParam = searchParams.get("first_air_date.gte");
+      const firstAirDateLteParam = searchParams.get("first_air_date.lte");
 
-      if (releaseDateGteParam)
-        setReleaseDateGte(new UTCDate(releaseDateGteParam));
-      if (releaseDateLteParam)
-        setReleaseDateLte(new UTCDate(releaseDateLteParam));
-      if (runtimeGteParam && runtimeLteParam) {
-        setRuntime([parseInt(runtimeGteParam), parseInt(runtimeLteParam)]);
-      }
+      if (firstAirDateGteParam)
+        setReleaseDateGte(new UTCDate(firstAirDateGteParam));
+      if (firstAirDateLteParam)
+        setReleaseDateLte(new UTCDate(firstAirDateLteParam));
     }
   }, [searchParams, watchProviderList.results, mediaType]);
 
@@ -231,26 +225,6 @@ export default function FilterSort({
       params.delete("with_original_language");
     }
 
-    // release date greater than or equal
-    if (releaseDateGte) {
-      params.set(
-        "primary_release_date.gte",
-        format(releaseDateGte, "yyyy-MM-dd"),
-      );
-    } else {
-      params.delete("primary_release_date.gte");
-    }
-
-    // release date less than or equal
-    if (releaseDateLte) {
-      params.set(
-        "primary_release_date.lte",
-        format(releaseDateLte, "yyyy-MM-dd"),
-      );
-    } else {
-      params.delete("primary_release_date.lte");
-    }
-
     // runtime range
     if (
       runtime.length === 2 &&
@@ -288,6 +262,42 @@ export default function FilterSort({
       params.set("watch_region", watchRegion);
     } else {
       params.delete("watch_region");
+    }
+
+    if (mediaType === "movie") {
+      // release date greater than or equal
+      if (releaseDateGte) {
+        params.set(
+          "primary_release_date.gte",
+          format(releaseDateGte, "yyyy-MM-dd"),
+        );
+      } else {
+        params.delete("primary_release_date.gte");
+      }
+
+      // release date less than or equal
+      if (releaseDateLte) {
+        params.set(
+          "primary_release_date.lte",
+          format(releaseDateLte, "yyyy-MM-dd"),
+        );
+      } else {
+        params.delete("primary_release_date.lte");
+      }
+    } else {
+      // release date greater than or equal
+      if (releaseDateGte) {
+        params.set("first_air_date.gte", format(releaseDateGte, "yyyy-MM-dd"));
+      } else {
+        params.delete("first_air_date.gte");
+      }
+
+      // release date less than or equal
+      if (releaseDateLte) {
+        params.set("first_air_date.lte", format(releaseDateLte, "yyyy-MM-dd"));
+      } else {
+        params.delete("first_air_date.lte");
+      }
     }
 
     router.push(`${pathname}?${params.toString()}`);
@@ -462,7 +472,9 @@ export default function FilterSort({
         />
       </div>
       <div className="space-y-4">
-        <h3 className="my-4 ml-4 font-semibold">Release Date</h3>
+        <h3 className="my-4 ml-4 font-semibold">
+          {mediaType === "movie" ? "Release Date" : "First Air Date"}
+        </h3>
         <Label htmlFor="gte" className="ml-4">
           From:
         </Label>
@@ -521,7 +533,9 @@ export default function FilterSort({
     <>
       <Card className="w-full divide-y-2">
         <CardHeader>
-          <CardTitle className="text-center font-bold">Filter Movies</CardTitle>
+          <CardTitle className="text-center font-bold">
+            {mediaType === "movie" ? "Filter Movies" : "Filter TV Shows"}
+          </CardTitle>{" "}
         </CardHeader>
         <CardContent className="p-0">
           <div className="hidden lg:block">
@@ -537,10 +551,14 @@ export default function FilterSort({
               </SheetTrigger>
               <SheetContent side="left" className="text-black">
                 <SheetHeader>
-                  <SheetTitle>Filter Movies</SheetTitle>
+                  <SheetTitle>
+                    {mediaType === "movie"
+                      ? "Filter Movies"
+                      : " Filter TV Shows"}
+                  </SheetTitle>
                   <SheetDescription>
                     Apply filters and sorting options to find your perfect
-                    movie.
+                    {mediaType === "movie" ? "movie" : "tv show"}.
                   </SheetDescription>
                 </SheetHeader>
                 <div className="mt-4 flex h-[calc(100vh-8rem)] flex-col overflow-y-auto">

@@ -87,7 +87,7 @@ export default async function DiscoverTvShowPage({
             ))
           ) : (
             <h2 className="text-2xl font-bold">
-              No TV shows found that match your query.
+              No TV shows found that match your selected filter options.
             </h2>
           )}
         </div>
