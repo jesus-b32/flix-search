@@ -58,10 +58,50 @@ export const users = createTable("users", {
 
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
+  videoLists: many(videoLists),
 }));
 
+/**
+ * Tables for videos, video lists, and the many-many relationship between them
+ */
+//junction table for videos to video lists tables
+export const videosToVideoLists = createTable(
+  "video_to_video_list",
+  {
+    videoListId: integer("video_list_id")
+      .notNull()
+      .references(() => videoLists.id),
+    videoId: integer("video_id")
+      .notNull()
+      .references(() => videos.id),
+  },
+  (t) => ({
+    pk: primaryKey({
+      columns: [t.videoListId, t.videoId],
+    }),
+  }),
+);
+
+// many to one relationship between videosToVideoLists table and video table
+// many to one relationship between videosToVideoLists table and videoList table
+export const videosToVideoListsRelations = relations(
+  videosToVideoLists,
+  ({ one }) => ({
+    videoList: one(videoLists, {
+      fields: [videosToVideoLists.videoListId],
+      references: [videoLists.id],
+    }),
+    video: one(videos, {
+      fields: [videosToVideoLists.videoId],
+      references: [videos.id],
+    }),
+  }),
+);
+
+// custom enum type for media type column in videos table
 export const mediaTypeEnum = pgEnum("media_type", ["movie", "tv"]);
 
+// videos table
 export const videos = createTable(
   "videos",
   {
@@ -74,6 +114,12 @@ export const videos = createTable(
   // }),
 );
 
+// one to many relationship between videos and videosToVideoLists tables
+export const videosRelations = relations(videos, ({ many }) => ({
+  videosToVideoLists: many(videosToVideoLists),
+}));
+
+// video lists table
 export const videoLists = createTable("video_lists", {
   id: serial("id").primaryKey(),
   userId: integer("user_id")
@@ -81,6 +127,13 @@ export const videoLists = createTable("video_lists", {
     .references(() => users.id),
   name: varchar("name", { length: 255 }).notNull(),
 });
+
+// many to one relationship between videoLists and users table
+// one to many relationship between videoLists and videosToVideoLists tables
+export const videoListsRelations = relations(videoLists, ({ one, many }) => ({
+  user: one(users, { fields: [videoLists.userId], references: [users.id] }),
+  videosToVideoLists: many(videosToVideoLists),
+}));
 
 export const accounts = createTable(
   "account",
