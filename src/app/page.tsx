@@ -1,6 +1,11 @@
 import Search from "@/components/client/Search";
+// import { getServerAuthSession } from "@/server/auth";
+import { auth } from "@/server/auth";
 
-export default function HomePage() {
+export default async function HomePage() {
+  // const session = await getServerAuthSession();
+  const session = await auth();
+
   return (
     <main className="flex min-h-screen flex-col items-center text-white">
       <div className="mt-4 flex flex-col items-center gap-6">

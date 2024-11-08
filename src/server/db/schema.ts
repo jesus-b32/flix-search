@@ -46,16 +46,19 @@ export const users = createTable("users", {
     .notNull()
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  username: varchar("username", { length: 255 }),
-  passwordHash: varchar("password_hash", { length: 255 }),
-  // email: varchar("email", { length: 255 }).notNull(),
-  // emailVerified: timestamp("email_verified", {
-  //   mode: "date",
-  //   withTimezone: true,
-  // }).default(sql`CURRENT_TIMESTAMP`),
+  name: varchar("name", { length: 255 }),
+  // username: varchar("username", { length: 255 }),
+  // passwordHash: varchar("password_hash", { length: 255 }),
+  email: varchar("email", { length: 255 }).notNull(),
+  emailVerified: timestamp("email_verified", {
+    mode: "date",
+    withTimezone: true,
+  }).default(sql`CURRENT_TIMESTAMP`),
   image: varchar("image", { length: 255 }),
 });
 
+// one to many relationship between users and accounts tables
+// one to many relationship between users and video lists tables
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
   videoLists: many(videoLists),
@@ -71,13 +74,16 @@ export const videosToVideoLists = createTable(
     videoListId: integer("video_list_id")
       .notNull()
       .references(() => videoLists.id),
-    videoId: integer("video_id")
+    videoTmdbId: integer("video_tmdb_id")
       .notNull()
-      .references(() => videos.id),
+      .references(() => videos.tmdbId),
+    videoMediaType: varchar("video_media_type", { length: 255 })
+      .notNull()
+      .references(() => videos.mediaType),
   },
   (t) => ({
     pk: primaryKey({
-      columns: [t.videoListId, t.videoId],
+      columns: [t.videoListId, t.videoTmdbId, t.videoMediaType],
     }),
   }),
 );
@@ -92,8 +98,11 @@ export const videosToVideoListsRelations = relations(
       references: [videoLists.id],
     }),
     video: one(videos, {
-      fields: [videosToVideoLists.videoId],
-      references: [videos.id],
+      fields: [
+        videosToVideoLists.videoTmdbId,
+        videosToVideoLists.videoMediaType,
+      ],
+      references: [videos.tmdbId, videos.mediaType],
     }),
   }),
 );
@@ -105,13 +114,13 @@ export const mediaTypeEnum = pgEnum("media_type", ["movie", "tv"]);
 export const videos = createTable(
   "videos",
   {
-    id: serial("id").primaryKey(),
-    tmdb_id: integer("id").notNull(),
-    mediaType: mediaTypeEnum("mediaType").notNull(),
+    // id: serial("id").primaryKey(),
+    tmdbId: integer("tmdb_id").notNull(),
+    mediaType: mediaTypeEnum("media_type").notNull(),
   },
-  // (videos) => ({
-  //   pk: primaryKey({ columns: [videos.id, videos.mediaType] }),
-  // }),
+  (t) => ({
+    pk: primaryKey({ columns: [t.tmdbId, t.mediaType] }),
+  }),
 );
 
 // one to many relationship between videos and videosToVideoLists tables
@@ -191,17 +200,17 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
   user: one(users, { fields: [sessions.userId], references: [users.id] }),
 }));
 
-export const verificationTokens = createTable(
-  "verification_token",
-  {
-    identifier: varchar("identifier", { length: 255 }).notNull(),
-    token: varchar("token", { length: 255 }).notNull(),
-    expires: timestamp("expires", {
-      mode: "date",
-      withTimezone: true,
-    }).notNull(),
-  },
-  (vt) => ({
-    compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
-  }),
-);
+// export const verificationTokens = createTable(
+//   "verification_token",
+//   {
+//     identifier: varchar("identifier", { length: 255 }).notNull(),
+//     token: varchar("token", { length: 255 }).notNull(),
+//     expires: timestamp("expires", {
+//       mode: "date",
+//       withTimezone: true,
+//     }).notNull(),
+//   },
+//   (vt) => ({
+//     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
+//   }),
+// );
