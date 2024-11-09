@@ -26,12 +26,12 @@ export const users = createTable("users", {
     .$defaultFn(() => crypto.randomUUID()),
   name: varchar("name", { length: 255 }),
   // username: varchar("username", { length: 255 }),
-  // passwordHash: varchar("password_hash", { length: 255 }),
+  password: text("password_hash"),
   email: varchar("email", { length: 255 }).unique(),
-  emailVerified: timestamp("email_verified", {
-    mode: "date",
-    withTimezone: true,
-  }).default(sql`CURRENT_TIMESTAMP`),
+  // emailVerified: timestamp("email_verified", {
+  //   mode: "date",
+  //   withTimezone: true,
+  // }).default(sql`CURRENT_TIMESTAMP`),
   image: text("image"),
 });
 

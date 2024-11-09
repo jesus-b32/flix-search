@@ -10,6 +10,7 @@ import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 
 import { v4 as uuid } from "uuid";
+import { env } from "@/env";
 
 const adapter = DrizzleAdapter(db);
 
@@ -42,6 +43,14 @@ const authConfig: NextAuthConfig = {
     }),
   ],
   callbacks: {
+    /**
+     * Custom `jwt` function that adds a `credentials` key to the `token` object
+     * when the user logs in with the credentials provider.
+     *
+     * @param {Object} params - The parameters passed to the `jwt` function
+     *
+     * @returns {Promise<Object>} The updated token object
+     */
     async jwt({ token, user, account }) {
       if (account?.provider === "credentials") {
         token.credentials = true;
@@ -50,9 +59,25 @@ const authConfig: NextAuthConfig = {
     },
   },
   jwt: {
+    /**
+     * This is a custom `encode` function that replaces the default `encode`
+     * function from NextAuth.js.
+     *
+     * If the `token` object has a `credentials` key, it will create a new session
+     * in the database and return the session token. If the `token` object doesn't
+     * have a `credentials` key, it will call the default `encode` function.
+     *
+     * @param {Object} params - The parameters passed to the `encode` function
+     *
+     * @returns {Promise<string>} The JWT token
+     */
     encode: async function (params) {
       if (params.token?.credentials) {
         const sessionToken = uuid();
+
+        // if (!sessionToken) {
+        //   throw new Error("Failed to generate session token");
+        // }
 
         if (!params.token.sub) {
           throw new Error("No user ID found in token");
@@ -73,8 +98,9 @@ const authConfig: NextAuthConfig = {
       return defaultEncode(params);
     },
   },
-  secret: process.env.AUTH_SECRET!,
-  experimental: { enableWebAuthn: true },
+  // secret: process.env.AUTH_SECRET!,
+  secret: env.AUTH_SECRET,
+  // experimental: { enableWebAuthn: true },
 };
 
 export const { handlers, signIn, signOut, auth } = NextAuth(authConfig);
