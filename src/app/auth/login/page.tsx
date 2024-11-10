@@ -21,10 +21,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { LoginSchema } from "@/schemas/login-schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-
 import { LoginForm } from "@/components/auth/login-form";
 
 export default function LoginPage() {

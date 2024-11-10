@@ -19,6 +19,7 @@ import { CircleUser, Clapperboard, Menu } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../components/ui/button";
 import SearchPopover from "./SearchPopover";
+import { LoginButton } from "@/components/auth/login-button";
 
 export default function TopNav() {
   return (
@@ -36,7 +37,9 @@ export default function TopNav() {
         </Link>
         <Link href="/tv?sort_by=popularity.desc&page=1">Discover TV Shows</Link>
         <Link href="/auth/signup">Signup</Link>
+        {/* <LoginButton> */}
         <Link href="/auth/login">Login</Link>
+        {/* </LoginButton> */}
       </nav>
       <Sheet>
         <SheetTrigger asChild>
