@@ -4,6 +4,14 @@ interface FormSuccessProps {
   message: string;
 }
 
+/**
+ * FormSuccess displays a success message in a green rounded rectangle with
+ * a check icon. If the message is empty, it returns null.
+ *
+ * @param {FormSuccessProps} props - The properties for the component
+ * @param {string} props.message - The success message to display
+ * @returns - The FormSuccess element or null if no message
+ */
 export function FormSuccess({ message }: FormSuccessProps) {
   if (!message) {
     return null;

@@ -1,10 +1,17 @@
-// import {ExclamationTriangleIcon} from "lucude-react";
 import { TriangleAlert } from "lucide-react";
 
 interface FormErrorProps {
   message: string;
 }
 
+/**
+ * FormError displays an error message below a form field or form in a red
+ * rounded rectangle with a triangle alert icon. If the message is empty, it
+ * returns null.
+ *
+ * @param {string} message - The error message to display
+ * @returns  - The FormError element
+ */
 export function FormError({ message }: FormErrorProps) {
   if (!message) {
     return null;

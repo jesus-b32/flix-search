@@ -36,7 +36,7 @@ export default function TopNav() {
           Discover Movies
         </Link>
         <Link href="/tv?sort_by=popularity.desc&page=1">Discover TV Shows</Link>
-        <Link href="/auth/signup">Signup</Link>
+        <Link href="/auth/register">Signup</Link>
         {/* <LoginButton> */}
         <Link href="/auth/login">Login</Link>
         {/* </LoginButton> */}
@@ -75,7 +75,7 @@ export default function TopNav() {
               Discover TV Shows
             </Link>
             <Link
-              href="/auth/signup"
+              href="/auth/register"
               className="text-muted-foreground hover:text-foreground"
             >
               Signup

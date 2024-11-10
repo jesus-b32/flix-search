@@ -5,7 +5,7 @@
 import { signIn, signOut } from "@/server/auth";
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
-import { LoginSchema } from "@/schemas/login-schema";
+import { LoginSchema } from "@/schemas";
 import { RegisterSchema } from "@/schemas/register-schema";
 import { eq } from "drizzle-orm";
 

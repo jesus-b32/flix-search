@@ -3,10 +3,8 @@
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Header } from "@/components/auth/header";
 import { Social } from "@/components/auth/social";
@@ -20,6 +18,12 @@ interface CardWrapperProps {
   showSocial?: boolean;
 }
 
+/**
+ * A pre-styled Card component that wraps the children with a default header
+ * and footer. The header shows the given label and the footer shows a back
+ * button to the given href and label. If showSocial is true, the footer will
+ * also render a Social component.
+ */
 export const CardWrapper = ({
   children,
   headerLabels,
