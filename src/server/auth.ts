@@ -3,22 +3,46 @@ import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { db } from "@/server/db";
 
 // NextAuth imports
-import NextAuth, { type User } from "next-auth";
-import type { NextAuthConfig } from "next-auth";
+import NextAuth from "next-auth";
+import type { NextAuthConfig, DefaultSession, User } from "next-auth";
 import { encode as defaultEncode } from "next-auth/jwt";
 import Credentials from "next-auth/providers/credentials";
-import Google from "next-auth/providers/google";
+// import Google from "next-auth/providers/google";
+import GitHub from "next-auth/providers/github";
 
 import { v4 as uuid } from "uuid";
 import { env } from "@/env";
 
 const adapter = DrizzleAdapter(db);
 
+/**
+ * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
+ * object and keep type safety.
+ *
+ * @see https://authjs.dev/getting-started/typescript#module-augmentation
+ */
+declare module "next-auth" {
+  /**
+   * Returned by `auth`, `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
+   */
+  interface Session {
+    user: {
+      /** The user's id. */
+      id: string;
+      /**
+       * By default, TypeScript merges new interface properties and overwrites existing ones.
+       * In this case, the default session user properties will be overwritten,
+       * with the new ones defined above. To keep the default session user properties,
+       * you need to add them back into the newly declared interface.
+       */
+    } & DefaultSession["user"];
+  }
+}
+
 const authConfig: NextAuthConfig = {
   adapter,
   providers: [
     Credentials({
-      // name: "Credentials",
       credentials: {
         // You can specify which fields should be submitted, by adding keys to the `credentials` object.
         // e.g. domain, username, password, 2FA token, etc.

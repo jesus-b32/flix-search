@@ -35,8 +35,8 @@ export default function TopNav() {
           Discover Movies
         </Link>
         <Link href="/tv?sort_by=popularity.desc&page=1">Discover TV Shows</Link>
-        <Link href="/signup">Signup</Link>
-        <Link href="/login">Login</Link>
+        <Link href="/auth/signup">Signup</Link>
+        <Link href="/auth/login">Login</Link>
       </nav>
       <Sheet>
         <SheetTrigger asChild>
@@ -72,13 +72,13 @@ export default function TopNav() {
               Discover TV Shows
             </Link>
             <Link
-              href="/signup"
+              href="/auth/signup"
               className="text-muted-foreground hover:text-foreground"
             >
               Signup
             </Link>
             <Link
-              href="/login"
+              href="/auth/login"
               className="text-muted-foreground hover:text-foreground"
             >
               Login
