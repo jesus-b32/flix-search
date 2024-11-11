@@ -1,6 +1,5 @@
 import { relations, sql } from "drizzle-orm";
 import {
-  index,
   integer,
   pgTableCreator,
   primaryKey,
@@ -26,12 +25,12 @@ export const users = createTable("users", {
     .$defaultFn(() => crypto.randomUUID()),
   name: varchar("name", { length: 255 }),
   // username: varchar("username", { length: 255 }),
-  password: text("password_hash"),
   email: varchar("email", { length: 255 }).unique(),
-  // emailVerified: timestamp("email_verified", {
-  //   mode: "date",
-  //   withTimezone: true,
-  // }).default(sql`CURRENT_TIMESTAMP`),
+  password: text("password"),
+  emailVerified: timestamp("email_verified", {
+    mode: "date",
+    withTimezone: true,
+  }).default(sql`CURRENT_TIMESTAMP`),
   image: text("image"),
 });
 
@@ -51,17 +50,14 @@ export const videosToVideoLists = createTable(
   {
     videoListId: integer("video_list_id")
       .notNull()
-      .references(() => videoLists.id),
-    videoTmdbId: integer("video_tmdb_id")
+      .references(() => videoLists.id, { onDelete: "cascade" }),
+    videoId: integer("video_id")
       .notNull()
-      .references(() => videos.tmdbId),
-    videoMediaType: varchar("video_media_type", { length: 255 })
-      .notNull()
-      .references(() => videos.mediaType),
+      .references(() => videos.id, { onDelete: "cascade" }),
   },
   (t) => ({
     pk: primaryKey({
-      columns: [t.videoListId, t.videoTmdbId, t.videoMediaType],
+      columns: [t.videoListId, t.videoId],
     }),
   }),
 );
@@ -76,11 +72,8 @@ export const videosToVideoListsRelations = relations(
       references: [videoLists.id],
     }),
     video: one(videos, {
-      fields: [
-        videosToVideoLists.videoTmdbId,
-        videosToVideoLists.videoMediaType,
-      ],
-      references: [videos.tmdbId, videos.mediaType],
+      fields: [videosToVideoLists.videoId],
+      references: [videos.id],
     }),
   }),
 );
@@ -89,17 +82,11 @@ export const videosToVideoListsRelations = relations(
 export const mediaTypeEnum = pgEnum("media_type", ["movie", "tv"]);
 
 // videos table
-export const videos = createTable(
-  "videos",
-  {
-    // id: serial("id").primaryKey(),
-    tmdbId: integer("tmdb_id").notNull(),
-    mediaType: mediaTypeEnum("media_type").notNull(),
-  },
-  (t) => ({
-    pk: primaryKey({ columns: [t.tmdbId, t.mediaType] }),
-  }),
-);
+export const videos = createTable("videos", {
+  id: serial("id").primaryKey(),
+  tmdbId: integer("tmdb_id").notNull(),
+  mediaType: mediaTypeEnum("media_type").notNull(),
+});
 
 // one to many relationship between videos and videosToVideoLists tables
 export const videosRelations = relations(videos, ({ many }) => ({
@@ -109,9 +96,9 @@ export const videosRelations = relations(videos, ({ many }) => ({
 // video lists table
 export const videoLists = createTable("video_lists", {
   id: serial("id").primaryKey(),
-  userId: integer("user_id")
+  userId: varchar("user_id", { length: 255 })
     .notNull()
-    .references(() => users.id),
+    .references(() => users.id, { onDelete: "cascade" }),
   name: varchar("name", { length: 255 }).notNull(),
 });
 
@@ -147,7 +134,6 @@ export const accounts = createTable(
     compoundKey: primaryKey({
       columns: [account.provider, account.providerAccountId],
     }),
-    // userIdIdx: index("account_user_id_idx").on(account.userId),
   }),
 );
 
@@ -155,24 +141,16 @@ export const accountsRelations = relations(accounts, ({ one }) => ({
   user: one(users, { fields: [accounts.userId], references: [users.id] }),
 }));
 
-export const sessions = createTable(
-  "session",
-  {
-    sessionToken: varchar("session_token", { length: 255 })
-      .notNull()
-      .primaryKey(),
-    userId: varchar("user_id", { length: 255 })
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-    expires: timestamp("expires", {
-      mode: "date",
-      withTimezone: true,
-    }).notNull(),
-  },
-  // (session) => ({
-  //   userIdIdx: index("session_user_id_idx").on(session.userId),
-  // }),
-);
+export const sessions = createTable("session", {
+  sessionToken: varchar("session_token", { length: 255 }).primaryKey(),
+  userId: varchar("user_id", { length: 255 })
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  expires: timestamp("expires", {
+    mode: "date",
+    withTimezone: true,
+  }).notNull(),
+});
 
 export const sessionsRelations = relations(sessions, ({ one }) => ({
   user: one(users, { fields: [sessions.userId], references: [users.id] }),

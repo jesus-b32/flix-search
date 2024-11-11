@@ -48,6 +48,7 @@ export const env = createEnv({
     POSTGRES_URL: process.env.POSTGRES_URL,
     NODE_ENV: process.env.NODE_ENV,
     AUTH_SECRET: process.env.AUTH_SECRET,
+    // AUTH_DRIZZLE_URL: process.env.AUTH_DRIZZLE_URL,
     // NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     TMDB_API_KEY: process.env.TMDB_API_KEY,
   },
