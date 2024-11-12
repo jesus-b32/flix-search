@@ -33,8 +33,6 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     };
   }
 
-  // const hashPassword = await bcrypt.hash(password, 10);
-
   try {
     const hashPassword = await bcrypt.hash(password, 10);
 
