@@ -1,9 +1,38 @@
 import { auth } from "@/server/auth";
+import {
+  publicRoutes,
+  authRoutes,
+  apiAuthPrefix,
+  DEFAULT_LOGIN_REDIRECT,
+} from "@/routes";
 
 export default auth((req) => {
+  const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
-  console.log("ROUTE: ", req.nextUrl.pathname);
-  console.log("IS LOGGED IN: ", isLoggedIn);
+
+  const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
+  const isPublicRoute =
+    publicRoutes.includes(nextUrl.pathname) ||
+    nextUrl.pathname.startsWith("/movie") ||
+    nextUrl.pathname.startsWith("/tv");
+  const isAuthRoute = authRoutes.includes(nextUrl.pathname);
+
+  //must be in this order when checking routes
+  if (isApiAuthRoute) return null;
+
+  if (isAuthRoute) {
+    if (isLoggedIn) {
+      return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+    }
+    return null;
+  }
+
+  if (!isLoggedIn && !isPublicRoute) {
+    return Response.redirect(new URL("/auth/login", nextUrl));
+  }
+
+  // default is to all every other route
+  return null;
 });
 
 // Don't invoke Middleware on the paths that match the regex pattern below
