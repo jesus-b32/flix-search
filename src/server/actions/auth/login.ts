@@ -2,6 +2,9 @@
 
 import type * as z from "zod";
 import { LoginSchema } from "@/schemas";
+import { signIn } from "@/auth";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
+import { AuthError } from "next-auth";
 
 /**
  * Validates the form values and returns a success message or an error message
@@ -18,7 +21,28 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
     };
   }
 
-  return {
-    success: "Email Sent!",
-  };
+  const { email, password } = validatedFields.data;
+
+  try {
+    await signIn("credentials", {
+      email,
+      password,
+      redirectTo: DEFAULT_LOGIN_REDIRECT,
+    });
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case "CredentialsSignin":
+          return {
+            error: "Invalid credentials!",
+          };
+        default:
+          return {
+            error: "Something went wrong!",
+          };
+      }
+    }
+    //need to throw the error in order to redirect
+    throw error;
+  }
 };

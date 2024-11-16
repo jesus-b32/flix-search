@@ -1,20 +1,23 @@
-import { auth } from "@/server/auth";
+import { auth } from "@/auth";
 import {
   publicRoutes,
   authRoutes,
   apiAuthPrefix,
   DEFAULT_LOGIN_REDIRECT,
 } from "@/routes";
+// import type { NextRequest } from "next/server";
 
 export default auth((req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
 
+  console.log("isLoggedIn: ", isLoggedIn);
+
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
   const isPublicRoute =
     publicRoutes.includes(nextUrl.pathname) ||
-    nextUrl.pathname.startsWith("/movie") ||
-    nextUrl.pathname.startsWith("/tv");
+    nextUrl.pathname.startsWith("/movie/") ||
+    nextUrl.pathname.startsWith("/tv/");
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
   //must be in this order when checking routes

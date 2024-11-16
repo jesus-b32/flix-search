@@ -2,7 +2,7 @@
 
 // import { signIn as signInWithPasskey } from "next-auth/webauthn";
 
-import { signIn, signOut } from "@/server/auth";
+import { signIn, signOut } from "@/auth";
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
 import { LoginSchema } from "@/schemas";
