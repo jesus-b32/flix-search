@@ -1,4 +1,4 @@
-import { relations, sql } from "drizzle-orm";
+import { relations } from "drizzle-orm";
 import {
   integer,
   pgTableCreator,
@@ -6,7 +6,6 @@ import {
   serial,
   text,
   timestamp,
-  varchar,
   pgEnum,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
@@ -20,26 +19,69 @@ import type { AdapterAccountType } from "next-auth/adapters";
 export const createTable = pgTableCreator((name) => `flix_search_${name}`);
 
 export const users = createTable("users", {
-  id: varchar("id", { length: 255 })
+  id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  name: varchar("name", { length: 255 }),
+  name: text("name"),
   // username: varchar("username", { length: 255 }),
-  email: varchar("email", { length: 255 }).unique(),
+  email: text("email").unique(),
   password: text("password"),
-  emailVerified: timestamp("email_verified", {
-    mode: "date",
-    withTimezone: true,
-  }).default(sql`CURRENT_TIMESTAMP`),
+  emailVerified: timestamp("email_verified", { mode: "date" }),
   image: text("image"),
 });
 
 // one to many relationship between users and accounts tables
 // one to many relationship between users and video lists tables
 export const usersRelations = relations(users, ({ many }) => ({
-  accounts: many(accounts),
+  // accounts: many(accounts),
   videoLists: many(videoLists),
 }));
+
+/**
+ * Accounts table for NextAuth authentication
+ */
+export const accounts = createTable(
+  "account",
+  {
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    type: text("type").$type<AdapterAccountType>().notNull(),
+    provider: text("provider").notNull(),
+    providerAccountId: text("provider_account_id").notNull(),
+    refresh_token: text("refresh_token"),
+    access_token: text("access_token"),
+    expires_at: integer("expires_at"),
+    token_type: text("token_type"),
+    scope: text("scope"),
+    id_token: text("id_token"),
+    session_state: text("session_state"),
+  },
+  (account) => ({
+    compoundKey: primaryKey({
+      columns: [account.provider, account.providerAccountId],
+    }),
+  }),
+);
+
+// export const accountsRelations = relations(accounts, ({ one }) => ({
+//   user: one(users, { fields: [accounts.userId], references: [users.id] }),
+// }));
+
+/**
+ * Sessions table for NextAuth authentication
+ */
+export const sessions = createTable("session", {
+  sessionToken: text("session_token").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  expires: timestamp("expires", { mode: "date" }).notNull(),
+});
+
+// export const sessionsRelations = relations(sessions, ({ one }) => ({
+//   user: one(users, { fields: [sessions.userId], references: [users.id] }),
+// }));
 
 /**
  * Tables for videos, video lists, and the many-many relationship between them
@@ -96,10 +138,10 @@ export const videosRelations = relations(videos, ({ many }) => ({
 // video lists table
 export const videoLists = createTable("video_lists", {
   id: serial("id").primaryKey(),
-  userId: varchar("user_id", { length: 255 })
+  userId: text("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
-  name: varchar("name", { length: 255 }).notNull(),
+  name: text("name").notNull(),
 });
 
 // many to one relationship between videoLists and users table
@@ -107,51 +149,4 @@ export const videoLists = createTable("video_lists", {
 export const videoListsRelations = relations(videoLists, ({ one, many }) => ({
   user: one(users, { fields: [videoLists.userId], references: [users.id] }),
   videosToVideoLists: many(videosToVideoLists),
-}));
-
-export const accounts = createTable(
-  "account",
-  {
-    userId: varchar("user_id", { length: 255 })
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-    type: varchar("type", { length: 255 })
-      .$type<AdapterAccountType>()
-      .notNull(),
-    provider: varchar("provider", { length: 255 }).notNull(),
-    providerAccountId: varchar("provider_account_id", {
-      length: 255,
-    }).notNull(),
-    refresh_token: text("refresh_token"),
-    access_token: text("access_token"),
-    expires_at: integer("expires_at"),
-    token_type: varchar("token_type", { length: 255 }),
-    scope: varchar("scope", { length: 255 }),
-    id_token: text("id_token"),
-    session_state: varchar("session_state", { length: 255 }),
-  },
-  (account) => ({
-    compoundKey: primaryKey({
-      columns: [account.provider, account.providerAccountId],
-    }),
-  }),
-);
-
-export const accountsRelations = relations(accounts, ({ one }) => ({
-  user: one(users, { fields: [accounts.userId], references: [users.id] }),
-}));
-
-export const sessions = createTable("session", {
-  sessionToken: varchar("session_token", { length: 255 }).primaryKey(),
-  userId: varchar("user_id", { length: 255 })
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  expires: timestamp("expires", {
-    mode: "date",
-    withTimezone: true,
-  }).notNull(),
-});
-
-export const sessionsRelations = relations(sessions, ({ one }) => ({
-  user: one(users, { fields: [sessions.userId], references: [users.id] }),
 }));

@@ -8,13 +8,18 @@ import { db } from "@/server/db";
 import { users, accounts, sessions } from "@/server/db/schema";
 import { LoginSchema } from "@/schemas";
 import { getUserByEmail } from "@/data/user";
+import { v4 as uuid } from "uuid";
+import type { NextAuthConfig } from "next-auth";
+import { encode as defaultEncode } from "next-auth/jwt";
 
-const authConfig = {
-  adapter: DrizzleAdapter(db, {
-    usersTable: users,
-    accountsTable: accounts,
-    sessionsTable: sessions,
-  }),
+const adapter = DrizzleAdapter(db, {
+  usersTable: users,
+  accountsTable: accounts,
+  sessionsTable: sessions,
+});
+
+const authConfig: NextAuthConfig = {
+  adapter,
   providers: [
     Credentials({
       credentials: {
@@ -44,6 +49,59 @@ const authConfig = {
       },
     }),
   ],
+  callbacks: {
+    /**
+     * This is a custom `jwt` function that adds a `credentials` key to the `token` object
+     * when the user logs in with the credentials provider.
+     *
+     * @param params - The parameters passed to the `jwt` function
+     *
+     * @returns The updated token object
+     */
+    async jwt({ token, user, account }) {
+      if (account?.provider === "credentials") {
+        token.credentials = true;
+      }
+      return token;
+    },
+  },
+  jwt: {
+    /**
+     * This is a custom `encode` function that replaces the default `encode`
+     * function from NextAuth.js.
+     *
+     * If the `token` object has a `credentials` key, it will create a new session
+     * in the database and return the session token. If the `token` object doesn't
+     * have a `credentials` key, it will call the default `encode` function.
+     *
+     * @param params - The parameters passed to the `encode` function
+     *
+     * @returns The JWT token
+     */
+    encode: async function (params) {
+      console.log("params: ", params);
+      if (params.token?.credentials) {
+        const sessionToken = uuid();
+
+        if (!params.token.sub) {
+          throw new Error("No user ID found in token");
+        }
+
+        const createdSession = await adapter?.createSession?.({
+          sessionToken: sessionToken,
+          userId: params.token.sub,
+          expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
+        });
+
+        if (!createdSession) {
+          throw new Error("Failed to create session");
+        }
+
+        return sessionToken;
+      }
+      return defaultEncode(params);
+    },
+  },
 };
 
 export const { auth, handlers, signIn, signOut } = NextAuth(authConfig);

@@ -5,8 +5,12 @@ import {
   apiAuthPrefix,
   DEFAULT_LOGIN_REDIRECT,
 } from "@/routes";
-// import type { NextRequest } from "next/server";
 
+/**
+ * Middleware that checks if the user is logged in or not.
+ * If the user is not logged in, it will redirect the user to the login page on protected routes
+ * If the user is logged in, it will redirect the user to the settings page on auth routes
+ */
 export default auth((req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
