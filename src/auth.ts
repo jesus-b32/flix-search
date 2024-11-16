@@ -1,4 +1,4 @@
-import NextAuth from "next-auth";
+import NextAuth, { type DefaultSession } from "next-auth";
 import bcrypt from "bcryptjs";
 // import GitHub from "next-auth/providers/github";
 // import Google from "next-auth/providers/google";
@@ -17,6 +17,16 @@ const adapter = DrizzleAdapter(db, {
   accountsTable: accounts,
   sessionsTable: sessions,
 });
+
+declare module "next-auth" {
+  /**
+   * Returned by `auth`, `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
+   */
+  interface Session {
+    // default User session has property of: id, name, email, image
+    user: DefaultSession["user"];
+  }
+}
 
 const authConfig: NextAuthConfig = {
   adapter,
@@ -69,14 +79,15 @@ const authConfig: NextAuthConfig = {
      * @returns The updated session object
      */
     session({ session, user }) {
-      session.user = {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        emailVerified: user.emailVerified,
-        image: user.image,
+      return {
+        ...session,
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          image: user.image,
+        },
       };
-      return session;
     },
   },
   jwt: {
