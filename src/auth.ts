@@ -59,7 +59,7 @@ const authConfig: NextAuthConfig = {
       if (account?.provider === "credentials") {
         token.credentials = true;
       }
-      console.log("token: ", token);
+      console.log("token after adding credentials: ", { token });
       return token;
     },
     /**

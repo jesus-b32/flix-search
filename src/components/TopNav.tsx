@@ -121,7 +121,9 @@ export default async function TopNav() {
                 <form
                   action={async () => {
                     "use server";
-                    await signOut();
+                    await signOut({
+                      redirectTo: "/auth/login",
+                    });
                   }}
                 >
                   <Button type="submit" variant="destructive" size={"sm"}>
