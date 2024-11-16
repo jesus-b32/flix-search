@@ -5,7 +5,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 
 import {
   Sheet,
@@ -13,16 +13,17 @@ import {
   SheetTrigger,
   SheetTitle,
   SheetDescription,
-} from "../components/ui/sheet";
+} from "@/components/ui/sheet";
 
 import { CircleUser, Clapperboard, Menu } from "lucide-react";
 import Link from "next/link";
-import { Button } from "../components/ui/button";
-import SearchPopover from "./SearchPopover";
-import { LoginButton } from "@/components/auth/login-button";
-import { signOut } from "@/auth";
+import { Button } from "@/components/ui/button";
+import SearchPopover from "@/components/SearchPopover";
+// import { LoginButton } from "@/components/auth/login-button";
+import { signOut, auth } from "@/auth";
 
-export default function TopNav() {
+export default async function TopNav() {
+  const session = await auth();
   return (
     <header className="sticky top-0 flex h-16 items-center gap-4 bg-background bg-slate-600 px-4 text-black md:px-6">
       <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
@@ -37,10 +38,12 @@ export default function TopNav() {
           Discover Movies
         </Link>
         <Link href="/tv?sort_by=popularity.desc&page=1">Discover TV Shows</Link>
-        <Link href="/auth/register">Signup</Link>
-        {/* <LoginButton> */}
-        <Link href="/auth/login">Login</Link>
-        {/* </LoginButton> */}
+        {!session?.user ? (
+          <>
+            <Link href="/auth/register">Signup</Link>
+            <Link href="/auth/login">Login</Link>
+          </>
+        ) : null}
       </nav>
       <Sheet>
         <SheetTrigger asChild>
@@ -75,18 +78,22 @@ export default function TopNav() {
             >
               Discover TV Shows
             </Link>
-            <Link
-              href="/auth/register"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              Signup
-            </Link>
-            <Link
-              href="/auth/login"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              Login
-            </Link>
+            {!session?.user ? (
+              <>
+                <Link
+                  href="/auth/register"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  Signup
+                </Link>
+                <Link
+                  href="/auth/login"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  Login
+                </Link>
+              </>
+            ) : null}
           </nav>
         </SheetContent>
       </Sheet>
@@ -94,33 +101,37 @@ export default function TopNav() {
         <div className="ml-auto flex-initial">
           <SearchPopover />
         </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button size="icon" className="rounded-full">
-              <CircleUser className="h-5 w-5" />
-              <span className="sr-only">Toggle user menu</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem>Support</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <form
-                action={async () => {
-                  "use server";
-                  await signOut();
-                }}
-              >
-                <Button type="submit" variant="destructive" size={"sm"}>
-                  Sign out
-                </Button>
-              </form>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {!session?.user ? null : (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="icon" className="rounded-full">
+                <CircleUser className="h-5 w-5" />
+                <span className="sr-only">Toggle user menu</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Link href={"/settings"}>Settings</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>Support</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <form
+                  action={async () => {
+                    "use server";
+                    await signOut();
+                  }}
+                >
+                  <Button type="submit" variant="destructive" size={"sm"}>
+                    Sign out
+                  </Button>
+                </form>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
     </header>
   );
