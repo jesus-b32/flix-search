@@ -51,31 +51,42 @@ const authConfig: NextAuthConfig = {
   ],
   callbacks: {
     /**
-     * This is a custom `jwt` function that adds a `credentials` key to the `token` object
-     * when the user logs in with the credentials provider.
-     *
+     * This is a custom `jwt` function that adds a `credentials` key to the `token` object when the user logs in with the credentials provider.
      * @param params - The parameters passed to the `jwt` function
-     *
      * @returns The updated token object
      */
-    async jwt({ token, user, account }) {
+    async jwt({ token, account }) {
       if (account?.provider === "credentials") {
         token.credentials = true;
       }
+      console.log("token: ", token);
       return token;
+    },
+    /**
+     * This is a custom `session` function that adds the user's data to the session.
+     * @param session - The session object
+     * @param user - The user object
+     * @returns The updated session object
+     */
+    session({ session, user }) {
+      session.user = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        emailVerified: user.emailVerified,
+        image: user.image,
+      };
+      return session;
     },
   },
   jwt: {
     /**
      * This is a custom `encode` function that replaces the default `encode`
      * function from NextAuth.js.
-     *
      * If the `token` object has a `credentials` key, it will create a new session
      * in the database and return the session token. If the `token` object doesn't
      * have a `credentials` key, it will call the default `encode` function.
-     *
      * @param params - The parameters passed to the `encode` function
-     *
      * @returns The JWT token
      */
     encode: async function (params) {
