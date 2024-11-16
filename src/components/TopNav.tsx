@@ -20,6 +20,7 @@ import Link from "next/link";
 import { Button } from "../components/ui/button";
 import SearchPopover from "./SearchPopover";
 import { LoginButton } from "@/components/auth/login-button";
+import { signOut } from "@/auth";
 
 export default function TopNav() {
   return (
@@ -106,7 +107,18 @@ export default function TopNav() {
             <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuItem>Support</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            <DropdownMenuItem>
+              <form
+                action={async () => {
+                  "use server";
+                  await signOut();
+                }}
+              >
+                <Button type="submit" variant="destructive" size={"sm"}>
+                  Sign out
+                </Button>
+              </form>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
