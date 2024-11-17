@@ -4,6 +4,7 @@ import type * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useTransition, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 //shadcn ui components
 import {
@@ -35,6 +36,12 @@ import { login } from "@/server/actions/auth/login";
  * a success message when the login is successful.
  */
 export const LoginForm = () => {
+  const searchParams = useSearchParams();
+  const urlError =
+    searchParams.get("error") === "OAuthAccountNotLinked"
+      ? "Email already in use with a different provider"
+      : "";
+
   const [isPending, startTransition] = useTransition();
 
   const [error, setError] = useState("");
@@ -61,7 +68,9 @@ export const LoginForm = () => {
     startTransition(async () => {
       await login(values).then((data) => {
         setError(data?.error ?? "");
-        setSuccess(data?.success ?? "");
+
+        // TODO: add when we do 2fa
+        // setSuccess(data?.success ?? "");
       });
     });
   };
@@ -112,7 +121,7 @@ export const LoginForm = () => {
               )}
             />
           </div>
-          <FormError message={error} />
+          <FormError message={error || urlError} />
           <FormSuccess message={success} />
           <Button type="submit" className="w-full" disabled={isPending}>
             Login

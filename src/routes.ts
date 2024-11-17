@@ -15,7 +15,7 @@ export const publicRoutes = [
  * An array of routes that are used for authentication
  * These routes will redirect users to settings page
  */
-export const authRoutes = ["/auth/login", "/auth/register"];
+export const authRoutes = ["/auth/login", "/auth/register", "/auth/error"];
 
 /**
  * A prefix for API authentication routes

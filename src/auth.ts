@@ -1,16 +1,18 @@
 import NextAuth, { type DefaultSession } from "next-auth";
 import bcrypt from "bcryptjs";
-// import GitHub from "next-auth/providers/github";
-// import Google from "next-auth/providers/google";
+import GitHub from "next-auth/providers/github";
+import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { db } from "@/server/db";
 import { users, accounts, sessions } from "@/server/db/schema";
 import { LoginSchema } from "@/schemas";
-import { getUserByEmail } from "@/data/user";
+import { getUserByEmail, getUserById } from "@/data/user";
 import { v4 as uuid } from "uuid";
 import type { NextAuthConfig } from "next-auth";
 import { encode as defaultEncode } from "next-auth/jwt";
+import { updateUserEmailVerified } from "@/data/user";
+import { env } from "@/env";
 
 const adapter = DrizzleAdapter(db, {
   usersTable: users,
@@ -24,6 +26,7 @@ declare module "next-auth" {
    */
   interface Session {
     // default User session has property of: id, name, email, image
+    // https://next-auth.js.org/getting-started/typescript
     user: DefaultSession["user"];
   }
 }
@@ -31,18 +34,33 @@ declare module "next-auth" {
 const authConfig: NextAuthConfig = {
   adapter,
   providers: [
+    GitHub({
+      clientId: env.GITHUB_CLIENT_ID,
+      clientSecret: env.GITHUB_CLIENT_SECRET,
+    }),
+    Google({
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
+    }),
     Credentials({
       credentials: {
         email: {},
         password: {},
       },
+      /**
+       * Checks if the user is authorized to log in.
+       * If the user's credentials are valid, it will return the user object.
+       * If the credentials are invalid, it will return null.
+       * The user object must have a password or it will not be authorized.
+       * @param credentials - The credentials of the user (email and password).
+       * @returns The user object if the credentials are valid, null if not.
+       */
       authorize: async (credentials) => {
         //validate credentials from login page
         const validatedFields = LoginSchema.safeParse(credentials);
 
         //if credentials are valid
         if (validatedFields.success) {
-          console.log("validation success!");
           const { email, password } = validatedFields.data;
           const user = await getUserByEmail(email);
 
@@ -51,7 +69,6 @@ const authConfig: NextAuthConfig = {
           if (!user?.password || !user) return null;
           const passwordsMatch = await bcrypt.compare(password, user.password);
           if (passwordsMatch) {
-            console.log("user: ", user);
             return user;
           }
         }
@@ -59,7 +76,31 @@ const authConfig: NextAuthConfig = {
       },
     }),
   ],
+  pages: {
+    signIn: "/auth/login",
+    error: "/auth/error",
+  },
+  events: {
+    /**
+     * Event handler that is triggered when an account is linked to a user.
+     * This function updates the user's email verification status in the database.
+     * Used to update the user's email verification status when they log in with a social media provider.
+     *
+     * @param user - The user object containing the user's details.
+     */
+    async linkAccount({ user }) {
+      if (!user.id) return;
+      await updateUserEmailVerified(user.id);
+    },
+  },
   callbacks: {
+    async signIn({ user }) {
+      //check if user exists
+      if (!user.id) return false;
+      // const existingUser = await getUserById(user.id);
+      // if (!existingUser?.emailVerified || !existingUser) return false;
+      return true;
+    },
     /**
      * This is a custom `jwt` function that adds a `credentials` key to the `token` object when the user logs in with the credentials provider.
      * @param params - The parameters passed to the `jwt` function
@@ -69,7 +110,6 @@ const authConfig: NextAuthConfig = {
       if (account?.provider === "credentials") {
         token.credentials = true;
       }
-      console.log("token after adding credentials: ", { token });
       return token;
     },
     /**
@@ -101,7 +141,6 @@ const authConfig: NextAuthConfig = {
      * @returns The JWT token
      */
     encode: async function (params) {
-      console.log("params: ", params);
       if (params.token?.credentials) {
         const sessionToken = uuid();
 

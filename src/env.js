@@ -21,6 +21,10 @@ export const env = createEnv({
       process.env.NODE_ENV === "production"
         ? z.string()
         : z.string().optional(),
+    GITHUB_CLIENT_ID: z.string(),
+    GITHUB_CLIENT_SECRET: z.string(),
+    GOOGLE_CLIENT_ID: z.string(),
+    GOOGLE_CLIENT_SECRET: z.string(),
     // NEXTAUTH_URL: z.preprocess(
     //   // This makes Vercel deployments not fail if you don't set NEXTAUTH_URL
     //   // Since NextAuth.js automatically uses the VERCEL_URL if present.
@@ -48,6 +52,10 @@ export const env = createEnv({
     POSTGRES_URL: process.env.POSTGRES_URL,
     NODE_ENV: process.env.NODE_ENV,
     AUTH_SECRET: process.env.AUTH_SECRET,
+    GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
+    GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
     // AUTH_DRIZZLE_URL: process.env.AUTH_DRIZZLE_URL,
     // NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     TMDB_API_KEY: process.env.TMDB_API_KEY,

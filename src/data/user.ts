@@ -23,3 +23,15 @@ export const getUserById = async (id: string) => {
     return null;
   }
 };
+
+export const updateUserEmailVerified = async (id: string) => {
+  try {
+    await db
+      .update(users)
+      .set({ emailVerified: new Date() })
+      .where(eq(users.id, id));
+    return true;
+  } catch {
+    return null;
+  }
+};
