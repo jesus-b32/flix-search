@@ -39,6 +39,7 @@ declare module "next-auth" {
 const authConfig: NextAuthConfig = {
   adapter,
   providers: [
+    // Can see callback url using http://localhost:3000/api/auth/providers or [domain]/api/auth/providers
     GitHub({
       clientId: env.GITHUB_CLIENT_ID,
       clientSecret: env.GITHUB_CLIENT_SECRET,
