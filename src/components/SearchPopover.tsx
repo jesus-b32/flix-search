@@ -7,6 +7,13 @@ import {
 import { Search as SearchIcon } from "lucide-react";
 import Search from "./client/Search";
 
+/**
+ * A popover that contains a search bar. The popover is
+ * triggered by a button with a search icon.
+ *
+ * @example
+ * <SearchPopover />
+ */
 export default function SearchPopover() {
   return (
     <Popover>

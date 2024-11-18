@@ -1,9 +1,9 @@
 "use client";
 
+// form validation imports
 import type * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useTransition, useState } from "react";
 
 //shadcn ui components
 import {
@@ -22,9 +22,10 @@ import { CardWrapper } from "@/components/auth/card-wrapper";
 import { FormError } from "@/components/auth/form-error";
 import { FormSuccess } from "@/components/auth/form-success";
 
+//other imports
 import { RegisterSchema } from "@/schemas";
-
 import { register } from "@/server/actions/auth/register";
+import { useTransition, useState } from "react";
 
 /**
  * RegisterForm is a component that renders a register form with an email,

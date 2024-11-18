@@ -1,18 +1,23 @@
-import NextAuth, { type DefaultSession } from "next-auth";
-import bcrypt from "bcryptjs";
+//Next-auth imports
+import NextAuth from "next-auth";
+import type { NextAuthConfig, DefaultSession } from "next-auth";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
+import { encode as defaultEncode } from "next-auth/jwt";
+
+//database imports
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { db } from "@/server/db";
 import { users, accounts, sessions } from "@/server/db/schema";
 import { LoginSchema } from "@/schemas";
 import { getUserByEmail, getUserById } from "@/data/user";
-import { v4 as uuid } from "uuid";
-import type { NextAuthConfig } from "next-auth";
-import { encode as defaultEncode } from "next-auth/jwt";
 import { updateUserEmailVerified } from "@/data/user";
+
+//other imports
 import { env } from "@/env";
+import { v4 as uuid } from "uuid";
+import bcrypt from "bcryptjs";
 
 const adapter = DrizzleAdapter(db, {
   usersTable: users,

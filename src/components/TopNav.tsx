@@ -22,6 +22,17 @@ import SearchPopover from "@/components/SearchPopover";
 // import { LoginButton } from "@/components/auth/login-button";
 import { signOut, auth } from "@/auth";
 
+/**
+ * The navigation bar component. It displays the Flix Search logo,
+ * links to discover movies and TV shows, login/signup buttons,
+ * and a search bar. For logged-in users, it also displays a dropdown
+ * menu with links to their account settings and support and hides the login/signup buttons.
+ *
+ * The component is responsive and will render a hamburger menu
+ * on smaller screens.
+ *
+ * @returns The navigation bar component.
+ */
 export default async function TopNav() {
   const session = await auth();
   return (

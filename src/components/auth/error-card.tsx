@@ -1,6 +1,13 @@
 import { CardWrapper } from "@/components/auth/card-wrapper";
 import { TriangleAlert } from "lucide-react";
 
+/**
+ * A special card for when something goes wrong with authentication.
+ *
+ * It displays a red error triangle, a header that says "Oops, something went
+ * wrong.", and a button that says "Back to login" that redirects you to the
+ * login page.
+ */
 export const ErrorCard = () => {
   return (
     <CardWrapper

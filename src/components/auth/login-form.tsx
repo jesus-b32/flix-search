@@ -1,10 +1,9 @@
 "use client";
 
+// form validation imports
 import type * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useTransition, useState } from "react";
-import { useSearchParams } from "next/navigation";
 
 //shadcn ui components
 import {
@@ -23,8 +22,10 @@ import { CardWrapper } from "@/components/auth/card-wrapper";
 import { FormError } from "@/components/auth/form-error";
 import { FormSuccess } from "@/components/auth/form-success";
 
+//other imports
+import { useTransition, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { LoginSchema } from "@/schemas";
-
 import { login } from "@/server/actions/auth/login";
 
 /**
