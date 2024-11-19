@@ -32,16 +32,17 @@ export default async function DetailCard({
   details: movieDetails | tvDetails;
 }) {
   const session = await auth();
+  console.log("session: ", session);
   const mediaType = "title" in details ? "movie" : "tv";
 
   const video = await getVideo(details.id, mediaType);
   console.log("video: ", video);
   const videoId = video?.id ?? 0;
-  console.log("video id: ", video?.id);
 
-  const watchlist = !session?.user?.id
-    ? null
-    : await getVideoList(session.user.id, "watchlist");
+  // get watchlist from db; breaks code if I set to null
+  const watchlist = !session
+    ? false
+    : await getVideoList(session.user?.id ?? "", "watchlist");
 
   console.log("watchlist: ", watchlist);
 
@@ -86,13 +87,13 @@ export default async function DetailCard({
             action={async () => {
               "use server";
               if (watchlist) {
-                const isVideoInWatchlist = await isVideoInList(
+                const isVideoInWatchlist2 = await isVideoInList(
                   videoId,
                   watchlist.id,
                 );
-                if (isVideoInWatchlist) {
+                if (isVideoInWatchlist2) {
                   await removeVideoFromList(videoId, watchlist.id);
-                } else if (!isVideoInWatchlist) {
+                } else if (!isVideoInWatchlist2) {
                   const insertedVideoId = await insertVideotoDb(
                     details.id,
                     mediaType,
@@ -108,7 +109,7 @@ export default async function DetailCard({
               type="submit"
               variant={isVideoInWatchlist ? "destructive" : "default"}
               size={"sm"}
-              disabled={!session?.user}
+              disabled={!session}
             >
               {isVideoInWatchlist
                 ? "Remove from Watchlist"
