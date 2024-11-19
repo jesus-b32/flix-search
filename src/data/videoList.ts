@@ -98,12 +98,19 @@ export const insertVideotoDb = async (
   mediaType: "movie" | "tv",
 ) => {
   try {
-    await db.insert(videos).values({
-      tmdbId,
-      mediaType,
-    });
+    const video = await db
+      .insert(videos)
+      .values({
+        tmdbId,
+        mediaType,
+      })
+      .returning({
+        id: videos.id,
+      });
 
-    return true;
+    const videoId = video[0]?.id ?? null;
+
+    return videoId;
   } catch {
     return null;
   }

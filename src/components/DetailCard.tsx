@@ -12,6 +12,14 @@ import { ImageOff } from "lucide-react";
 import type { movieDetails } from "@/server/actions/movies/types";
 import type { tvDetails } from "@/server/actions/tv/types";
 import { auth } from "@/auth";
+import {
+  getVideoList,
+  addVideoToList,
+  isVideoInList,
+  removeVideoFromList,
+  getVideo,
+  insertVideotoDb,
+} from "@/data/videoList";
 
 /**
  * Creates a server component that displays a movie or TV show's details
@@ -24,6 +32,25 @@ export default async function DetailCard({
   details: movieDetails | tvDetails;
 }) {
   const session = await auth();
+  const mediaType = "title" in details ? "movie" : "tv";
+
+  const video = await getVideo(details.id, mediaType);
+  console.log("video: ", video);
+  const videoId = video?.id ?? 0;
+  console.log("video id: ", video?.id);
+
+  const watchlist = !session?.user?.id
+    ? null
+    : await getVideoList(session.user.id, "watchlist");
+
+  console.log("watchlist: ", watchlist);
+
+  const isVideoInWatchlist = watchlist
+    ? await isVideoInList(videoId, watchlist.id)
+    : false;
+
+  console.log("isVideoInWatchlist: ", isVideoInWatchlist);
+
   return (
     <Card className="mt-6 flex h-fit w-full flex-col items-center rounded-none border-none md:flex-row md:items-start">
       <div className="flex justify-center md:h-[513px] md:w-[342px] md:justify-start">
@@ -55,7 +82,39 @@ export default async function DetailCard({
           <p>{details?.overview}</p>
         </CardContent>
         <CardFooter className="flex justify-center md:justify-start">
-          <Button disabled={!session?.user}>Add to Watchlist</Button>
+          <form
+            action={async () => {
+              "use server";
+              if (watchlist) {
+                const isVideoInWatchlist = await isVideoInList(
+                  videoId,
+                  watchlist.id,
+                );
+                if (isVideoInWatchlist) {
+                  await removeVideoFromList(videoId, watchlist.id);
+                } else if (!isVideoInWatchlist) {
+                  const insertedVideoId = await insertVideotoDb(
+                    details.id,
+                    mediaType,
+                  );
+                  if (insertedVideoId) {
+                    await addVideoToList(insertedVideoId, watchlist.id);
+                  }
+                }
+              }
+            }}
+          >
+            <Button
+              type="submit"
+              variant={isVideoInWatchlist ? "destructive" : "default"}
+              size={"sm"}
+              disabled={!session?.user}
+            >
+              {isVideoInWatchlist
+                ? "Remove from Watchlist"
+                : "Add to Watchlist"}
+            </Button>
+          </form>
         </CardFooter>
       </div>
     </Card>
