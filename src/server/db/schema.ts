@@ -7,6 +7,7 @@ import {
   text,
   timestamp,
   pgEnum,
+  unique,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
 
@@ -124,11 +125,17 @@ export const videosToVideoListsRelations = relations(
 export const mediaTypeEnum = pgEnum("media_type", ["movie", "tv"]);
 
 // videos table
-export const videos = createTable("videos", {
-  id: serial("id").primaryKey(),
-  tmdbId: integer("tmdb_id").notNull(),
-  mediaType: mediaTypeEnum("media_type").notNull(),
-});
+export const videos = createTable(
+  "videos",
+  {
+    id: serial("id").primaryKey(),
+    tmdbId: integer("tmdb_id").notNull(),
+    mediaType: mediaTypeEnum("media_type").notNull(),
+  },
+  (t) => ({
+    unq: unique().on(t.tmdbId, t.mediaType),
+  }),
+);
 
 // one to many relationship between videos and videosToVideoLists tables
 export const videosRelations = relations(videos, ({ many }) => ({
@@ -136,13 +143,19 @@ export const videosRelations = relations(videos, ({ many }) => ({
 }));
 
 // video lists table
-export const videoLists = createTable("video_lists", {
-  id: serial("id").primaryKey(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  name: text("name").notNull(),
-});
+export const videoLists = createTable(
+  "video_lists",
+  {
+    id: serial("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+  },
+  (t) => ({
+    unq: unique().on(t.userId, t.name),
+  }),
+);
 
 // many to one relationship between videoLists and users table
 // one to many relationship between videoLists and videosToVideoLists tables
