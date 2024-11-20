@@ -98,6 +98,7 @@ export const insertVideotoDb = async (
   mediaType: "movie" | "tv",
 ) => {
   try {
+    // example of video output looks like:  [ { id: 14 } ]
     const video = await db
       .insert(videos)
       .values({
@@ -108,7 +109,7 @@ export const insertVideotoDb = async (
         id: videos.id,
       });
 
-    const videoId = video[0]?.id ?? null;
+    const videoId = video[0]?.id ?? 0;
 
     return videoId;
   } catch {

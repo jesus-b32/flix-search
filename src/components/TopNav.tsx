@@ -49,7 +49,7 @@ export default async function TopNav() {
           Discover Movies
         </Link>
         <Link href="/tv?sort_by=popularity.desc&page=1">Discover TV Shows</Link>
-        {!session?.user ? (
+        {!session ? (
           <>
             <Link href="/auth/register">Signup</Link>
             <Link href="/auth/login">Login</Link>
@@ -89,7 +89,7 @@ export default async function TopNav() {
             >
               Discover TV Shows
             </Link>
-            {!session?.user ? (
+            {!session ? (
               <>
                 <Link
                   href="/auth/register"
@@ -112,7 +112,7 @@ export default async function TopNav() {
         <div className="ml-auto flex-initial">
           <SearchPopover />
         </div>
-        {!session?.user ? null : (
+        {!session ? null : (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button size="icon" className="rounded-full">

@@ -31,26 +31,29 @@ export default async function DetailCard({
 }: {
   details: movieDetails | tvDetails;
 }) {
+  // session is null if user is not logged in
   const session = await auth();
-  console.log("session: ", session);
   const mediaType = "title" in details ? "movie" : "tv";
 
+  // return video object from db or is undefined if it doesn't exist
   const video = await getVideo(details.id, mediaType);
-  console.log("video: ", video);
   const videoId = video?.id ?? 0;
 
-  // get watchlist from db; breaks code if I set to null
+  /**
+   * get watchlist from db if user is logged in;
+   * code breaks if watchlist set to null
+   */
   const watchlist = !session
     ? false
     : await getVideoList(session.user?.id ?? "", "watchlist");
 
-  console.log("watchlist: ", watchlist);
-
+  /**
+   * check if video is in watchlist
+   * if so return true; if not found return false
+   */
   const isVideoInWatchlist = watchlist
     ? await isVideoInList(videoId, watchlist.id)
     : false;
-
-  console.log("isVideoInWatchlist: ", isVideoInWatchlist);
 
   return (
     <Card className="mt-6 flex h-fit w-full flex-col items-center rounded-none border-none md:flex-row md:items-start">
@@ -87,19 +90,17 @@ export default async function DetailCard({
             action={async () => {
               "use server";
               if (watchlist) {
-                const isVideoInWatchlist2 = await isVideoInList(
-                  videoId,
-                  watchlist.id,
-                );
-                if (isVideoInWatchlist2) {
+                if (isVideoInWatchlist) {
                   await removeVideoFromList(videoId, watchlist.id);
-                } else if (!isVideoInWatchlist2) {
-                  const insertedVideoId = await insertVideotoDb(
-                    details.id,
-                    mediaType,
-                  );
+                } else {
+                  const insertedVideoId =
+                    videoId === 0
+                      ? await insertVideotoDb(details.id, mediaType)
+                      : 0;
                   if (insertedVideoId) {
                     await addVideoToList(insertedVideoId, watchlist.id);
+                  } else {
+                    await addVideoToList(videoId, watchlist.id);
                   }
                 }
               }
