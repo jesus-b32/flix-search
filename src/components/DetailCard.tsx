@@ -6,20 +6,13 @@ import {
   CardTitle,
   CardFooter,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 
 import { ImageOff } from "lucide-react";
 import type { movieDetails } from "@/server/actions/movies/types";
 import type { tvDetails } from "@/server/actions/tv/types";
 import { auth } from "@/auth";
-import {
-  getVideoList,
-  addVideoToList,
-  isVideoInList,
-  removeVideoFromList,
-  getVideo,
-  insertVideotoDb,
-} from "@/data/videoList";
+import { getVideoList, isVideoInList, getVideo } from "@/data/videoList";
+import WatchlistButton from "@/components/WatchlistButton";
 
 /**
  * Creates a server component that displays a movie or TV show's details
@@ -86,37 +79,14 @@ export default async function DetailCard({
           <p>{details?.overview}</p>
         </CardContent>
         <CardFooter className="flex justify-center md:justify-start">
-          <form
-            action={async () => {
-              "use server";
-              if (watchlist) {
-                if (isVideoInWatchlist) {
-                  await removeVideoFromList(videoId, watchlist.id);
-                } else {
-                  const insertedVideoId =
-                    videoId === 0
-                      ? await insertVideotoDb(details.id, mediaType)
-                      : 0;
-                  if (insertedVideoId) {
-                    await addVideoToList(insertedVideoId, watchlist.id);
-                  } else {
-                    await addVideoToList(videoId, watchlist.id);
-                  }
-                }
-              }
-            }}
-          >
-            <Button
-              type="submit"
-              variant={isVideoInWatchlist ? "destructive" : "default"}
-              size={"sm"}
-              disabled={!session}
-            >
-              {isVideoInWatchlist
-                ? "Remove from Watchlist"
-                : "Add to Watchlist"}
-            </Button>
-          </form>
+          <WatchlistButton
+            tmdbId={details.id}
+            mediaType={mediaType}
+            userId={session?.user?.id ?? ""}
+            videoId={videoId}
+            watchlist={watchlist}
+            isVideoInWatchlist={isVideoInWatchlist}
+          />
         </CardFooter>
       </div>
     </Card>

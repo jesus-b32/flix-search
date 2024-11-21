@@ -340,3 +340,13 @@ export type watchProviderRegions = {
     native_name: string;
   }[];
 };
+
+export type watchlist =
+  | false
+  | {
+      userId: string;
+      id: number;
+      name: string;
+    }
+  | null
+  | undefined;
