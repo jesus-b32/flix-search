@@ -59,6 +59,28 @@ export const isVideoInList = async (videoId: number, videoListId: number) => {
   }
 };
 
+export const getVideosFromList = async (videoListId: number) => {
+  try {
+    const videosfromList = await db
+      .select({
+        videoId: videos.id,
+        tmdbId: videos.tmdbId,
+        mediaType: videos.mediaType,
+        title: videos.title,
+        overview: videos.overview,
+        releaseDate: videos.releaseDate,
+        posterPath: videos.posterPath,
+      })
+      .from(videosToVideoLists)
+      .innerJoin(videos, eq(videosToVideoLists.videoId, videos.id))
+      .where(eq(videosToVideoLists.videoListId, videoListId));
+
+    return videosfromList;
+  } catch {
+    return null;
+  }
+};
+
 export const addVideoToList = async (videoId: number, videoListId: number) => {
   try {
     await db.insert(videosToVideoLists).values({
