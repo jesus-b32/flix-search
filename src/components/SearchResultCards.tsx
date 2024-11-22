@@ -35,31 +35,19 @@ export default function SearchResultCards({
     <Card className="flex w-full flex-col items-center border-none md:w-10/12 md:flex-row">
       <div className="flex h-[278px] w-[185px] justify-center md:justify-start">
         {/* imagge is 185x278 */}
-        {"title" in cinema ? (
-          <Link href={`/movie/${cinema.id}`}>
-            {cinema?.poster_path ? (
-              <img
-                src={`https://image.tmdb.org/t/p/w185${cinema.poster_path}`}
-                alt="Movie or show image"
-                className="h-full w-full rounded-none md:rounded-l-lg"
-              />
-            ) : (
-              <ImageOff className="h-full w-full rounded-none md:rounded-l-lg" />
-            )}
-          </Link>
-        ) : (
-          <Link href={`/tv/${cinema.id}`}>
-            {cinema?.poster_path ? (
-              <img
-                src={`https://image.tmdb.org/t/p/w185${cinema.poster_path}`}
-                alt="Movie or show image"
-                className="h-full w-full rounded-none md:rounded-l-lg"
-              />
-            ) : (
-              <ImageOff className="h-full w-full rounded-none md:rounded-l-lg" />
-            )}
-          </Link>
-        )}
+        <Link
+          href={"title" in cinema ? `/movie/${cinema.id}` : `/tv/${cinema.id}`}
+        >
+          {cinema?.poster_path ? (
+            <img
+              src={`https://image.tmdb.org/t/p/w185${cinema.poster_path}`}
+              alt="Movie or show image"
+              className="h-full w-full rounded-none md:rounded-l-lg"
+            />
+          ) : (
+            <ImageOff className="h-full w-full rounded-none md:rounded-l-lg" />
+          )}
+        </Link>
       </div>
       <div className="flex h-fit w-full flex-col md:h-[278px] md:w-2/3">
         <CardHeader className="text-center md:text-left">

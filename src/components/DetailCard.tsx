@@ -69,14 +69,14 @@ export default async function DetailCard({
           </CardTitle>
           <CardDescription>
             {"title" in details
-              ? `${details?.release_date} | ${details?.runtime}min`
-              : `${details?.first_air_date} | ${details?.number_of_seasons} seasons | ${details?.number_of_episodes} episodes`}
+              ? `${details?.release_date || "No Release Date"} | ${details?.runtime || "?"} minutes`
+              : `${details?.first_air_date || "FIrst Air Date Unknown"} | ${details?.number_of_seasons || "?"} seasons | ${details?.number_of_episodes || "?"} episodes`}
           </CardDescription>
         </CardHeader>
         <CardContent className="text-center md:text-left">
           <p>{`Genres: ${details?.genres.map((genre) => genre.name).join(", ") || "N/A"}`}</p>
           <h4 className="text-xl font-bold">Overview</h4>
-          <p>{details?.overview}</p>
+          <p>{details?.overview || "No Overview"}</p>
         </CardContent>
         <CardFooter className="flex justify-center md:justify-start">
           <WatchlistButton

@@ -131,6 +131,10 @@ export const videos = createTable(
     id: serial("id").primaryKey(),
     tmdbId: integer("tmdb_id").notNull(),
     mediaType: mediaTypeEnum("media_type").notNull(),
+    title: text("title").notNull(),
+    overview: text("overview"),
+    releaseDate: text("release_date"),
+    posterPath: text("poster_path"),
   },
   (t) => ({
     unq: unique().on(t.tmdbId, t.mediaType),
