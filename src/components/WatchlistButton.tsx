@@ -8,6 +8,10 @@ import { updateWatchlist } from "@/server/actions/watchlist";
 export default function WatchlistButton({
   tmdbId,
   mediaType,
+  title,
+  overview,
+  releaseDate,
+  posterPath,
   userId,
   videoId,
   watchlist,
@@ -15,6 +19,10 @@ export default function WatchlistButton({
 }: {
   tmdbId: number;
   mediaType: "movie" | "tv";
+  title: string;
+  overview: string;
+  releaseDate: string;
+  posterPath: string;
   userId: string;
   videoId: number;
   watchlist: watchlistType;
@@ -27,6 +35,10 @@ export default function WatchlistButton({
         await updateWatchlist(
           tmdbId,
           mediaType,
+          title,
+          overview,
+          releaseDate,
+          posterPath,
           videoId,
           watchlist,
           isVideoInWatchlist,

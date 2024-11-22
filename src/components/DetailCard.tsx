@@ -82,6 +82,14 @@ export default async function DetailCard({
           <WatchlistButton
             tmdbId={details.id}
             mediaType={mediaType}
+            title={"title" in details ? details.title : details.name}
+            overview={details?.overview ?? ""}
+            releaseDate={
+              "title" in details
+                ? (details?.release_date ?? "")
+                : (details?.first_air_date ?? "")
+            }
+            posterPath={details?.poster_path ?? ""}
             userId={session?.user?.id ?? ""}
             videoId={videoId}
             watchlist={watchlist}

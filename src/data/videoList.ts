@@ -96,6 +96,10 @@ export const removeVideoFromList = async (
 export const insertVideotoDb = async (
   tmdbId: number,
   mediaType: "movie" | "tv",
+  title: string,
+  overview: string,
+  releaseDate: string,
+  posterPath: string,
 ) => {
   try {
     // example of video output looks like:  [ { id: 14 } ]
@@ -104,6 +108,10 @@ export const insertVideotoDb = async (
       .values({
         tmdbId,
         mediaType,
+        title,
+        overview,
+        releaseDate,
+        posterPath,
       })
       .returning({
         id: videos.id,

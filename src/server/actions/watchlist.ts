@@ -10,6 +10,10 @@ import { type watchlist as watchlistType } from "@/server/actions/types";
 export async function updateWatchlist(
   tmdbId: number,
   mediaType: "movie" | "tv",
+  title: string,
+  overview: string,
+  releaseDate: string,
+  posterPath: string,
   videoId: number,
   watchlist: watchlistType,
   isVideoInWatchlist: boolean | null,
@@ -19,7 +23,16 @@ export async function updateWatchlist(
       await removeVideoFromList(videoId, watchlist.id);
     } else {
       const insertedVideoId =
-        videoId === 0 ? await insertVideotoDb(tmdbId, mediaType) : 0;
+        videoId === 0
+          ? await insertVideotoDb(
+              tmdbId,
+              mediaType,
+              title,
+              overview,
+              releaseDate,
+              posterPath,
+            )
+          : 0;
       if (insertedVideoId) {
         await addVideoToList(insertedVideoId, watchlist.id);
       } else {
