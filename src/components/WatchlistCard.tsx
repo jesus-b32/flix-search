@@ -4,18 +4,25 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  CardFooter,
 } from "@/components/ui/card";
 
 import { ImageOff } from "lucide-react";
 import Link from "next/link";
+
+import WatchlistButton from "@/components/WatchlistButton";
+import { auth } from "@/auth";
+import { type watchlist as watchlistType } from "@/server/actions/types";
 
 /**
  * Returns a card with the details of a movie or tv show that was searched
  * @param movie or tv show
  * @returns - A list card with title, poster image, and overview for movies or TV shows related to the search
  */
-export default function WatchlistCard({
+export default async function WatchlistCard({
   cinema,
+  watchlist,
+  isVideoInWatchlist,
 }: {
   cinema: {
     videoId: number;
@@ -26,7 +33,10 @@ export default function WatchlistCard({
     releaseDate: string;
     posterPath: string;
   };
+  watchlist: watchlistType;
+  isVideoInWatchlist: boolean | null;
 }) {
+  const session = await auth();
   /**
    * Card Responsive:
    *   On small screens, the image appears above the content and is centered
@@ -74,6 +84,20 @@ export default function WatchlistCard({
         <CardContent className="text-center md:text-left">
           <p className="line-clamp-6">{cinema?.overview || "No Overview"}</p>
         </CardContent>
+        <CardFooter className="flex justify-center md:justify-start">
+          <WatchlistButton
+            tmdbId={cinema.tmdbId}
+            mediaType={cinema.mediaType}
+            title={cinema.title}
+            overview={cinema.overview}
+            releaseDate={cinema.releaseDate}
+            posterPath={cinema.posterPath}
+            userId={session?.user?.id ?? ""}
+            videoId={cinema.videoId}
+            watchlist={watchlist}
+            isVideoInWatchlist={isVideoInWatchlist}
+          />
+        </CardFooter>
       </div>
     </Card>
   );

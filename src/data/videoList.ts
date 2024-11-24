@@ -6,7 +6,7 @@ import { eq, and } from "drizzle-orm";
 export const getVideoList = async (userId: string, name: string) => {
   try {
     const videoList = await db.query.videoLists.findFirst({
-      where: and(eq(videoLists?.userId, userId), eq(videoLists?.name, name)),
+      where: and(eq(videoLists.userId, userId), eq(videoLists.name, name)),
     });
 
     return videoList;
