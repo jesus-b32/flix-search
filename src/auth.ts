@@ -13,6 +13,7 @@ import { users, accounts, sessions } from "@/server/db/schema";
 import { LoginSchema } from "@/schemas";
 import { getUserByEmail, getUserById } from "@/data/user";
 import { updateUserEmailVerified } from "@/data/user";
+import { createVideoList } from "@/data/videoList";
 
 //other imports
 import { env } from "@/env";
@@ -86,20 +87,38 @@ const authConfig: NextAuthConfig = {
     signIn: "/auth/login",
     error: "/auth/error",
   },
+  /**
+   * Events are asynchronous functions that do not return a response, they are useful for audit logs / reporting or handling any other side-effects.
+   * https://next-auth.js.org/configuration/events
+   */
   events: {
     /**
      * Event handler that is triggered when an account is linked to a user.
      * This function updates the user's email verification status in the database.
-     * Used to update the user's email verification status when they log in with a social media provider.
+     * Used to update the user's email verification status when new user logs in with a social media provider.
+     * Also creates a watchlist for new users
      *
      * @param user - The user object containing the user's details.
      */
     async linkAccount({ user }) {
       if (!user.id) return;
       await updateUserEmailVerified(user.id);
+      await createVideoList(user.id, "watchlist");
     },
   },
+  /**
+   * Callbacks are asynchronous functions you can use to control what happens when an action is performed.
+   * Callbacks are extremely powerful, especially in scenarios involving JSON Web Tokens as they allow you to implement access controls without a database and to integrate with external databases or APIs.
+   * https://next-auth.js.org/configuration/callbacks
+   */
   callbacks: {
+    /**
+     * Called whenever a user signs in.
+     * Verifies that the user exists in the database and has a verified email.
+     * If the user does not exist or email is not verified, returns false to prevent signin.
+     * @param user - The user object containing the user's details.
+     * @returns boolean indicating whether signin was successful.
+     */
     async signIn({ user }) {
       //check if user exists
       if (!user.id) return false;
@@ -107,6 +126,7 @@ const authConfig: NextAuthConfig = {
       // if (!existingUser?.emailVerified || !existingUser) return false;
       return true;
     },
+
     /**
      * This is a custom `jwt` function that adds a `credentials` key to the `token` object when the user logs in with the credentials provider.
      * @param params - The parameters passed to the `jwt` function
@@ -118,8 +138,9 @@ const authConfig: NextAuthConfig = {
       }
       return token;
     },
+
     /**
-     * This is a custom `session` function that adds the user's data to the session.
+     * This is a custom `session` function that adds the desired user's data to the session.
      * @param session - The session object
      * @param user - The user object
      * @returns The updated session object
@@ -136,6 +157,13 @@ const authConfig: NextAuthConfig = {
       };
     },
   },
+
+  /**
+   * JSON Web Tokens can be used for session tokens if enabled with session: { strategy: "jwt" } option.
+   * JSON Web Tokens are enabled by default if you have not specified an adapter.
+   * JSON Web Tokens are encrypted (JWE) by default. We recommend you keep this behaviour.
+   * https://next-auth.js.org/configuration/options#jwt
+   */
   jwt: {
     /**
      * This is a custom `encode` function that replaces the default `encode`

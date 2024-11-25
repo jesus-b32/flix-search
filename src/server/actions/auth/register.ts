@@ -8,6 +8,7 @@ import { users } from "@/server/db/schema";
 // import { eq } from "drizzle-orm";
 
 import { getUserByEmail } from "@/data/user";
+import { createVideoList } from "@/data/videoList";
 
 /**
  * Validates the form values and returns a success message or an error message
@@ -36,11 +37,20 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
   try {
     const hashPassword = await bcrypt.hash(password, 10);
 
-    await db.insert(users).values({
-      name,
-      email,
-      password: hashPassword,
-    });
+    const newUser = await db
+      .insert(users)
+      .values({
+        name,
+        email,
+        password: hashPassword,
+      })
+      .returning({
+        id: users.id,
+      });
+
+    const userId = newUser[0]?.id ?? "";
+
+    await createVideoList(userId, "watchlist");
     // ...
   } catch {
     // Handle the error, for example:
