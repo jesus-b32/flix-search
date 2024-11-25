@@ -26,6 +26,7 @@ import { FormSuccess } from "@/components/auth/form-success";
 import { RegisterSchema } from "@/schemas";
 import { register } from "@/server/actions/auth/register";
 import { useTransition, useState } from "react";
+import { login } from "@/server/actions/auth/login";
 
 /**
  * RegisterForm is a component that renders a register form with an email,
@@ -65,6 +66,15 @@ export const RegisterForm = () => {
         setError(data.error ?? "");
         setSuccess(data.success ?? "");
       });
+
+      await login({ email: values.email, password: values.password }).then(
+        (data) => {
+          setError(data?.error ?? "");
+
+          // TODO: add when we do 2fa
+          // setSuccess(data?.success ?? "");
+        },
+      );
     });
   };
   return (
