@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { type watchlist as watchlistType } from "@/server/actions/types";
 import { Button } from "@/components/ui/button";
 import { updateWatchlist } from "@/server/actions/watchlist";
+import { useState } from "react";
 
 export default function WatchlistButton({
   tmdbId,
@@ -29,6 +30,7 @@ export default function WatchlistButton({
   isVideoInWatchlist: boolean | null;
 }) {
   const router = useRouter();
+  const [inWatchlist, setInWatchlist] = useState(isVideoInWatchlist ?? false);
   return (
     <form
       action={async () => {
@@ -47,12 +49,15 @@ export default function WatchlistButton({
       }}
     >
       <Button
+        onClick={() => {
+          setInWatchlist(!inWatchlist);
+        }}
         type="submit"
-        variant={isVideoInWatchlist ? "destructive" : "default"}
+        variant={inWatchlist ? "destructive" : "default"}
         size={"sm"}
         disabled={userId === ""}
       >
-        {isVideoInWatchlist ? "Remove from Watchlist" : "Add to Watchlist"}
+        {inWatchlist ? "Remove from Watchlist" : "Add to Watchlist"}
       </Button>
     </form>
   );
