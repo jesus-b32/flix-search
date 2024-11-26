@@ -128,7 +128,7 @@ export default async function TopNav() {
                 <Link href={`/user/${name}/watchlist`}>Watchlist</Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link href={"/settings"}>Settings</Link>
+                <Link href={"/settings/profile"}>Settings</Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>

@@ -35,3 +35,12 @@ export const updateUserEmailVerified = async (id: string) => {
     return null;
   }
 };
+
+export const deleteUserById = async (id: string) => {
+  try {
+    await db.delete(users).where(eq(users.id, id));
+    return true;
+  } catch {
+    return null;
+  }
+};
