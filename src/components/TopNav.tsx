@@ -15,7 +15,7 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet";
 
-import { CircleUser, Clapperboard, Menu } from "lucide-react";
+import { Clapperboard, Menu, CircleUserRound } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import SearchPopover from "@/components/SearchPopover";
@@ -117,7 +117,15 @@ export default async function TopNav() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button size="icon" className="rounded-full">
-                <CircleUser className="h-5 w-5" />
+                {(session?.user?.image ?? "") ? (
+                  <img
+                    src={session?.user?.image}
+                    alt="Profile picture"
+                    className="h-10 w-10 rounded-full"
+                  />
+                ) : (
+                  <CircleUserRound className="h-10 w-10" strokeWidth={1} />
+                )}
                 <span className="sr-only">Toggle user menu</span>
               </Button>
             </DropdownMenuTrigger>
