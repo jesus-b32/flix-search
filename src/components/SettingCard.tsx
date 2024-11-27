@@ -44,7 +44,6 @@ export default function SettingCard() {
               <SheetTrigger asChild>
                 <Button className="w-full border-none">
                   <SlidersHorizontal className="mr-2 h-4 w-4" />
-                  Filters & Sort
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="text-black">

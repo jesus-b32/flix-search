@@ -8,7 +8,7 @@ const SettingsLayout = ({ children }: { children: React.ReactNode }) => {
         <div className="h-fit w-full items-start md:w-10/12 lg:w-60">
           <SettingCard />
         </div>
-        <div className="flex w-full flex-col items-start gap-y-6 lg:w-3/4">
+        <div className="flex w-full flex-col items-start gap-y-6 md:w-10/12 lg:w-3/4">
           {children}
         </div>
       </div>

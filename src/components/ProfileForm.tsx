@@ -22,7 +22,7 @@ export default function ProfileForm({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>
+        <Button size={"sm"}>
           {valueBeingEdited === "image"
             ? "Update Profile Image"
             : `Update ${valueBeingEdited}`}
@@ -39,18 +39,18 @@ export default function ProfileForm({
         <div className="grid gap-4 py-4">
           {/* oAuth accounts won't have a password */}
           {!isOauth ? (
-            <div className="grid grid-cols-4 items-center gap-4">
+            <div className="flex flex-col items-start gap-y-4">
               <Label htmlFor="password" className="text-right">
                 Enter Your Password
               </Label>
-              <Input id="password" className="col-span-3 text-black" />
+              <Input id="password" className="text-black" />
             </div>
           ) : null}
-          <div className="grid grid-cols-4 items-center gap-4">
+          <div className="flex flex-col items-start gap-y-4">
             <Label htmlFor={valueBeingEdited} className="text-right">
               {`New ${valueBeingEdited}`}
             </Label>
-            <Input id={valueBeingEdited} className="col-span-3 text-black" />
+            <Input id={valueBeingEdited} className="text-black" />
           </div>
         </div>
         <DialogFooter>

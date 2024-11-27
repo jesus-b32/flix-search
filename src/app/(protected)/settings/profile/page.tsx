@@ -13,7 +13,7 @@ export default async function SettingProfilePage() {
   return (
     <div className="w-full">
       <h1 className="my-5 text-4xl font-bold">Edit Profile</h1>
-      <section className="flex w-full flex-col items-center space-y-4 md:w-10/12 md:items-start">
+      <section className="flex w-full flex-col items-start space-y-4 md:w-10/12">
         <Label htmlFor="name" className="font-semibold">
           Name
         </Label>
