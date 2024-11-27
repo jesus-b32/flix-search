@@ -3,10 +3,12 @@ import { auth } from "@/auth";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { isOauthUser } from "@/data/user";
 
 export default async function DeleteAccountPage() {
   const session = await auth();
-  // People who use Oauth won't have a password. Need to figure out to determine if user is using oAuth or credentials
+  const isOauth = await isOauthUser(session?.user?.id ?? "");
+
   return (
     <div className="w-full">
       <h1 className="my-5 text-4xl font-bold">Delete Account</h1>
@@ -16,10 +18,18 @@ export default async function DeleteAccountPage() {
           continue and remove your account, you can do so by entering your
           password below and confirming the prompts.
         </p>
-        <Label htmlFor="password" className="font-semibold">
-          Password
-        </Label>
-        <Input id="password" className="w-full text-black" type="password" />
+        {!isOauth ? (
+          <>
+            <Label htmlFor="password" className="font-semibold">
+              Password
+            </Label>
+            <Input
+              id="password"
+              className="w-full text-black"
+              type="password"
+            />{" "}
+          </>
+        ) : null}
         <Button variant={"destructive"}>Delete Account</Button>
       </section>
     </div>

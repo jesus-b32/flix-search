@@ -1,5 +1,6 @@
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
+import { accounts } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
 
 export const getUserByEmail = async (email: string) => {
@@ -39,6 +40,20 @@ export const updateUserEmailVerified = async (id: string) => {
 export const deleteUserById = async (id: string) => {
   try {
     await db.delete(users).where(eq(users.id, id));
+    return true;
+  } catch {
+    return null;
+  }
+};
+
+export const isOauthUser = async (id: string) => {
+  try {
+    const account = await db.query.accounts.findFirst({
+      where: eq(accounts.userId, id),
+    });
+
+    if (!account) return false;
+
     return true;
   } catch {
     return null;

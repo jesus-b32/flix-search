@@ -12,9 +12,13 @@ import { Label } from "@/components/ui/label";
 
 interface ProfileFormProps {
   valueBeingEdited: "name" | "image" | "password" | "email";
+  isOauth: boolean | null;
 }
 
-export default function ProfileForm({ valueBeingEdited }: ProfileFormProps) {
+export default function ProfileForm({
+  valueBeingEdited,
+  isOauth,
+}: ProfileFormProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -34,12 +38,14 @@ export default function ProfileForm({ valueBeingEdited }: ProfileFormProps) {
         </DialogHeader>
         <div className="grid gap-4 py-4">
           {/* oAuth accounts won't have a password */}
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="password" className="text-right">
-              Enter Your Password
-            </Label>
-            <Input id="password" className="col-span-3 text-black" />
-          </div>
+          {!isOauth ? (
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="password" className="text-right">
+                Enter Your Password
+              </Label>
+              <Input id="password" className="col-span-3 text-black" />
+            </div>
+          ) : null}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor={valueBeingEdited} className="text-right">
               {`New ${valueBeingEdited}`}

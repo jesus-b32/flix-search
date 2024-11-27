@@ -4,9 +4,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 import ProfileForm from "@/components/ProfileForm";
+import { isOauthUser } from "@/data/user";
 
 export default async function SettingProfilePage() {
   const session = await auth();
+  const isOauth = await isOauthUser(session?.user?.id ?? "");
+
   return (
     <div className="w-full">
       <h1 className="my-5 text-4xl font-bold">Edit Profile</h1>
@@ -38,7 +41,7 @@ export default async function SettingProfilePage() {
           defaultValue={session?.user?.image ?? ""}
           disabled
         />
-        <ProfileForm valueBeingEdited="image" />
+        <ProfileForm valueBeingEdited="image" isOauth={isOauth} />
       </section>
     </div>
   );
