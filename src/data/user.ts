@@ -59,3 +59,12 @@ export const isOauthUser = async (id: string) => {
     return null;
   }
 };
+
+export const updateUserImage = async (id: string, imageUrl: string) => {
+  try {
+    await db.update(users).set({ image: imageUrl }).where(eq(users.id, id));
+    return true;
+  } catch {
+    return null;
+  }
+};

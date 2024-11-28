@@ -3,8 +3,9 @@ import { auth } from "@/auth";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-import ProfileForm from "@/components/ProfileForm";
+import ProfileEditWrapper from "@/components/ProfileEditWrapper";
 import { isOauthUser } from "@/data/user";
+import { ImageForm } from "@/components/form/ImageForm";
 
 export default async function SettingProfilePage() {
   const session = await auth();
@@ -41,7 +42,9 @@ export default async function SettingProfilePage() {
           defaultValue={session?.user?.image ?? ""}
           disabled
         />
-        <ProfileForm valueBeingEdited="image" isOauth={isOauth} />
+        <ProfileEditWrapper valueBeingEdited="image" isOauth={isOauth}>
+          <ImageForm isOauth={isOauth} userId={session?.user?.id ?? ""} />
+        </ProfileEditWrapper>
       </section>
     </div>
   );

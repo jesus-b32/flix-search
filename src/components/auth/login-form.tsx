@@ -43,6 +43,11 @@ export const LoginForm = () => {
       ? "Email already in use with a different provider"
       : "";
 
+  /**
+   * useTransition is a React Hook that lets you update the state without blocking the UI.
+   * The isPending flag that tells you whether there is a pending Transition. In the form it is used to show a loading state when the form is submitting.
+   * The startTransition function that lets you mark a state update as a Transition.
+   */
   const [isPending, startTransition] = useTransition();
 
   const [error, setError] = useState("");
