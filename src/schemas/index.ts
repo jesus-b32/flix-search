@@ -25,3 +25,7 @@ export const NewImageSchema = z.object({
   password: z.string().optional(),
   image: z.string().url({ message: "Invalid image url" }),
 });
+
+export const DeleteAccountSchema = z.object({
+  password: z.string().optional(),
+});

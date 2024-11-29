@@ -1,9 +1,7 @@
 import { auth } from "@/auth";
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import { isOauthUser } from "@/data/user";
+import { DeleteAccountForm } from "@/components/form/DeleteAccountForm";
 
 export default async function DeleteAccountPage() {
   const session = await auth();
@@ -18,19 +16,7 @@ export default async function DeleteAccountPage() {
           continue and remove your account, you can do so by entering your
           password below and confirming the prompts.
         </p>
-        {!isOauth ? (
-          <>
-            <Label htmlFor="password" className="font-semibold">
-              Password
-            </Label>
-            <Input
-              id="password"
-              className="w-full text-black"
-              type="password"
-            />{" "}
-          </>
-        ) : null}
-        <Button variant={"destructive"}>Delete Account</Button>
+        <DeleteAccountForm isOauth={isOauth} userId={session?.user?.id ?? ""} />
       </section>
     </div>
   );
