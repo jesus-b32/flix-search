@@ -30,7 +30,7 @@ export default async function DetailCard({
 
   // return video object from db or is undefined if it doesn't exist
   const video = await getVideo(details.id, mediaType);
-  const videoId = video?.id ?? 0;
+  const videoId = video?.id ?? "";
 
   /**
    * get watchlist from db if user is logged in;

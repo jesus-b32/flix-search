@@ -28,7 +28,7 @@ export const createVideoList = async (userId: string, name: string) => {
   }
 };
 
-export const deleteVideoList = async (id: number) => {
+export const deleteVideoList = async (id: string) => {
   try {
     await db.delete(videoLists).where(eq(videoLists.id, id));
 
@@ -40,7 +40,7 @@ export const deleteVideoList = async (id: number) => {
 /////////////////////////////////////////////////////////////////////////////
 
 // checking, adding, and removing videos from video lists /////////////////////
-export const isVideoInList = async (videoId: number, videoListId: number) => {
+export const isVideoInList = async (videoId: string, videoListId: string) => {
   try {
     const foundVideo = await db.query.videosToVideoLists.findFirst({
       where: and(
@@ -59,7 +59,7 @@ export const isVideoInList = async (videoId: number, videoListId: number) => {
   }
 };
 
-export const getVideosFromList = async (videoListId: number) => {
+export const getVideosFromList = async (videoListId: string) => {
   try {
     const videosfromList = await db
       .select({
@@ -81,7 +81,7 @@ export const getVideosFromList = async (videoListId: number) => {
   }
 };
 
-export const addVideoToList = async (videoId: number, videoListId: number) => {
+export const addVideoToList = async (videoId: string, videoListId: string) => {
   try {
     await db.insert(videosToVideoLists).values({
       videoId,
@@ -95,8 +95,8 @@ export const addVideoToList = async (videoId: number, videoListId: number) => {
 };
 
 export const removeVideoFromList = async (
-  videoId: number,
-  videoListId: number,
+  videoId: string,
+  videoListId: string,
 ) => {
   try {
     await db

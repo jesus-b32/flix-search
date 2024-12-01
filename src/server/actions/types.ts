@@ -345,7 +345,7 @@ export type watchlist =
   | false
   | {
       userId: string;
-      id: number;
+      id: string;
       name: string;
     }
   | null

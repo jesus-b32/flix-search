@@ -25,7 +25,7 @@ export default function WatchlistButton({
   releaseDate: string;
   posterPath: string;
   userId: string;
-  videoId: number;
+  videoId: string;
   watchlist: watchlistType;
   isVideoInWatchlist: boolean | null;
 }) {

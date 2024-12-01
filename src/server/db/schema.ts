@@ -1,13 +1,13 @@
-import { relations } from "drizzle-orm";
 import {
   integer,
   pgTableCreator,
   primaryKey,
-  serial,
   text,
   timestamp,
   pgEnum,
   unique,
+  uuid,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
 
@@ -19,24 +19,25 @@ import type { AdapterAccountType } from "next-auth/adapters";
  */
 export const createTable = pgTableCreator((name) => `flix_search_${name}`);
 
-export const users = createTable("users", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  name: text("name"),
-  // username: text("username").unique(),
-  email: text("email").unique(),
-  password: text("password"),
-  emailVerified: timestamp("email_verified", { mode: "date" }),
-  image: text("image"),
-});
-
-// one to many relationship between users and accounts tables
-// one to many relationship between users and video lists tables
-export const usersRelations = relations(users, ({ many }) => ({
-  // accounts: many(accounts),
-  videoLists: many(videoLists),
-}));
+export const users = createTable(
+  "users",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    name: text("name"),
+    email: text("email"),
+    password: text("password"),
+    emailVerified: timestamp("email_verified", { mode: "date" }),
+    image: text("image"),
+  },
+  (t) => {
+    return {
+      // create an unique index on the email column to make queries faster
+      emailIndex: uniqueIndex("email_index").on(t.email),
+    };
+  },
+);
 
 /**
  * Accounts table for NextAuth authentication
@@ -65,10 +66,6 @@ export const accounts = createTable(
   }),
 );
 
-// export const accountsRelations = relations(accounts, ({ one }) => ({
-//   user: one(users, { fields: [accounts.userId], references: [users.id] }),
-// }));
-
 /**
  * Sessions table for NextAuth authentication
  */
@@ -80,10 +77,6 @@ export const sessions = createTable("session", {
   expires: timestamp("expires", { mode: "date" }).notNull(),
 });
 
-// export const sessionsRelations = relations(sessions, ({ one }) => ({
-//   user: one(users, { fields: [sessions.userId], references: [users.id] }),
-// }));
-
 /**
  * Tables for videos, video lists, and the many-many relationship between them
  */
@@ -91,34 +84,20 @@ export const sessions = createTable("session", {
 export const videosToVideoLists = createTable(
   "video_to_video_list",
   {
-    videoListId: integer("video_list_id")
-      .notNull()
-      .references(() => videoLists.id, { onDelete: "cascade" }),
-    videoId: integer("video_id")
-      .notNull()
-      .references(() => videos.id, { onDelete: "cascade" }),
+    videoListId: uuid("video_list_id")
+      .references(() => videoLists.id, { onDelete: "cascade" })
+      .notNull(),
+    videoId: uuid("video_id")
+      .references(() => videos.id, { onDelete: "cascade" })
+      .notNull(),
   },
-  (t) => ({
-    pk: primaryKey({
-      columns: [t.videoListId, t.videoId],
-    }),
-  }),
-);
-
-// many to one relationship between videosToVideoLists table and video table
-// many to one relationship between videosToVideoLists table and videoList table
-export const videosToVideoListsRelations = relations(
-  videosToVideoLists,
-  ({ one }) => ({
-    videoList: one(videoLists, {
-      fields: [videosToVideoLists.videoListId],
-      references: [videoLists.id],
-    }),
-    video: one(videos, {
-      fields: [videosToVideoLists.videoId],
-      references: [videos.id],
-    }),
-  }),
+  (t) => {
+    return {
+      pk: primaryKey({
+        columns: [t.videoListId, t.videoId],
+      }),
+    };
+  },
 );
 
 // custom enum type for media type column in videos table
@@ -128,7 +107,7 @@ export const mediaTypeEnum = pgEnum("media_type", ["movie", "tv"]);
 export const videos = createTable(
   "videos",
   {
-    id: serial("id").primaryKey(),
+    id: uuid("id").primaryKey().defaultRandom(),
     tmdbId: integer("tmdb_id").notNull(),
     mediaType: mediaTypeEnum("media_type").notNull(),
     title: text("title").notNull(),
@@ -141,16 +120,11 @@ export const videos = createTable(
   }),
 );
 
-// one to many relationship between videos and videosToVideoLists tables
-export const videosRelations = relations(videos, ({ many }) => ({
-  videosToVideoLists: many(videosToVideoLists),
-}));
-
 // video lists table
 export const videoLists = createTable(
   "video_lists",
   {
-    id: serial("id").primaryKey(),
+    id: uuid("id").primaryKey().defaultRandom(),
     userId: text("user_id")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
@@ -160,10 +134,3 @@ export const videoLists = createTable(
     unq: unique().on(t.userId, t.name),
   }),
 );
-
-// many to one relationship between videoLists and users table
-// one to many relationship between videoLists and videosToVideoLists tables
-export const videoListsRelations = relations(videoLists, ({ one, many }) => ({
-  user: one(users, { fields: [videoLists.userId], references: [users.id] }),
-  videosToVideoLists: many(videosToVideoLists),
-}));

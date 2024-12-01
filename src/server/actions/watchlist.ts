@@ -14,7 +14,7 @@ export async function updateWatchlist(
   overview: string,
   releaseDate: string,
   posterPath: string,
-  videoId: number,
+  videoId: string,
   watchlist: watchlistType,
   isVideoInWatchlist: boolean | null,
 ) {
@@ -23,7 +23,7 @@ export async function updateWatchlist(
       await removeVideoFromList(videoId, watchlist.id);
     } else {
       const insertedVideoId =
-        videoId === 0
+        videoId === ""
           ? await insertVideotoDb(
               tmdbId,
               mediaType,
