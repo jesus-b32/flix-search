@@ -18,26 +18,28 @@ export async function updateWatchlist(
   watchlist: watchlistType,
   isVideoInWatchlist: boolean | null,
 ) {
-  if (watchlist) {
-    if (isVideoInWatchlist) {
-      await removeVideoFromList(videoId, watchlist.id);
-    } else {
-      const insertedVideoId =
-        videoId === ""
-          ? await insertVideotoDb(
-              tmdbId,
-              mediaType,
-              title,
-              overview,
-              releaseDate,
-              posterPath,
-            )
-          : 0;
-      if (insertedVideoId) {
-        await addVideoToList(insertedVideoId, watchlist.id);
+  try {
+    if (watchlist) {
+      if (isVideoInWatchlist) {
+        await removeVideoFromList(videoId, watchlist.id);
       } else {
-        await addVideoToList(videoId, watchlist.id);
+        const insertedVideoId =
+          videoId === ""
+            ? await insertVideotoDb(
+                tmdbId,
+                mediaType,
+                title,
+                overview,
+                releaseDate,
+                posterPath,
+              )
+            : 0;
+        if (insertedVideoId) {
+          await addVideoToList(insertedVideoId, watchlist.id);
+        } else {
+          await addVideoToList(videoId, watchlist.id);
+        }
       }
     }
-  }
+  } catch (error) {}
 }

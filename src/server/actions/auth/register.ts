@@ -52,7 +52,7 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
 
     await createVideoList(userId, "watchlist");
     // ...
-  } catch {
+  } catch (error) {
     // Handle the error, for example:
     return {
       error: "Error creating user!",

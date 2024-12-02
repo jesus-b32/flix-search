@@ -7,7 +7,7 @@ export default async function WatchlistPage() {
   const session = await auth();
   const watchlist = await getVideoList(session?.user?.id ?? "", "watchlist");
 
-  const videos = await getVideosFromList(watchlist?.id ?? 0);
+  const videos = await getVideosFromList(watchlist?.id ?? "");
 
   return (
     <div className="flex min-h-screen flex-col items-center">

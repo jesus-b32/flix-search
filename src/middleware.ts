@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import {
-  publicRoutes,
+  protectedRoutes,
   authRoutes,
   apiAuthPrefix,
   DEFAULT_LOGIN_REDIRECT,
@@ -16,10 +16,10 @@ export default auth((req) => {
   const isLoggedIn = !!req.auth;
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
-  const isPublicRoute =
-    publicRoutes.includes(nextUrl.pathname) ||
-    nextUrl.pathname.startsWith("/movie/") ||
-    nextUrl.pathname.startsWith("/tv/");
+  const isProtectedRoute =
+    protectedRoutes.includes(nextUrl.pathname) ||
+    (nextUrl.pathname.startsWith("/user/") &&
+      nextUrl.pathname.endsWith("/watchlist"));
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
   //must be in this order when checking routes
@@ -32,7 +32,7 @@ export default auth((req) => {
     return null;
   }
 
-  if (!isLoggedIn && !isPublicRoute) {
+  if (!isLoggedIn && isProtectedRoute) {
     return Response.redirect(new URL("/auth/login", nextUrl));
   }
 

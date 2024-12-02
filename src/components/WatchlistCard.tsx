@@ -25,7 +25,7 @@ export default async function WatchlistCard({
   isVideoInWatchlist,
 }: {
   cinema: {
-    videoId: number;
+    videoId: string;
     tmdbId: number;
     mediaType: "movie" | "tv";
     title: string;

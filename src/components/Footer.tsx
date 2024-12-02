@@ -18,12 +18,6 @@ export default function Footer() {
             <Button asChild variant="link">
               <Link href="/about">About</Link>
             </Button>
-            <Button asChild variant="link">
-              <Link href="#">Services</Link>
-            </Button>
-            <Button asChild variant="link">
-              <Link href="#">Contact</Link>
-            </Button>
           </nav>
         </div>
       </div>

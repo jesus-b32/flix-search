@@ -10,7 +10,7 @@ export const getVideoList = async (userId: string, name: string) => {
     });
 
     return videoList;
-  } catch {
+  } catch (error) {
     return null;
   }
 };
@@ -23,7 +23,7 @@ export const createVideoList = async (userId: string, name: string) => {
     });
 
     return true;
-  } catch {
+  } catch (error) {
     return null;
   }
 };
@@ -33,7 +33,7 @@ export const deleteVideoList = async (id: string) => {
     await db.delete(videoLists).where(eq(videoLists.id, id));
 
     return true;
-  } catch {
+  } catch (error) {
     return null;
   }
 };
@@ -54,7 +54,7 @@ export const isVideoInList = async (videoId: string, videoListId: string) => {
     }
 
     return true;
-  } catch {
+  } catch (error) {
     return null;
   }
 };
@@ -76,7 +76,7 @@ export const getVideosFromList = async (videoListId: string) => {
       .where(eq(videosToVideoLists.videoListId, videoListId));
 
     return videosfromList;
-  } catch {
+  } catch (error) {
     return null;
   }
 };
@@ -89,7 +89,7 @@ export const addVideoToList = async (videoId: string, videoListId: string) => {
     });
 
     return true;
-  } catch {
+  } catch (error) {
     return null;
   }
 };
@@ -109,7 +109,7 @@ export const removeVideoFromList = async (
       );
 
     return true;
-  } catch {
+  } catch (error) {
     return null;
   }
 };
@@ -142,7 +142,7 @@ export const insertVideotoDb = async (
     const videoId = video[0]?.id ?? 0;
 
     return videoId;
-  } catch {
+  } catch (error) {
     return null;
   }
 };
@@ -154,7 +154,7 @@ export const getVideo = async (tmdbId: number, mediaType: "movie" | "tv") => {
     });
 
     return foundVideo;
-  } catch {
+  } catch (error) {
     return null;
   }
 };

@@ -9,7 +9,7 @@ export const getUserByEmail = async (email: string) => {
       where: eq(users.email, email),
     });
     return user;
-  } catch {
+  } catch (error) {
     return null;
   }
 };
@@ -20,7 +20,7 @@ export const getUserById = async (id: string) => {
       where: eq(users.id, id),
     });
     return user;
-  } catch {
+  } catch (error) {
     return null;
   }
 };
@@ -32,7 +32,7 @@ export const updateUserEmailVerified = async (id: string) => {
       .set({ emailVerified: new Date() })
       .where(eq(users.id, id));
     return true;
-  } catch {
+  } catch (error) {
     return null;
   }
 };
@@ -41,7 +41,7 @@ export const deleteUserById = async (id: string) => {
   try {
     await db.delete(users).where(eq(users.id, id));
     return true;
-  } catch {
+  } catch (error) {
     return null;
   }
 };
@@ -55,7 +55,7 @@ export const isOauthUser = async (id: string) => {
     if (!account) return false;
 
     return true;
-  } catch {
+  } catch (error) {
     return null;
   }
 };
@@ -64,7 +64,7 @@ export const updateUserImage = async (id: string, imageUrl: string) => {
   try {
     await db.update(users).set({ image: imageUrl }).where(eq(users.id, id));
     return true;
-  } catch {
+  } catch (error) {
     return null;
   }
 };
