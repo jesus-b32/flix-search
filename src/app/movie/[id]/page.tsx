@@ -1,3 +1,5 @@
+import { type Metadata } from "next";
+
 import {
   getMovieDetails,
   getMovieProviders,
@@ -8,6 +10,25 @@ import { getCountries } from "@/server/actions/actions";
 import AvailabilityByProvider from "@/components/AvailabilityByProvider";
 import AvailabilityByCountry from "@/components/AvailabilityByCountry";
 import Recommendations from "@/components/Recommendations";
+
+type Props = {
+  params: { id: string };
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  // read route params
+  const id = Number(params.id);
+
+  // fetch data
+  const movie = await getMovieDetails(id);
+  if (movie instanceof Error) {
+    throw new Error(`Failed to fetch movie data: ${movie}`);
+  }
+
+  return {
+    title: movie.title,
+  };
+}
 
 export default async function MovieDetails({
   params,

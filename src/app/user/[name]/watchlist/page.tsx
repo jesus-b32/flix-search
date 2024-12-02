@@ -1,7 +1,13 @@
+import { type Metadata } from "next";
+
 import { auth } from "@/auth";
 import { getVideoList } from "@/data/videoList";
 import WatchlistCard from "@/components/WatchlistCard";
 import { getVideosFromList } from "@/data/videoList";
+
+export const metadata: Metadata = {
+  title: "My Watchlist",
+};
 
 export default async function WatchlistPage() {
   const session = await auth();

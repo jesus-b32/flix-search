@@ -1,7 +1,12 @@
+import { type Metadata } from "next";
 import { auth } from "@/auth";
 
 import { isOauthUser } from "@/data/user";
 import { DeleteAccountForm } from "@/components/form/DeleteAccountForm";
+
+export const metadata: Metadata = {
+  title: "Delete My Account",
+};
 
 export default async function DeleteAccountPage() {
   const session = await auth();

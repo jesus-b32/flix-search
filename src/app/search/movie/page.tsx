@@ -1,8 +1,28 @@
+import { type Metadata } from "next";
+
 import { searchMovies } from "@/server/actions/movies/actions";
 import SearchResultCards from "@/components/SearchResultCards";
 import PaginationComponent from "@/components/client/Pagination";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+
+type Props = {
+  searchParams: {
+    search?: string;
+    page?: string;
+  };
+};
+
+export const generateMetadata = async ({
+  searchParams,
+}: Props): Promise<Metadata> => {
+  // read route searchParam
+  const searchTerm = searchParams?.search ?? "";
+
+  return {
+    title: searchTerm,
+  };
+};
 
 export default async function SearchPage({
   searchParams,

@@ -1,3 +1,5 @@
+import { type Metadata } from "next";
+
 // client and server Components
 import SearchResultCards from "@/components/SearchResultCards";
 import PaginationComponent from "@/components/client/Pagination";
@@ -13,6 +15,10 @@ import {
   getLanguages,
   getWatchProviderRegions,
 } from "@/server/actions/actions";
+
+export const metadata: Metadata = {
+  title: "Discover TV Shows",
+};
 
 export default async function DiscoverTvShowPage({
   searchParams,

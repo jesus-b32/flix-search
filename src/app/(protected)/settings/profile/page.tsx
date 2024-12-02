@@ -1,3 +1,4 @@
+import { type Metadata } from "next";
 import { auth } from "@/auth";
 
 import { Input } from "@/components/ui/input";
@@ -6,6 +7,10 @@ import { Label } from "@/components/ui/label";
 import ProfileEditWrapper from "@/components/ProfileEditWrapper";
 import { isOauthUser } from "@/data/user";
 import { ImageForm } from "@/components/form/ImageForm";
+
+export const metadata: Metadata = {
+  title: "My Profile",
+};
 
 export default async function SettingProfilePage() {
   const session = await auth();

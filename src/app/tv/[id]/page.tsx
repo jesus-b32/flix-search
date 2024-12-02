@@ -1,3 +1,5 @@
+import { type Metadata } from "next";
+
 import {
   getTvShowDetails,
   getTvShowProviders,
@@ -8,6 +10,25 @@ import { getCountries } from "@/server/actions/actions";
 import AvailabilityByProvider from "@/components/AvailabilityByProvider";
 import AvailabilityByCountry from "@/components/AvailabilityByCountry";
 import Recommendations from "@/components/Recommendations";
+
+type Props = {
+  params: { id: string };
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  // read route params
+  const id = Number(params.id);
+
+  // fetch data
+  const TvShow = await getTvShowDetails(id);
+  if (TvShow instanceof Error) {
+    throw new Error(`Failed to fetch TV show data: ${TvShow}`);
+  }
+
+  return {
+    title: TvShow.name,
+  };
+}
 
 export default async function TvDetails({
   params,

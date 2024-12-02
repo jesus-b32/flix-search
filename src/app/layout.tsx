@@ -6,8 +6,11 @@ import TopNav from "@/components/TopNav";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Flix Search",
-  description: "Global Streaming Search Engine",
+  title: {
+    template: "%s | Flix Search",
+    default: "Flix Search",
+  },
+  description: "Global Streaming Search Engine for Movies and TV Shows",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
