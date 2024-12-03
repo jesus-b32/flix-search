@@ -117,9 +117,9 @@ export default async function TopNav() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button size="icon" className="rounded-full">
-                {(session?.user?.image ?? "") ? (
+                {session?.user?.image ? (
                   <img
-                    src={session?.user?.image}
+                    src={session?.user?.image ?? ""}
                     alt="Profile picture"
                     className="h-10 w-10 rounded-full"
                   />

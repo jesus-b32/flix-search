@@ -348,7 +348,7 @@ export default function FilterSort({
                     <CommandItem
                       key={region.iso_3166_1}
                       value={region.native_name.toLowerCase()}
-                      onSelect={(currentValue) => {
+                      onSelect={() => {
                         setCurrentValue(region.iso_3166_1);
                         setOpen(false);
                         setIsChanged(true);

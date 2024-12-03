@@ -50,8 +50,6 @@ export default function SelectSearch({
     searchParams.get("streamingProvider") ?? "8",
   );
 
-  const pageParam = searchParams.get("page");
-
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -89,7 +87,7 @@ export default function SelectSearch({
                     <CommandItem
                       key={provider.provider_id}
                       value={provider.provider_name.toLowerCase()}
-                      onSelect={(currentValue) => {
+                      onSelect={() => {
                         const params = new URLSearchParams(searchParams);
                         params.set(
                           "streamingProvider",
@@ -115,7 +113,7 @@ export default function SelectSearch({
                     <CommandItem
                       key={country.iso_3166_1}
                       value={country.native_name.toLowerCase()}
-                      onSelect={(currentValue) => {
+                      onSelect={() => {
                         const params = new URLSearchParams(searchParams);
                         if (searchParams.get("page")) params.set("page", "1");
                         params.set("watch_region", country.iso_3166_1);

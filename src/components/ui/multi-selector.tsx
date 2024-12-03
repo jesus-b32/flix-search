@@ -15,7 +15,7 @@ import {
 import { cn } from "@/lib/utils";
 
 export interface Option {
-  id: string;
+  id?: string; //changed this to optional
   value: string;
   label: string;
   disable?: boolean;
@@ -259,8 +259,9 @@ const MultipleSelector = React.forwardRef<
             if (input.value === "" && selected.length > 0) {
               const lastSelectOption = selected[selected.length - 1];
               // If last item is fixed, we should not remove it.
-              if (!lastSelectOption.fixed) {
-                handleUnselect(selected[selected.length - 1]);
+              if (!lastSelectOption?.fixed) {
+                // The ! is a non-null assertion operator that asserts that the value is not null or undefined
+                handleUnselect(selected[selected.length - 1]!);
               }
             }
           }
@@ -358,6 +359,7 @@ const MultipleSelector = React.forwardRef<
     const CreatableItem = () => {
       if (!creatable) return undefined;
       if (
+        //made id optional for Option definition
         isOptionsExist(options, [{ value: inputValue, label: inputValue }]) ||
         selected.find((s) => s.value === inputValue)
       ) {
@@ -521,7 +523,10 @@ const MultipleSelector = React.forwardRef<
               }}
               onFocus={(event) => {
                 setOpen(true);
-                triggerSearchOnFocus && onSearch?.(debouncedSearchTerm);
+                if (triggerSearchOnFocus) {
+                  onSearch?.(debouncedSearchTerm);
+                }
+                // triggerSearchOnFocus && onSearch?.(debouncedSearchTerm);
                 inputProps?.onFocus?.(event);
               }}
               placeholder={

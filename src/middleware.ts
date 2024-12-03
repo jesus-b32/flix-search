@@ -23,13 +23,13 @@ export default auth((req) => {
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
   //must be in this order when checking routes
-  if (isApiAuthRoute) return null;
+  // if (isApiAuthRoute) return null;
 
   if (isAuthRoute) {
     if (isLoggedIn) {
       return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
     }
-    return null;
+    // return null;
   }
 
   if (!isLoggedIn && isProtectedRoute) {
@@ -37,7 +37,7 @@ export default auth((req) => {
   }
 
   // default is to all every other route
-  return null;
+  // return null;
 });
 
 // Don't invoke Middleware on the paths that match the regex pattern below

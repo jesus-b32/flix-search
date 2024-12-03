@@ -21,8 +21,8 @@ export async function searchTvShows(searchTerm: string, page = 1) {
     }
 
     return results;
-  } catch (error) {
-    throw new Error(`Failed to fetch data: ${error}`);
+  } catch {
+    throw new Error(`Failed to fetch data`);
   }
 }
 

@@ -41,5 +41,5 @@ export async function updateWatchlist(
         }
       }
     }
-  } catch (error) {}
+  } catch {}
 }

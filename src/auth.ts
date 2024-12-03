@@ -11,7 +11,7 @@ import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { db } from "@/server/db";
 import { users, accounts, sessions } from "@/server/db/schema";
 import { LoginSchema } from "@/schemas";
-import { getUserByEmail, getUserById } from "@/data/user";
+import { getUserByEmail } from "@/data/user";
 import { updateUserEmailVerified } from "@/data/user";
 import { createVideoList } from "@/data/videoList";
 
@@ -39,6 +39,8 @@ declare module "next-auth" {
 
 const authConfig: NextAuthConfig = {
   adapter,
+  // needed for localhost build
+  trustHost: env.AUTH_TRUST_HOST === "true" ? true : false,
   providers: [
     // Can see callback url using http://localhost:3000/api/auth/providers or [domain]/api/auth/providers
     GitHub({
