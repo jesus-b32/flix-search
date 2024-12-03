@@ -50,8 +50,10 @@ export default function About() {
         <h2 className="text-2xl font-semibold">Streaming Data Source</h2>
         <p>
           The Streaming info in this application comes from{" "}
-          <a href="https://www.justwatch.com/">JustWatch</a>. Visit JustWatch
-          for more information.{" "}
+          <a href="https://www.justwatch.com/" className="underline">
+            JustWatch
+          </a>
+          . Visit JustWatch for more information.{" "}
           <img
             src="/justwatch.svg"
             alt="Just Watch Logo"
