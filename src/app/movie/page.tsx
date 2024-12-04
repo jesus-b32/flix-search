@@ -65,6 +65,8 @@ export default async function DiscoverMoviePage({
     throw new Error(`Failed to fetch watch provider data movies discover page`);
   }
 
+  const totalPages = movies.total_pages > 500 ? 500 : movies.total_pages;
+
   // Add "All Languages" option to the top of languages list
   languages.unshift({
     iso_639_1: "all",
@@ -99,7 +101,7 @@ export default async function DiscoverMoviePage({
         </div>
       </div>
       {/* max page value is 500 according to TMDB */}
-      <PaginationComponent totalPages={500} />
+      <PaginationComponent totalPages={totalPages} />
     </div>
   );
 }

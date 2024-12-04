@@ -40,6 +40,8 @@ export default async function SearchPage({
     throw new Error(`Failed to fetch data: ${movies}`);
   }
 
+  const totalPages = movies.total_pages > 500 ? 500 : movies.total_pages;
+
   return (
     <div className="flex min-h-screen flex-col items-center">
       <h1 className="my-5 text-2xl font-bold">{`Movie Search Results for: ${searchTerm}`}</h1>
@@ -51,7 +53,7 @@ export default async function SearchPage({
           <SearchResultCards key={movie.id} cinema={movie} />
         ))}
       </div>
-      <PaginationComponent totalPages={movies.total_pages} />
+      <PaginationComponent totalPages={totalPages} />
     </div>
   );
 }

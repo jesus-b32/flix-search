@@ -67,6 +67,8 @@ export default async function DiscoverTvShowPage({
     );
   }
 
+  const totalPages = tvShows.total_pages > 500 ? 500 : tvShows.total_pages;
+
   // Add "All Languages" option to the top of languages list
   languages.unshift({
     iso_639_1: "all",
@@ -101,7 +103,7 @@ export default async function DiscoverTvShowPage({
         </div>
       </div>
       {/* max page value is 500 according to TMDB */}
-      <PaginationComponent totalPages={500} />
+      <PaginationComponent totalPages={totalPages} />
     </div>
   );
 }
