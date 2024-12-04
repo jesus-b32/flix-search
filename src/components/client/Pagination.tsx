@@ -42,7 +42,6 @@ export default function PaginationComponent({
     } else {
       params.set("search", searchTerm);
     }
-    // params.set("search", searchTerm);
     params.set("page", pageNumber.toString());
     return `${pathname}?${params.toString()}`;
   };

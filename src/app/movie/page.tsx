@@ -98,12 +98,8 @@ export default async function DiscoverMoviePage({
           )}
         </div>
       </div>
-      <PaginationComponent totalPages={movies.total_pages} />
+      {/* max page value is 500 according to TMDB */}
+      <PaginationComponent totalPages={500} />
     </div>
   );
 }
-
-//  <div className="flex w-full flex-col items-center gap-y-6 lg:w-10/12 lg:flex-row lg:items-start lg:gap-x-4"></div>
-// <div className="h-fit w-full md:w-10/12 lg:fixed lg:w-60">
-//   <FilterSort />
-// </div>;

@@ -57,7 +57,7 @@ export async function getTvShowProviders(watchRegion = "") {
  */
 export async function discoverTvShow(queryParams: string) {
   const results = await getData<tvSearchResult>(
-    `/discover/tv?include_adult=false&include_video=false&language=en-US&page=1&${queryParams}`,
+    `/discover/tv?include_adult=false&include_video=false&language=en-US&${queryParams}`,
   );
 
   return results;

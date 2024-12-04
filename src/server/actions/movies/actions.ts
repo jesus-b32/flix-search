@@ -57,7 +57,7 @@ export async function getMovieProviders(watchRegion = "") {
  */
 export async function discoverMovies(queryParams: string) {
   const results = await getData<movieSearchResult>(
-    `/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&${queryParams}`,
+    `/discover/movie?include_adult=false&include_video=false&language=en-US&${queryParams}`,
   );
 
   return results;
