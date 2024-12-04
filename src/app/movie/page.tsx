@@ -48,21 +48,21 @@ export default async function DiscoverMoviePage({
   );
 
   if (movies instanceof Error) {
-    throw new Error(`Failed to fetch movie data: ${movies}`);
+    throw new Error(`Failed to fetch movie data in discover page`);
   }
   if (genres instanceof Error) {
-    throw new Error(`Failed to fetch genre data: ${genres}`);
+    throw new Error(`Failed to fetch genre data for movies discover page`);
   }
   if (languages instanceof Error) {
-    throw new Error(`Failed to fetch language data: ${languages}`);
+    throw new Error(`Failed to fetch language data for movies discover page`);
   }
   if (watchProviderRegions instanceof Error) {
     throw new Error(
-      `Failed to fetch watch provider region data: ${watchProviderRegions}`,
+      `Failed to fetch watch provider region data for movies discover page`,
     );
   }
   if (watchProviders instanceof Error) {
-    throw new Error(`Failed to fetch watch provider data: ${watchProviders}`);
+    throw new Error(`Failed to fetch watch provider data movies discover page`);
   }
 
   // Add "All Languages" option to the top of languages list

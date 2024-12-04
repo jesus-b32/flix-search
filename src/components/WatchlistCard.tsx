@@ -82,7 +82,7 @@ export default async function WatchlistCard({
           </CardDescription>
         </CardHeader>
         <CardContent className="text-center md:text-left">
-          <p className="line-clamp-6">{cinema?.overview || "No Overview"}</p>
+          <p className="line-clamp-4">{cinema?.overview || "No Overview"}</p>
         </CardContent>
         <CardFooter className="flex justify-center md:justify-start">
           <WatchlistButton

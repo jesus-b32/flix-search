@@ -39,7 +39,11 @@ declare module "next-auth" {
 
 const authConfig: NextAuthConfig = {
   adapter,
-  // needed for localhost build
+  /**
+   * Whether to trust the host header from the request.
+   * needed for localhost build
+   * https://authjs.dev/reference/core#trusthost
+   */
   trustHost: env.AUTH_TRUST_HOST === "true" ? true : false,
   providers: [
     // Can see callback url using http://localhost:3000/api/auth/providers or [domain]/api/auth/providers
