@@ -71,9 +71,9 @@
 
 <!-- [![Global Streaming Search Screen Shot][./public/streamingProviders.jpg]](#) -->
 
-![The San Juan Mountains are beautiful!](/public/streamingProviders.jpg "San Juan Mountains")
+![Streaming platform Image](/public/streamingProviders.jpg "Flix Search")
 
-Flix Search will help you easily find on what platforms your favorite movies and TV shows are streaming on. You can view streaming availability by country to see all the streaming platform that has that movie or TV show available. Another way to view streaming availability is by streaming platform. You can select a streaming platform and see which countries have that movie or TV show available for the selected streaming platform. [Click here](#) to access the Flix Search website and give it a try.
+Flix Search will help you easily find on what platforms your favorite movies and TV shows are streaming on. You can view streaming availability by country to see all the streaming platform that has that movie or TV show available. Another way to view streaming availability is by streaming platform. You can select a streaming platform and see which countries have that movie or TV show available for the selected streaming platform. [Click here](https://flix-search.vercel.app/) to access the Flix Search website and give it a try.
 
 ### Key Features
 
