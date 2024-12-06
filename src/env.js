@@ -58,8 +58,6 @@ export const env = createEnv({
     GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
-    // AUTH_DRIZZLE_URL: process.env.AUTH_DRIZZLE_URL,
-    // NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     TMDB_API_KEY: process.env.TMDB_API_KEY,
   },
   /**
