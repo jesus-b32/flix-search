@@ -54,8 +54,14 @@ export const env = createEnv({
     NODE_ENV: process.env.NODE_ENV,
     AUTH_SECRET: process.env.AUTH_SECRET,
     AUTH_TRUST_HOST: process.env.AUTH_TRUST_HOST,
-    GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
-    GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
+    GITHUB_CLIENT_ID:
+      process.env.NODE_ENV === "production"
+        ? process.env.GITHUB_CLIENT_ID_PROD
+        : process.env.GITHUB_CLIENT_ID_DEV,
+    GITHUB_CLIENT_SECRET:
+      process.env.NODE_ENV === "production"
+        ? process.env.GITHUB_CLIENT_SECRET_PROD
+        : process.env.GITHUB_CLIENT_SECRET_DEV,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
     TMDB_API_KEY: process.env.TMDB_API_KEY,
