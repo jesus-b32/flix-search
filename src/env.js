@@ -14,11 +14,11 @@ export const env = createEnv({
    */
   server: {
     POSTGRES_URL: z.string().url(),
-    NODE_ENV: z
+    ENV_TYPE: z
       .enum(["development", "test", "production"])
       .default("development"),
     AUTH_SECRET:
-      process.env.NODE_ENV === "production"
+      process.env.ENV_TYPE === "production"
         ? z.string()
         : z.string().optional(),
     AUTH_TRUST_HOST: z.enum(["true", "false"]),
@@ -51,15 +51,15 @@ export const env = createEnv({
    */
   runtimeEnv: {
     POSTGRES_URL: process.env.POSTGRES_URL,
-    NODE_ENV: process.env.NODE_ENV,
+    ENV_TYPE: process.env.ENV_TYPE,
     AUTH_SECRET: process.env.AUTH_SECRET,
     AUTH_TRUST_HOST: process.env.AUTH_TRUST_HOST,
     GITHUB_CLIENT_ID:
-      process.env.NODE_ENV === "production"
+      process.env.ENV_TYPE === "production"
         ? process.env.GITHUB_CLIENT_ID_PROD
         : process.env.GITHUB_CLIENT_ID_DEV,
     GITHUB_CLIENT_SECRET:
-      process.env.NODE_ENV === "production"
+      process.env.ENV_TYPE === "production"
         ? process.env.GITHUB_CLIENT_SECRET_PROD
         : process.env.GITHUB_CLIENT_SECRET_DEV,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
