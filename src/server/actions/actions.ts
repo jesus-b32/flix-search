@@ -1,7 +1,11 @@
 "use server";
 
-import { getData } from "./tmdapi";
-import type { countryList, languagesList, watchProviderRegions } from "./types";
+import { getData } from "@/lib/tmdapi";
+import type {
+  countryList,
+  languagesList,
+  watchProviderRegions,
+} from "@/server/actions/types";
 
 /**
  * Get the list of countries used in the TMDB API

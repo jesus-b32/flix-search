@@ -118,6 +118,39 @@ Flix Search will help you easily find on what platforms your favorite movies and
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+<!-- Installation Instruction -->
+
+## Getting Started
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/jesus-b32/flix-search.git
+cd flix-search
+```
+
+2. Create a `.env file` and add the necessary environment variables shown in the `.env.example` file.
+
+3. Install dependencies:
+
+```bash
+npm install
+```
+
+4. Create database table from schema file:
+
+```bash
+npm run db:push
+```
+
+5. Run the development server:
+
+```bash
+npm run dev
+```
+
+6. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
 <!-- LICENSE -->
 
 ## License

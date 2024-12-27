@@ -13,6 +13,8 @@ import type { tvDetails } from "@/server/actions/tv/types";
 import { auth } from "@/auth";
 import { getVideoList, isVideoInList, getVideo } from "@/data/videoList";
 import WatchlistButton from "@/components/WatchlistButton";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 /**
  * Creates a server component that displays a movie or TV show's details
@@ -79,22 +81,28 @@ export default async function DetailCard({
           <p>{details?.overview || "No Overview"}</p>
         </CardContent>
         <CardFooter className="flex justify-center md:justify-start">
-          <WatchlistButton
-            tmdbId={details.id}
-            mediaType={mediaType}
-            title={"title" in details ? details.title : details.name}
-            overview={details?.overview ?? ""}
-            releaseDate={
-              "title" in details
-                ? (details?.release_date ?? "")
-                : (details?.first_air_date ?? "")
-            }
-            posterPath={details?.poster_path ?? ""}
-            userId={session?.user?.id ?? ""}
-            videoId={videoId}
-            watchlist={watchlist}
-            isVideoInWatchlist={isVideoInWatchlist}
-          />
+          {session ? (
+            <WatchlistButton
+              tmdbId={details.id}
+              mediaType={mediaType}
+              title={"title" in details ? details.title : details.name}
+              overview={details?.overview ?? ""}
+              releaseDate={
+                "title" in details
+                  ? (details?.release_date ?? "")
+                  : (details?.first_air_date ?? "")
+              }
+              posterPath={details?.poster_path ?? ""}
+              userId={session?.user?.id ?? ""}
+              videoId={videoId}
+              watchlist={watchlist}
+              isVideoInWatchlist={isVideoInWatchlist}
+            />
+          ) : (
+            <Button asChild size={"sm"}>
+              <Link href="/auth/login">Login to add to watchlist</Link>
+            </Button>
+          )}
         </CardFooter>
       </div>
     </Card>

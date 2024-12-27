@@ -1,8 +1,11 @@
 "use server";
 
-import { getData } from "../tmdapi";
-import type { movieDetails, movieSearchResult } from "./types";
-import type { streamingProviderList, genresList } from "../types";
+import { getData } from "@/lib/tmdapi";
+import type {
+  movieDetails,
+  movieSearchResult,
+} from "@/server/actions/movies/types";
+import type { streamingProviderList, genresList } from "@/server/actions/types";
 
 /**
  * Search for movies by their original, translated and alternative titles.
