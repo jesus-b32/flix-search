@@ -1,6 +1,6 @@
 import Search from "@/components/client/Search";
 
-export default async function HomePage() {
+export default function HomePage() {
   return (
     <main className="flex min-h-screen flex-col items-center text-white">
       <div className="mt-4 flex flex-col items-center gap-6">

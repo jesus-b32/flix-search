@@ -10,11 +10,11 @@ import {
 import { ImageOff } from "lucide-react";
 import type { movieDetails } from "@/server/actions/movies/types";
 import type { tvDetails } from "@/server/actions/tv/types";
-import { auth } from "@/auth";
 import { getVideoList, isVideoInList, getVideo } from "@/data/videoList";
 import WatchlistButton from "@/components/WatchlistButton";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import type { Session } from "next-auth";
 
 /**
  * Creates a server component that displays a movie or TV show's details
@@ -23,11 +23,12 @@ import { Button } from "@/components/ui/button";
  */
 export default async function DetailCard({
   details,
+  session,
 }: {
   details: movieDetails | tvDetails;
+  session: Session | null;
 }) {
   // session is null if user is not logged in
-  const session = await auth();
   const mediaType = "title" in details ? "movie" : "tv";
 
   // return video object from db or is undefined if it doesn't exist

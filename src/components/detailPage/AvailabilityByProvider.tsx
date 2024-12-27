@@ -2,7 +2,7 @@ import type {
   streamingProviderList,
   countryList,
 } from "@/server/actions/types";
-import SelectSearch from "./client/SelectSearch";
+import SelectSearch from "@/components/client/SelectSearch";
 import type { movieDetails } from "@/server/actions/movies/types";
 import type { tvDetails } from "@/server/actions/tv/types";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
