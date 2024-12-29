@@ -27,11 +27,11 @@ type WatchProviderDetail = {
  */
 type WatchProviderCountry = {
   link: string;
-  flatrate: WatchProviderDetail[];
-  free: WatchProviderDetail[];
-  ads: WatchProviderDetail[];
-  rent: WatchProviderDetail[];
-  buy: WatchProviderDetail[];
+  flatrate?: WatchProviderDetail[];
+  free?: WatchProviderDetail[];
+  ads?: WatchProviderDetail[];
+  rent?: WatchProviderDetail[];
+  buy?: WatchProviderDetail[];
 };
 
 /**

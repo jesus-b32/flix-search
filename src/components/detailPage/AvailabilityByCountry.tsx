@@ -82,7 +82,7 @@ export default function AvailabilityByCountry({
                           >
                             <div className="flex justify-center">
                               <img
-                                alt="provider logo"
+                                alt={`${provider.provider_name} logo`}
                                 src={`https://image.tmdb.org/t/p/w92${
                                   provider.logo_path
                                 }`}
