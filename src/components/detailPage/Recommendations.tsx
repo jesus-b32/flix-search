@@ -40,7 +40,11 @@ export default function Recommendations({
                   <div className="flex h-auto w-full justify-center">
                     <img
                       src={`https://image.tmdb.org/t/p/w154${recommendation.poster_path}`}
-                      alt="Movie or TV show image"
+                      alt={
+                        "title" in recommendation
+                          ? `${recommendation.title} poster image`
+                          : `${recommendation.name} poster image`
+                      }
                       className="h-auto w-full max-w-[154px] rounded-t-lg"
                     />
                   </div>
