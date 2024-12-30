@@ -70,7 +70,11 @@ export default function AvailabilityByProvider({
                             >
                               <div className="flex justify-center">
                                 <img
-                                  alt="country flag"
+                                  alt={`${
+                                    countries.find(
+                                      (nation) => nation.iso_3166_1 === country,
+                                    )?.native_name ?? "N/A"
+                                  } flag`}
                                   src={`http://purecatamphetamine.github.io/country-flag-icons/3x2/${country}.svg`}
                                   className="h-auto w-40 rounded-t-lg border-b border-slate-300 object-cover"
                                 />

@@ -1,4 +1,7 @@
-import type { countryList } from "@/server/actions/types";
+import type {
+  countryList,
+  streamingProviderList,
+} from "@/server/actions/types";
 import type { movieDetails } from "@/server/actions/movies/types";
 import type { tvDetails } from "@/server/actions/tv/types";
 
@@ -118,6 +121,12 @@ export const mockMovieDetails: movieDetails = {
             provider_id: 591,
             provider_name: "Now TV Cinema",
             display_priority: 60,
+          },
+          {
+            logo_path: "/pvske1MyAoymrs5bguRfVqYiM9a.jpg",
+            provider_id: 9,
+            provider_name: "Amazon Prime Video",
+            display_priority: 2,
           },
         ],
         rent: [
@@ -311,4 +320,33 @@ export const mockNoWatchProviderData: movieDetails = {
   "watch/providers": {
     results: {},
   },
+};
+
+export const streamingProviders: streamingProviderList = {
+  results: [
+    {
+      display_priority: 5,
+      logo_path: "/pbpMk2JmcoNnQwx5JGpXngfoWtp.jpg",
+      provider_id: 8,
+      provider_name: "Netflix",
+    },
+    {
+      display_priority: 2,
+      logo_path: "/pvske1MyAoymrs5bguRfVqYiM9a.jpg",
+      provider_id: 9,
+      provider_name: "Amazon Prime Video",
+    },
+    {
+      display_priority: 27,
+      logo_path: "/97yvRBw1GzX7fXprcF80er19ot.jpg",
+      provider_id: 337,
+      provider_name: "Disney Plus",
+    },
+    {
+      display_priority: 29,
+      logo_path: "/fksCUZ9QDWZMUwL2LgMtLckROUN.jpg",
+      provider_id: 1899,
+      provider_name: "Max",
+    },
+  ],
 };
