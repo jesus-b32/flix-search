@@ -54,11 +54,15 @@ export default async function DetailCard({
   return (
     <Card className="mt-6 flex h-fit w-full flex-col items-center rounded-none border-none md:flex-row md:items-start">
       <div className="flex justify-center md:h-[513px] md:w-[342px] md:justify-start">
-        {/* imagge is 342x513 */}
+        {/* image is 342x513 */}
         {details?.poster_path ? (
           <img
             src={`https://image.tmdb.org/t/p/w342${details.poster_path}`}
-            alt="Movie or show image"
+            alt={
+              "title" in details
+                ? `${details.title} poster image`
+                : `${details.name} poster image`
+            }
             className="h-full w-full"
           />
         ) : (
