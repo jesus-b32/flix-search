@@ -25,16 +25,18 @@ export const Social = () => {
         size="lg"
         className="w-full"
         onClick={() => onClick("google")}
+        aria-label="Login with Google"
       >
-        <FcGoogle className="h-5 w-5" />
+        <FcGoogle className="h-5 w-5" role="img" />
       </Button>
       <Button
         variant="outline"
         size="lg"
         className="w-full"
         onClick={() => onClick("github")}
+        aria-label="Login with GitHub"
       >
-        <FaGithub className="h-5 w-5" />
+        <FaGithub className="h-5 w-5" role="img" />
       </Button>
     </div>
   );
