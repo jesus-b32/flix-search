@@ -26,6 +26,7 @@ import { FormSuccess } from "@/components/auth/form-success";
 import { RegisterSchema } from "@/schemas";
 import { register } from "@/server/actions/auth/register";
 import { useTransition, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { login } from "@/server/actions/auth/login";
 
 /**
@@ -37,6 +38,16 @@ import { login } from "@/server/actions/auth/login";
  * a success message when the registration is successful.
  */
 export const RegisterForm = () => {
+  const searchParams = useSearchParams();
+  const urlError =
+    searchParams.get("error") === "OAuthAccountNotLinked"
+      ? "Email already in use with a different provider"
+      : "";
+  /**
+   * useTransition is a React Hook that lets you update the state without blocking the UI.
+   * The isPending flag that tells you whether there is a pending Transition. In the form it is used to show a loading state when the form is submitting.
+   * The startTransition function that lets you mark a state update as a Transition.
+   */
   const [isPending, startTransition] = useTransition();
 
   const [error, setError] = useState("");
@@ -159,7 +170,7 @@ export const RegisterForm = () => {
               )}
             />
           </div>
-          <FormError message={error} />
+          <FormError message={error || urlError} />
           <FormSuccess message={success} />
           <Button type="submit" className="w-full" disabled={isPending}>
             Register
