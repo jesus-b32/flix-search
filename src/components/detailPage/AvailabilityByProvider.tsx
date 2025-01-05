@@ -2,7 +2,7 @@ import type {
   streamingProviderList,
   countryList,
 } from "@/server/actions/types";
-import SelectSearch from "./client/SelectSearch";
+import SelectSearch from "@/components/client/SelectSearch";
 import type { movieDetails } from "@/server/actions/movies/types";
 import type { tvDetails } from "@/server/actions/tv/types";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
@@ -70,7 +70,11 @@ export default function AvailabilityByProvider({
                             >
                               <div className="flex justify-center">
                                 <img
-                                  alt="country flag"
+                                  alt={`${
+                                    countries.find(
+                                      (nation) => nation.iso_3166_1 === country,
+                                    )?.native_name ?? "N/A"
+                                  } flag`}
                                   src={`http://purecatamphetamine.github.io/country-flag-icons/3x2/${country}.svg`}
                                   className="h-auto w-40 rounded-t-lg border-b border-slate-300 object-cover"
                                 />

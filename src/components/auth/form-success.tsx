@@ -18,7 +18,11 @@ export function FormSuccess({ message }: FormSuccessProps) {
   }
   return (
     <div className="flex items-center gap-x-2 rounded-md bg-emerald-500/15 p-3 text-sm text-emerald-500">
-      <CircleCheck className="h-4 w-4" />
+      <CircleCheck
+        className="h-4 w-4"
+        role="img"
+        aria-label="circle check img"
+      />
       <p>{message}</p>
     </div>
   );

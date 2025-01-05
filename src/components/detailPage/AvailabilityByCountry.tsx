@@ -1,5 +1,5 @@
 import type { countryList } from "@/server/actions/types";
-import SelectSearch from "./client/SelectSearch";
+import SelectSearch from "@/components/client/SelectSearch";
 import type { movieDetails } from "@/server/actions/movies/types";
 import type { tvDetails } from "@/server/actions/tv/types";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
@@ -60,44 +60,49 @@ export default function AvailabilityByCountry({
             <h2 className="mb-3 px-6 text-2xl font-bold md:px-0">
               {`${title} is available from the following providers in ${selectedCountryName}:`}
             </h2>
-            {Object.entries(watchProviderCountry).map(
-              ([providerType, providerDetails]) =>
-                typeof providerDetails !== "string" ? (
-                  <div key={providerType} className="mt-4 flex flex-col gap-4">
-                    <h3 className="text-center text-xl font-bold md:text-left">
-                      {providerType === "flatrate"
-                        ? "Stream"
-                        : providerType.charAt(0).toUpperCase() +
-                          providerType.slice(1)}
-                    </h3>
-                    <div className="grid grid-cols-1 justify-items-center gap-4 sm:grid-cols-2 md:grid-cols-3 md:justify-items-start lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
-                      {providerDetails.map((provider) => (
-                        <Card
-                          key={provider.provider_id}
-                          className="flex h-60 w-36 flex-col items-center border-none"
-                        >
-                          <div className="flex justify-center">
-                            <img
-                              alt="provider logo"
-                              src={`https://image.tmdb.org/t/p/w92${
-                                provider.logo_path
-                              }`}
-                              className="h-auto w-36 rounded-t-lg border-b border-slate-300 object-cover"
-                            />
-                          </div>
-                          <div className="flex flex-col flex-wrap">
-                            <CardHeader className="px-1 pt-2">
-                              <CardTitle className="text-center text-xl">
-                                {provider?.provider_name ?? "No provider name"}
-                              </CardTitle>
-                            </CardHeader>
-                          </div>
-                        </Card>
-                      ))}
+            {watchProviderCountry &&
+              Object.entries(watchProviderCountry).map(
+                ([providerType, providerDetails]) =>
+                  typeof providerDetails !== "string" ? (
+                    <div
+                      key={providerType}
+                      className="mt-4 flex flex-col gap-4"
+                    >
+                      <h3 className="text-center text-xl font-bold md:text-left">
+                        {providerType === "flatrate"
+                          ? "Stream"
+                          : providerType.charAt(0).toUpperCase() +
+                            providerType.slice(1)}
+                      </h3>
+                      <div className="grid grid-cols-1 justify-items-center gap-4 sm:grid-cols-2 md:grid-cols-3 md:justify-items-start lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+                        {providerDetails.map((provider) => (
+                          <Card
+                            key={provider.provider_id}
+                            className="flex h-60 w-36 flex-col items-center border-none"
+                          >
+                            <div className="flex justify-center">
+                              <img
+                                alt={`${provider.provider_name} logo`}
+                                src={`https://image.tmdb.org/t/p/w92${
+                                  provider.logo_path
+                                }`}
+                                className="h-auto w-36 rounded-t-lg border-b border-slate-300 object-cover"
+                              />
+                            </div>
+                            <div className="flex flex-col flex-wrap">
+                              <CardHeader className="px-1 pt-2">
+                                <CardTitle className="text-center text-xl">
+                                  {provider?.provider_name ??
+                                    "No provider name"}
+                                </CardTitle>
+                              </CardHeader>
+                            </div>
+                          </Card>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                ) : null,
-            )}
+                  ) : null,
+              )}
           </div>
         </>
       )}

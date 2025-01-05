@@ -10,9 +10,11 @@ import {
 import { ImageOff } from "lucide-react";
 import type { movieDetails } from "@/server/actions/movies/types";
 import type { tvDetails } from "@/server/actions/tv/types";
-import { auth } from "@/auth";
 import { getVideoList, isVideoInList, getVideo } from "@/data/videoList";
 import WatchlistButton from "@/components/WatchlistButton";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import type { Session } from "next-auth";
 
 /**
  * Creates a server component that displays a movie or TV show's details
@@ -21,11 +23,12 @@ import WatchlistButton from "@/components/WatchlistButton";
  */
 export default async function DetailCard({
   details,
+  session,
 }: {
   details: movieDetails | tvDetails;
+  session: Session | null;
 }) {
   // session is null if user is not logged in
-  const session = await auth();
   const mediaType = "title" in details ? "movie" : "tv";
 
   // return video object from db or is undefined if it doesn't exist
@@ -51,11 +54,15 @@ export default async function DetailCard({
   return (
     <Card className="mt-6 flex h-fit w-full flex-col items-center rounded-none border-none md:flex-row md:items-start">
       <div className="flex justify-center md:h-[513px] md:w-[342px] md:justify-start">
-        {/* imagge is 342x513 */}
+        {/* image is 342x513 */}
         {details?.poster_path ? (
           <img
             src={`https://image.tmdb.org/t/p/w342${details.poster_path}`}
-            alt="Movie or show image"
+            alt={
+              "title" in details
+                ? `${details.title} poster image`
+                : `${details.name} poster image`
+            }
             className="h-full w-full"
           />
         ) : (
@@ -79,22 +86,28 @@ export default async function DetailCard({
           <p>{details?.overview || "No Overview"}</p>
         </CardContent>
         <CardFooter className="flex justify-center md:justify-start">
-          <WatchlistButton
-            tmdbId={details.id}
-            mediaType={mediaType}
-            title={"title" in details ? details.title : details.name}
-            overview={details?.overview ?? ""}
-            releaseDate={
-              "title" in details
-                ? (details?.release_date ?? "")
-                : (details?.first_air_date ?? "")
-            }
-            posterPath={details?.poster_path ?? ""}
-            userId={session?.user?.id ?? ""}
-            videoId={videoId}
-            watchlist={watchlist}
-            isVideoInWatchlist={isVideoInWatchlist}
-          />
+          {session ? (
+            <WatchlistButton
+              tmdbId={details.id}
+              mediaType={mediaType}
+              title={"title" in details ? details.title : details.name}
+              overview={details?.overview ?? ""}
+              releaseDate={
+                "title" in details
+                  ? (details?.release_date ?? "")
+                  : (details?.first_air_date ?? "")
+              }
+              posterPath={details?.poster_path ?? ""}
+              userId={session?.user?.id ?? ""}
+              videoId={videoId}
+              watchlist={watchlist}
+              isVideoInWatchlist={isVideoInWatchlist}
+            />
+          ) : (
+            <Button asChild size={"sm"}>
+              <Link href="/auth/login">Login to add to watchlist</Link>
+            </Button>
+          )}
         </CardFooter>
       </div>
     </Card>
