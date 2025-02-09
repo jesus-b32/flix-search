@@ -35,8 +35,10 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
  */
 export default function SelectSearch({
   data,
+  className,
 }: {
   data: countryList | streamingProviderList;
+  className?: string;
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -51,92 +53,97 @@ export default function SelectSearch({
   );
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="secondary"
-          role="combobox"
-          aria-expanded={open}
-          className="w-[200px] justify-between"
-        >
-          {"results" in data
-            ? (data.results.find(
-                (provider) => provider.provider_id.toString() === watchProvider,
-              )?.provider_name ?? "Select Provider")
-            : (data.find((country) => country.iso_3166_1 === watchRegion)
-                ?.native_name ?? "Select country")}
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
-        <Command>
-          <CommandInput
-            placeholder={
-              "results" in data ? "Select streaming provider" : "Select country"
-            }
-          />
-          <CommandList>
-            <CommandEmpty>
-              {"results" in data
-                ? "No streaming providers found"
-                : "No countries found"}
-            </CommandEmpty>
-            <CommandGroup>
-              {"results" in data
-                ? data.results.map((provider) => (
-                    <CommandItem
-                      key={provider.provider_id}
-                      value={provider.provider_name.toLowerCase()}
-                      onSelect={() => {
-                        const params = new URLSearchParams(searchParams);
-                        params.set(
-                          "streamingProvider",
-                          provider.provider_id.toString(),
-                        );
-                        setWatchProvider(provider.provider_id.toString());
-                        setOpen(false);
-                        router.push(`${pathname}?${params.toString()}`);
-                      }}
-                    >
-                      <Check
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          watchProvider === provider.provider_id.toString()
-                            ? "opacity-100"
-                            : "opacity-0",
-                        )}
-                      />
-                      {provider.provider_name}
-                    </CommandItem>
-                  ))
-                : data.map((country) => (
-                    <CommandItem
-                      key={country.iso_3166_1}
-                      value={country.native_name.toLowerCase()}
-                      onSelect={() => {
-                        const params = new URLSearchParams(searchParams);
-                        if (searchParams.get("page")) params.set("page", "1");
-                        params.set("watch_region", country.iso_3166_1);
-                        setWatchRegion(country.iso_3166_1);
-                        setOpen(false);
-                        router.push(`${pathname}?${params.toString()}`);
-                      }}
-                    >
-                      <Check
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          watchRegion === country.iso_3166_1
-                            ? "opacity-100"
-                            : "opacity-0",
-                        )}
-                      />
-                      {country.native_name}
-                    </CommandItem>
-                  ))}
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
+    <div className={cn("w-[200px]", className)}>
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="secondary"
+            role="combobox"
+            aria-expanded={open}
+            className="w-full justify-between"
+          >
+            {"results" in data
+              ? (data.results.find(
+                  (provider) =>
+                    provider.provider_id.toString() === watchProvider,
+                )?.provider_name ?? "Select Provider")
+              : (data.find((country) => country.iso_3166_1 === watchRegion)
+                  ?.native_name ?? "Select country")}
+            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-full p-0" align="start" side="bottom">
+          <Command>
+            <CommandInput
+              placeholder={
+                "results" in data
+                  ? "Select streaming provider"
+                  : "Select country"
+              }
+            />
+            <CommandList>
+              <CommandEmpty>
+                {"results" in data
+                  ? "No streaming providers found"
+                  : "No countries found"}
+              </CommandEmpty>
+              <CommandGroup>
+                {"results" in data
+                  ? data.results.map((provider) => (
+                      <CommandItem
+                        key={provider.provider_id}
+                        value={provider.provider_name.toLowerCase()}
+                        onSelect={() => {
+                          const params = new URLSearchParams(searchParams);
+                          params.set(
+                            "streamingProvider",
+                            provider.provider_id.toString(),
+                          );
+                          setWatchProvider(provider.provider_id.toString());
+                          setOpen(false);
+                          router.push(`${pathname}?${params.toString()}`);
+                        }}
+                      >
+                        <Check
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            watchProvider === provider.provider_id.toString()
+                              ? "opacity-100"
+                              : "opacity-0",
+                          )}
+                        />
+                        {provider.provider_name}
+                      </CommandItem>
+                    ))
+                  : data.map((country) => (
+                      <CommandItem
+                        key={country.iso_3166_1}
+                        value={country.native_name.toLowerCase()}
+                        onSelect={() => {
+                          const params = new URLSearchParams(searchParams);
+                          if (searchParams.get("page")) params.set("page", "1");
+                          params.set("watch_region", country.iso_3166_1);
+                          setWatchRegion(country.iso_3166_1);
+                          setOpen(false);
+                          router.push(`${pathname}?${params.toString()}`);
+                        }}
+                      >
+                        <Check
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            watchRegion === country.iso_3166_1
+                              ? "opacity-100"
+                              : "opacity-0",
+                          )}
+                        />
+                        {country.native_name}
+                      </CommandItem>
+                    ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+    </div>
   );
 }
