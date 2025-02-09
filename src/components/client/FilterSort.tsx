@@ -25,14 +25,6 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -51,13 +43,10 @@ import type {
 import type { Dispatch, SetStateAction } from "react";
 
 // icons
-import {
-  SlidersHorizontal,
-  ChevronsUpDown,
-  Calendar as CalendarIcon,
-} from "lucide-react";
+import { SlidersHorizontal, Calendar as CalendarIcon } from "lucide-react";
 
 import SelectSearch from "@/components/client/SelectSearch";
+import SelectList from "@/components/client/SelectList";
 
 import { format } from "date-fns";
 import { UTCDate } from "@date-fns/utc";
@@ -304,85 +293,6 @@ export default function FilterSort({
     setIsChanged(false);
   };
 
-  /**
-   * A component that renders a searchable and selectable popover list for
-   * languages. It allows users to filter and select languages from the
-   * provided languageList, updating the originalLanguage state and the
-   * URL search parameters.
-   * @returns A React component for selecting and searching through the given
-   * languageList.
-   */
-  const SelectList = ({
-    list,
-    currentValue,
-    setCurrentValue,
-  }: {
-    list: languagesList | watchProviderRegions;
-    currentValue: string;
-    setCurrentValue: Dispatch<SetStateAction<string>>;
-  }) => (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="secondary"
-          role="combobox"
-          aria-expanded={open}
-          className="w-[200px] justify-between"
-        >
-          {"results" in list
-            ? list.results.find((region) => region.iso_3166_1 === currentValue)
-                ?.native_name
-            : list.find((language) => language.iso_639_1 === currentValue)
-                ?.english_name}
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
-        <Command>
-          <CommandInput placeholder={"Select language..."} />
-          <CommandList>
-            <CommandEmpty>{"No languages found"}</CommandEmpty>
-            <CommandGroup>
-              {"results" in list
-                ? list.results.map((region) => (
-                    <CommandItem
-                      key={region.iso_3166_1}
-                      value={region.native_name.toLowerCase()}
-                      onSelect={() => {
-                        setCurrentValue(region.iso_3166_1);
-                        setOpen(false);
-                        setIsChanged(true);
-                      }}
-                    >
-                      {region.native_name}
-                    </CommandItem>
-                  ))
-                : list.map((language) => (
-                    <CommandItem
-                      key={language.iso_639_1}
-                      value={language.english_name.toLowerCase()}
-                      onSelect={(currentValue) => {
-                        setCurrentValue(
-                          list.find(
-                            (language) =>
-                              language.english_name.toLowerCase() ===
-                              currentValue,
-                          )?.iso_639_1 ?? "",
-                        );
-                        setOpen(false);
-                        setIsChanged(true);
-                      }}
-                    >
-                      {language.english_name}
-                    </CommandItem>
-                  ))}
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
-  );
-
   const DateSelector = ({
     date,
     setDate,
@@ -432,11 +342,11 @@ export default function FilterSort({
    * @returns The content of the filter sheet.
    */
   const FilterContent = () => (
-    <div className="w-full space-y-6 divide-y-2">
-      <div className="">
+    <div className="mb-48 w-full space-y-6 divide-y-2">
+      <div className="w-full">
         <h3 className="my-4 ml-4 font-semibold">Sort By</h3>
         <Select value={sortBy} onValueChange={handleSortChange}>
-          <SelectTrigger className="w-full">
+          <SelectTrigger className="ml-4 w-10/12">
             <SelectValue placeholder="Select a sorting option" />
           </SelectTrigger>
           <SelectContent>
@@ -448,7 +358,7 @@ export default function FilterSort({
           </SelectContent>
         </Select>
       </div>
-      <div className="">
+      <div className="w-full">
         <h3 className="my-4 ml-4 font-semibold">Genres</h3>
         <div className="ml-4 space-y-2">
           {genreList.genres.map((genre) => (
@@ -469,29 +379,33 @@ export default function FilterSort({
           list={languageList}
           currentValue={originalLanguage}
           setCurrentValue={setOriginaLanguage}
+          className="ml-4 w-10/12"
+          onValueChange={() => setIsChanged(true)}
         />
       </div>
-      <div className="space-y-4">
+      <div className="w-full space-y-4">
         <h3 className="my-4 ml-4 font-semibold">
           {mediaType === "movie" ? "Release Date" : "First Air Date"}
         </h3>
         <Label htmlFor="gte" className="ml-4">
           From:
         </Label>
-        <div id="gte" className="pb-4">
+        <div id="gte" className="ml-4 w-10/12 pb-4">
           <DateSelector date={releaseDateGte} setDate={setReleaseDateGte} />
         </div>
         <Label htmlFor="lte" className="ml-4">
           To:
         </Label>
-        <div id="lte">
+        <div id="lte" className="ml-4 w-10/12">
           <DateSelector date={releaseDateLte} setDate={setReleaseDateLte} />
         </div>
       </div>
       <div className="flex flex-col items-center">
-        <h3 className="mb-8 ml-4 mt-4 w-full font-semibold">Runtime</h3>
+        <h3 className="mb-8 ml-4 mt-4 w-full font-semibold">
+          Runtime(minutes)
+        </h3>
         <DualRangeSlider
-          label={(value) => <span>{value}min</span>}
+          label={(value) => <span>{value}</span>}
           value={runtime}
           onValueChange={(value) => {
             setRuntime(value);
@@ -504,9 +418,12 @@ export default function FilterSort({
           className="w-10/12"
         />
       </div>
-      <div className="w-full space-y-4 pt-6 pb-12">
+      <div className="w-full space-y-4 pt-6">
         <h3 className="ml-4 font-semibold">Where to Watch</h3>
-        <SelectSearch data={watchProviderRegionList.results} />
+        <SelectSearch
+          data={watchProviderRegionList.results}
+          className="ml-4 w-10/12"
+        />
         <MultipleSelector
           value={watchProviders}
           onChange={(value) => {
@@ -524,7 +441,7 @@ export default function FilterSort({
               no results found.
             </p>
           }
-          // className="mb-6"
+          className="ml-4 w-10/12"
         />
       </div>
     </div>
