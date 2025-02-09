@@ -9,6 +9,7 @@ import {
 
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetTrigger,
   SheetTitle,
@@ -18,7 +19,7 @@ import {
 import { Clapperboard, Menu, CircleUserRound } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import SearchPopover from "@/components/SearchPopover";
+import SearchPopover from "@/components/client/SearchPopover";
 // import { LoginButton } from "@/components/auth/login-button";
 import { signOut, auth } from "@/auth";
 
@@ -49,7 +50,7 @@ export default async function TopNav() {
         <Link href="/movie?sort_by=popularity.desc&page=1">
           Discover Movies
         </Link>
-        <Link href="/tv?sort_by=popularity.desc&page=1">Discover TV Shows</Link>
+        <Link href="/tv?sort_by=popularity.desc&page=1">Discover Shows</Link>
         {!session ? (
           <>
             <Link href="/auth/register">Signup</Link>
@@ -74,36 +75,46 @@ export default async function TopNav() {
             Open navigation menu
           </SheetDescription>
           <nav className="grid gap-6 text-lg font-medium">
-            <Link href="/" className="w-fit">
-              <Clapperboard className="h-6 w-6" />
-              <span className="sr-only">Flix Search</span>
-            </Link>
-            <Link
-              href="/movie?sort_by=popularity.desc&page=1"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              Discover Movies
-            </Link>
-            <Link
-              href="/tv?sort_by=popularity.desc&page=1"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              Discover TV Shows
-            </Link>
+            <SheetClose asChild>
+              <Link href="/" className="w-fit">
+                <Clapperboard className="h-6 w-6" />
+                <span className="sr-only">Flix Search</span>
+              </Link>
+            </SheetClose>
+            <SheetClose asChild>
+              <Link
+                href="/movie?sort_by=popularity.desc&page=1"
+                className="text-muted-foreground hover:text-foreground"
+              >
+                Discover Movies
+              </Link>
+            </SheetClose>
+            <SheetClose asChild>
+              <Link
+                href="/tv?sort_by=popularity.desc&page=1"
+                className="text-muted-foreground hover:text-foreground"
+              >
+                Discover Shows
+              </Link>
+            </SheetClose>
             {!session ? (
               <>
-                <Link
-                  href="/auth/register"
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  Signup
-                </Link>
-                <Link
-                  href="/auth/login"
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  Login
-                </Link>
+                <SheetClose asChild>
+                  <Link
+                    href="/auth/register"
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    Signup
+                  </Link>
+                </SheetClose>
+                <SheetClose asChild>
+                  <Link
+                    href="/auth/login"
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    Login
+                  </Link>
+                </SheetClose>
               </>
             ) : null}
           </nav>

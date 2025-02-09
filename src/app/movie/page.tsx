@@ -101,7 +101,7 @@ export default async function DiscoverMoviePage({
         </div>
       </div>
       {/* max page value is 500 according to TMDB */}
-      <PaginationComponent totalPages={totalPages} />
+      <PaginationComponent totalPages={totalPages} className="mb-5" />
     </div>
   );
 }
