@@ -2,8 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import React from "react";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Search as SearchIcon } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
@@ -28,6 +28,10 @@ const formSchema = z.object({
   }),
 });
 
+interface SearchProps {
+  onSearch?: () => void;
+}
+
 /**
  * A form to search for movies and TV shows.
  *
@@ -38,7 +42,7 @@ const formSchema = z.object({
  * includes the search term in the query string. The path of the
  * new URL is determined by the media type.
  */
-export default function Search() {
+export default function Search({ onSearch }: SearchProps) {
   const router = useRouter();
 
   // `useForm` hook from react-hook-form to manage the form state and validation.
@@ -64,6 +68,9 @@ export default function Search() {
     } else if (mediaType === "tv-show") {
       router.push(`/search/tv/?${params.toString()}`);
     }
+    
+    // Call the onSearch callback if provided
+    onSearch?.();
   }
 
   return (

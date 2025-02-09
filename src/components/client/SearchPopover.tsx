@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -5,7 +7,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Search as SearchIcon } from "lucide-react";
-import Search from "./client/Search";
+import Search from "@/components/client/Search";
+import React from "react";
 
 /**
  * A popover that contains a search bar. The popover is
@@ -15,15 +18,17 @@ import Search from "./client/Search";
  * <SearchPopover />
  */
 export default function SearchPopover() {
+  const [open, setOpen] = React.useState(false);
+
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button>
           <SearchIcon size={20} />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-screen rounded-none border-none bg-slate-600">
-        <Search />
+        <Search onSearch={() => setOpen(false)} />
       </PopoverContent>
     </Popover>
   );

@@ -15,12 +15,15 @@ import { usePathname, useSearchParams } from "next/navigation";
 /**
  * This client component is used to display pagination links for the search results.
  * @param totalPages - The total number of pages in the search results
+ * @param className - Optional className for the pagination component
  * @returns The pagination link component
  */
 export default function PaginationComponent({
   totalPages,
+  className,
 }: {
   totalPages: number;
+  className?: string;
 }) {
   // lets you read the current URL's pathname.
   const pathname = usePathname();
@@ -49,7 +52,7 @@ export default function PaginationComponent({
   const allPages = generatePagination(currentPage, totalPages);
 
   return (
-    <Pagination>
+    <Pagination className={className}>
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious

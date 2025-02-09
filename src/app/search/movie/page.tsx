@@ -44,7 +44,10 @@ export default async function SearchPage({
 
   return (
     <div className="flex min-h-screen flex-col items-center">
-      <h1 className="my-5 text-2xl font-bold">{`Movie Search Results for: ${searchTerm}`}</h1>
+      <h1 className="mb-2 mt-5 text-2xl font-bold">
+        Movie Search Results for:
+      </h1>
+      <h2 className="mb-5 text-3xl font-bold">{searchTerm}</h2>
       <Button asChild className="mb-5">
         <Link href={`/search/tv/?search=${searchTerm}`}>TV Show Search</Link>
       </Button>
@@ -53,7 +56,7 @@ export default async function SearchPage({
           <SearchResultCards key={movie.id} cinema={movie} />
         ))}
       </div>
-      <PaginationComponent totalPages={totalPages} />
+      <PaginationComponent totalPages={totalPages} className="mb-5" />
     </div>
   );
 }

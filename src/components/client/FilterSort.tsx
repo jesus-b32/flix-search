@@ -504,7 +504,7 @@ export default function FilterSort({
           className="w-10/12"
         />
       </div>
-      <div className="w-full space-y-4 py-6">
+      <div className="w-full space-y-4 pt-6 pb-12">
         <h3 className="ml-4 font-semibold">Where to Watch</h3>
         <SelectSearch data={watchProviderRegionList.results} />
         <MultipleSelector
@@ -524,6 +524,7 @@ export default function FilterSort({
               no results found.
             </p>
           }
+          // className="mb-6"
         />
       </div>
     </div>
