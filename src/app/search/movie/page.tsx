@@ -43,7 +43,7 @@ export default async function SearchPage({
   const totalPages = movies.total_pages > 500 ? 500 : movies.total_pages;
 
   return (
-    <div className="flex min-h-screen flex-col items-center">
+    <div className="flex min-h-screen w-full flex-col items-center overflow-x-hidden">
       <h1 className="mb-2 mt-5 text-2xl font-bold">
         Movie Search Results for:
       </h1>
@@ -51,7 +51,7 @@ export default async function SearchPage({
       <Button asChild className="mb-5">
         <Link href={`/search/tv/?search=${searchTerm}`}>TV Show Search</Link>
       </Button>
-      <div className="mb-5 flex w-full flex-col items-center gap-y-6">
+      <div className="mb-5 flex w-full flex-col items-center gap-y-6 px-4">
         {movies.results.map((movie) => (
           <SearchResultCards key={movie.id} cinema={movie} />
         ))}

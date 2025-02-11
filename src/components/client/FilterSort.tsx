@@ -449,11 +449,11 @@ export default function FilterSort({
 
   return (
     <>
-      <Card className="w-full divide-y-2">
+      <Card className="w-[95%] divide-y-2 md:w-10/12 lg:w-full">
         <CardHeader>
           <CardTitle className="text-center font-bold">
             {mediaType === "movie" ? "Filter Movies" : "Filter TV Shows"}
-          </CardTitle>{" "}
+          </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           <div className="hidden lg:block">

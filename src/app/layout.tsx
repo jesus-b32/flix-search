@@ -21,7 +21,8 @@ export default function RootLayout({
     <html lang="en" className={`${GeistSans.variable}`}>
       <body className="bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
         <TopNav />
-        {children}
+        {/* Add padding-top to the main element equal to navbar height */}
+        <main className="pt-16">{children}</main>
         <Footer />
       </body>
     </html>
