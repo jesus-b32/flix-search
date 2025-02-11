@@ -38,7 +38,7 @@ export default async function TopNav() {
   const session = await auth();
   const name = session?.user?.name ?? "";
   return (
-    <header className="sticky top-0 flex h-16 items-center gap-4 bg-background bg-slate-600 px-4 text-black md:px-6">
+    <header className="fixed top-0 z-50 flex h-16 w-full items-center gap-4 bg-slate-600 px-6 text-black">
       <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
         <Link
           href="/"

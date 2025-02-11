@@ -32,8 +32,8 @@ export default function SearchResultCards({
    *   Main text content (inside `CardContent`)
    */
   return (
-    <Card className="flex w-full flex-col items-center border-none md:w-10/12 md:flex-row">
-      <div className="flex h-[278px] w-[185px] justify-center md:justify-start">
+    <Card className="flex w-[95%] flex-col items-center border-none md:w-10/12 md:flex-row">
+      <div className="flex h-auto max-h-[278px] w-auto max-w-[185px] justify-center md:justify-start">
         {/* imagge is 185x278 */}
         <Link
           href={"title" in cinema ? `/movie/${cinema.id}` : `/tv/${cinema.id}`}
@@ -42,10 +42,10 @@ export default function SearchResultCards({
             <img
               src={`https://image.tmdb.org/t/p/w185${cinema.poster_path}`}
               alt="Movie or show image"
-              className="h-full w-full rounded-none md:rounded-l-lg"
+              className="h-full w-full rounded-none object-contain md:rounded-l-lg"
             />
           ) : (
-            <ImageOff className="h-full w-full rounded-none md:rounded-l-lg" />
+            <ImageOff className="h-full w-full rounded-none object-contain md:rounded-l-lg" />
           )}
         </Link>
       </div>

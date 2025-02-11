@@ -77,10 +77,10 @@ export default async function DiscoverTvShowPage({
   });
 
   return (
-    <div className="flex min-h-screen flex-col items-center">
+    <div className="flex min-h-screen w-full flex-col items-center overflow-x-hidden px-4">
       <h1 className="my-5 text-4xl font-bold">Discover TV Shows</h1>
       <div className="flex w-full flex-col gap-y-6 md:items-center lg:w-11/12 lg:flex-row lg:items-start lg:gap-x-4">
-        <div className="h-fit w-full items-start md:w-10/12 lg:w-60">
+        <div className="flex w-full justify-center md:w-full lg:w-60">
           <FilterSort
             genreList={genres}
             languageList={languages}
