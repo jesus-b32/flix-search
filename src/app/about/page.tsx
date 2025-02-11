@@ -6,11 +6,11 @@ export const metadata: Metadata = {
 
 export default function About() {
   return (
-    <div className="flex min-h-screen flex-col items-center gap-y-6">
-      <h1 className="mt-5 text-4xl font-bold md:w-10/12">About Flix Search</h1>
-      <section className="flex w-full flex-col items-center md:w-10/12 md:items-start">
+    <div className="my-6 flex min-h-screen flex-col items-center gap-y-6">
+      <h1 className="text-4xl font-bold md:w-10/12">About Flix Search</h1>
+      <section className="flex w-10/12 flex-col items-center md:items-start">
         <h2 className="text-2xl font-semibold">What is Flix Search?</h2>
-        <p>
+        <p className="text-justify">
           Flix Search is a web application that will help you easily find what
           streaming services host your favorite movies and TV shows. You can
           check the streaming availability of a movie or TV show by country to
@@ -21,9 +21,9 @@ export default function About() {
         </p>
       </section>
 
-      <section className="flex w-full flex-col items-center md:w-10/12 md:items-start">
+      <section className="flex w-10/12 flex-col items-center md:items-start">
         <h2 className="text-2xl font-semibold">How do I use Flix Search?</h2>
-        <p>
+        <p className="text-justify">
           Just simply search for what you want to watch. Select the movie or TV
           show you want to watch. Find out which streaming services has the
           movie or TV show available and in which countries. Save it to your
@@ -31,9 +31,9 @@ export default function About() {
         </p>
       </section>
 
-      <section className="flex w-full flex-col items-center md:w-10/12 md:items-start">
+      <section className="flex w-10/12 flex-col items-center md:items-start">
         <h2 className="text-2xl font-semibold">Movie and TV Data Source</h2>
-        <p>
+        <p className="text-justify">
           This website uses TMDB and the TMDB APIs, but is not endorsed,
           certified, or otherwise approved by TMDB.{" "}
           <img
@@ -46,9 +46,9 @@ export default function About() {
         </p>
       </section>
 
-      <section className="flex w-full flex-col items-center md:w-10/12 md:items-start">
+      <section className="flex w-10/12 flex-col items-center md:items-start">
         <h2 className="text-2xl font-semibold">Streaming Data Source</h2>
-        <p>
+        <p className="text-justify">
           The Streaming info in this application comes from{" "}
           <a href="https://www.justwatch.com/" className="underline">
             JustWatch
