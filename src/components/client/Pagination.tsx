@@ -29,7 +29,7 @@ export default function PaginationComponent({
   const pathname = usePathname();
   // lets you read the current URL's query string.
   const searchParams = useSearchParams();
-  const currentPage = Number(searchParams.get("page")) ?? 1;
+  const currentPage = Number(searchParams.get("page")) || 1;
   const searchTerm = searchParams.get("search") ?? "";
 
   /**
@@ -74,6 +74,7 @@ export default function PaginationComponent({
                   href={createPageURL(page)}
                   isActive
                   className="text-black"
+                  size="sm"
                 >
                   {page}
                 </PaginationLink>
