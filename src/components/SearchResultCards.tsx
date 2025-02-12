@@ -45,7 +45,7 @@ export default function SearchResultCards({
               className="h-full w-full rounded-none object-contain md:rounded-l-lg"
             />
           ) : (
-            <ImageOff className="h-full w-full rounded-none object-contain md:rounded-l-lg" />
+            <ImageOff className="h-[188px] w-[125px] rounded-none md:h-[278px] md:w-[185px] md:rounded-l-lg" />
           )}
         </Link>
       </div>
