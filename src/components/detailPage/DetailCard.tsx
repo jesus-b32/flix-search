@@ -52,7 +52,7 @@ export default async function DetailCard({
     : false;
 
   return (
-    <Card className="mt-6 flex h-fit w-full flex-col items-center rounded-none border-none md:flex-row md:items-start">
+    <Card className="mt-6 flex h-fit w-[90%] flex-col items-center border-none md:w-10/12 md:flex-row md:items-start">
       <div className="flex justify-center md:h-[513px] md:w-[342px] md:justify-start">
         {/* image is 342x513 */}
         {details?.poster_path ? (
@@ -63,15 +63,15 @@ export default async function DetailCard({
                 ? `${details.title} poster image`
                 : `${details.name} poster image`
             }
-            className="h-full w-full"
+            className="h-full w-full rounded-lg"
           />
         ) : (
           <ImageOff className="h-full w-full" />
         )}
       </div>
       <div className="flex flex-col md:w-1/2 lg:w-7/12">
-        <CardHeader className="text-center md:text-left">
-          <CardTitle className="text-3xl font-bold">
+        <CardHeader className="pb-0 text-center md:text-left">
+          <CardTitle className="font-bold">
             {"title" in details ? details.title : details.name}
           </CardTitle>
           <CardDescription>
@@ -80,9 +80,10 @@ export default async function DetailCard({
               : `${details?.first_air_date || "FIrst Air Date Unknown"} | ${details?.number_of_seasons || "?"} seasons | ${details?.number_of_episodes || "?"} episodes`}
           </CardDescription>
         </CardHeader>
-        <CardContent className="text-center md:text-left">
-          <p>{`Genres: ${details?.genres.map((genre) => genre.name).join(", ") || "N/A"}`}</p>
-          <h4 className="text-xl font-bold">Overview</h4>
+        <CardContent className="pb-3 text-center md:text-left">
+          <h4 className="text-lg font-semibold">Genres</h4>
+          <p>{`${details?.genres.map((genre) => genre.name).join(", ") || "N/A"}`}</p>
+          <h4 className="text-lg font-semibold">Overview</h4>
           <p>{details?.overview || "No Overview"}</p>
         </CardContent>
         <CardFooter className="flex justify-center md:justify-start">
