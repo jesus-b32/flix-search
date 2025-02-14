@@ -6,7 +6,7 @@
 export default function JustWatchAttribution({ title }: { title: string }) {
   return (
     <div className="mt-6 flex w-full flex-col items-center justify-center p-6 md:w-10/12 md:items-start md:px-0">
-      <h2 className="text-2xl font-semibold">
+      <h2 className="text-center text-xl font-semibold md:text-left">
         {`Discover where you can stream ${title}`} with{" "}
         <img
           src="/justwatch.svg"
@@ -17,7 +17,7 @@ export default function JustWatchAttribution({ title }: { title: string }) {
           className="inline-block"
         />
       </h2>
-      <p>
+      <p className="text-center md:text-left">
         JustWatch makes it easy to find out where you can legally watch your
         favorite movies & TV shows online. Visit{" "}
         <a href="https://www.justwatch.com/" className="underline">
