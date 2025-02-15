@@ -18,11 +18,11 @@ export default function Recommendations({
    * Display recommendations based on the provided list of movie or TV show recommendations. Recommendation results can be empty
    */
   return (
-    <div className="w-full flex-col py-6 md:w-10/12">
-      <h2 className="mb-3 w-full text-center text-2xl font-semibold md:w-10/12 md:text-left">
+    <div className="flex w-full flex-col items-center py-6 md:w-10/12 md:items-start">
+      <h2 className="mb-3 w-[90%] text-center text-xl font-semibold md:w-full md:text-left">
         Recommendations:
       </h2>
-      <ScrollArea className="w-full whitespace-nowrap rounded-none border-none bg-slate-700 md:rounded-lg">
+      <ScrollArea className="w-[90%] rounded-lg bg-slate-700 md:w-full">
         <div className="flex w-max space-x-4 p-4">
           {recommendations.results.length === 0 ? (
             <h1 className="text-xl font-bold">No Recommendations Available</h1>
