@@ -57,7 +57,7 @@ export default function AvailabilityByCountry({
             <SelectSearch data={filteredCountries} />
           </div>
           <div className="mt-6 flex w-full flex-col">
-            <h2 className="mb-3 px-6 text-2xl font-bold md:px-0">
+            <h2 className="mb-3 px-6 text-center text-xl font-bold md:px-0 md:text-left">
               {`${title} is available from the following providers in ${selectedCountryName}:`}
             </h2>
             {watchProviderCountry &&
@@ -74,7 +74,7 @@ export default function AvailabilityByCountry({
                           : providerType.charAt(0).toUpperCase() +
                             providerType.slice(1)}
                       </h3>
-                      <div className="grid grid-cols-1 justify-items-center gap-4 sm:grid-cols-2 md:grid-cols-3 md:justify-items-start lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+                      <div className="grid grid-cols-1 justify-items-center gap-4 min-[370px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
                         {providerDetails.map((provider) => (
                           <Card
                             key={provider.provider_id}
