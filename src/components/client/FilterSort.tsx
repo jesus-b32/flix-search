@@ -6,8 +6,6 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 // UI Components
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
 import {
   Sheet,
   SheetContent,
@@ -16,15 +14,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { DualRangeSlider } from "@/components/ui/dual-range-slider";
-import MultipleSelector, { type Option } from "@/components/ui/multi-selector";
+import { type Option } from "@/components/ui/multi-selector";
 
 // type definitions
 import type {
@@ -37,13 +27,10 @@ import type {
 // icons
 import { SlidersHorizontal } from "lucide-react";
 
-import SelectSearch from "@/components/client/SelectSearch";
-import SelectList from "@/components/client/SelectList";
-
 import { format } from "date-fns";
 import { UTCDate } from "@date-fns/utc";
 
-import DateSelector from "@/components/client/DateSelector";
+import FilterContent from "@/components/client/FilterContent";
 
 export default function FilterSort({
   genreList,
@@ -95,21 +82,14 @@ export default function FilterSort({
   // State of different sorting and filtering options
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState("popularity.desc");
-  const [originalLanguage, setOriginaLanguage] = useState("all");
+  const [originalLanguage, setOriginalLanguage] = useState<string>("all");
   const [releaseDateGte, setReleaseDateGte] = useState<Date | null>(null);
   const [releaseDateLte, setReleaseDateLte] = useState<Date | null>(null);
-
-  // runtimeGte = runtime[0]; runtimeLte = runtime[1]
   const [runtime, setRuntime] = useState([0, 400]);
-
-  // State of watch provider options; value is provider name
+  //{id: watchProviderId, value: watchProviderName, label: watchProviderName}
   const [watchProviders, setWatchProviders] = useState<Option[]>([]);
-  // State of selected watch provider; value is provider id
   const [watchRegion, setWatchRegion] = useState("US");
-  //state that tracks if filter or sorting options have been changed
-  const [isChanged, setIsChanged] = useState(false);
-  // open state of language select
-  const [open, setOpen] = useState(false);
+  const [isChanged, setIsChanged] = useState(false); //tracks if filter/sorting options has changed
 
   // Whenever search params in URL changes, get the new sorting and filter options from the URL search params and update the state of those values if the search parameter exists
   useEffect(() => {
@@ -123,7 +103,7 @@ export default function FilterSort({
     // If param exists, create an array of selected genres and set it in state
     if (genresParam) setSelectedGenres(genresParam.split(","));
     if (sortParam) setSortBy(sortParam);
-    if (languageParam) setOriginaLanguage(languageParam);
+    if (languageParam) setOriginalLanguage(languageParam);
     if (watchProviderParam) {
       const watchProviderName = (watchProviderId: string) =>
         watchProviderList.results.find(
@@ -287,128 +267,6 @@ export default function FilterSort({
     setIsChanged(false);
   };
 
-  /**
-   * The content of the filter sheet. It contains 3 sections for sorting,
-   * selecting genres, and selecting the original language. The sorting options
-   * are given as an array of objects with a value and label property.
-   * The genre list is given as an array of objects with an id and name
-   * property. The original language is given as a string.
-   * @returns The content of the filter sheet.
-   */
-  const FilterContent = () => (
-    <div className="mb-48 w-full space-y-6 divide-y-2">
-      <div className="w-full">
-        <h3 className="my-4 ml-4 font-semibold">Sort By</h3>
-        <Select value={sortBy} onValueChange={handleSortChange}>
-          <SelectTrigger className="ml-4 w-10/12">
-            <SelectValue placeholder="Select a sorting option" />
-          </SelectTrigger>
-          <SelectContent>
-            {sortOptions.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-      <div className="w-full">
-        <h3 className="my-4 ml-4 font-semibold">Genres</h3>
-        <div className="ml-4 space-y-2">
-          {genreList.genres.map((genre) => (
-            <div key={genre.id} className="flex items-center space-x-2">
-              <Checkbox
-                id={genre.id.toString()}
-                checked={selectedGenres.includes(genre.id.toString())}
-                onCheckedChange={() => handleGenreChange(genre.id.toString())}
-              />
-              <Label htmlFor={genre.id.toString()}>{genre.name}</Label>
-            </div>
-          ))}
-        </div>
-      </div>
-      <div className="w-full">
-        <h3 className="my-4 ml-4 font-semibold">Language</h3>
-        <SelectList
-          list={languageList}
-          currentValue={originalLanguage}
-          setCurrentValue={setOriginaLanguage}
-          className="ml-4 w-10/12"
-          onValueChange={() => setIsChanged(true)}
-        />
-      </div>
-      <div className="w-full space-y-4">
-        <h3 className="my-4 ml-4 font-semibold">
-          {mediaType === "movie" ? "Release Date" : "First Air Date"}
-        </h3>
-        <Label htmlFor="gte" className="ml-4">
-          From:
-        </Label>
-        <div id="gte" className="ml-4 w-10/12 pb-4">
-          <DateSelector
-            date={releaseDateGte}
-            setDate={setReleaseDateGte}
-            setIsChanged={setIsChanged}
-          />
-        </div>
-        <Label htmlFor="lte" className="ml-4">
-          To:
-        </Label>
-        <div id="lte" className="ml-4 w-10/12">
-          <DateSelector
-            date={releaseDateLte}
-            setDate={setReleaseDateLte}
-            setIsChanged={setIsChanged}
-          />
-        </div>
-      </div>
-      <div className="flex flex-col items-center">
-        <h3 className="mb-8 ml-4 mt-4 w-full font-semibold">
-          Runtime(minutes)
-        </h3>
-        <DualRangeSlider
-          label={(value) => <span>{value}</span>}
-          value={runtime}
-          onValueChange={(value) => {
-            setRuntime(value);
-            setIsChanged(true);
-          }}
-          min={0}
-          max={400}
-          step={5}
-          minStepsBetweenThumbs={10}
-          className="w-10/12"
-        />
-      </div>
-      <div className="w-full space-y-4 pt-6">
-        <h3 className="ml-4 font-semibold">Where to Watch</h3>
-        <SelectSearch
-          data={watchProviderRegionList.results}
-          className="ml-4 w-10/12"
-        />
-        <MultipleSelector
-          value={watchProviders}
-          onChange={(value) => {
-            setWatchProviders(value);
-            setIsChanged(true);
-          }}
-          defaultOptions={watchProviderList.results.map((provider) => ({
-            label: provider.provider_name,
-            value: provider.provider_name.toLowerCase(),
-            id: provider.provider_id.toString(),
-          }))}
-          placeholder="Watch Providers"
-          emptyIndicator={
-            <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
-              no results found.
-            </p>
-          }
-          className="ml-4 w-10/12"
-        />
-      </div>
-    </div>
-  );
-
   return (
     <>
       <Card className="w-[95%] divide-y-2 md:w-10/12 lg:w-full">
@@ -419,7 +277,29 @@ export default function FilterSort({
         </CardHeader>
         <CardContent className="p-0">
           <div className="hidden lg:block">
-            <FilterContent />
+            <FilterContent
+              mediaType={mediaType}
+              sortOptions={sortOptions}
+              sortBy={sortBy}
+              handleSortChange={handleSortChange}
+              genreList={genreList}
+              selectedGenres={selectedGenres}
+              handleGenreChange={handleGenreChange}
+              originalLanguage={originalLanguage}
+              setOriginalLanguage={setOriginalLanguage}
+              releaseDateGte={releaseDateGte}
+              setReleaseDateGte={setReleaseDateGte}
+              releaseDateLte={releaseDateLte}
+              setReleaseDateLte={setReleaseDateLte}
+              runtime={runtime}
+              setRuntime={setRuntime}
+              watchProviderRegionList={watchProviderRegionList}
+              watchProviders={watchProviders}
+              setWatchProviders={setWatchProviders}
+              watchProviderList={watchProviderList}
+              languageList={languageList}
+              setIsChanged={setIsChanged}
+            />
           </div>
           <div className="lg:hidden">
             <Sheet>
@@ -442,7 +322,29 @@ export default function FilterSort({
                   </SheetDescription>
                 </SheetHeader>
                 <div className="mt-4 flex h-[calc(100vh-8rem)] flex-col overflow-y-auto">
-                  <FilterContent />
+                  <FilterContent
+                    mediaType={mediaType}
+                    sortOptions={sortOptions}
+                    sortBy={sortBy}
+                    handleSortChange={handleSortChange}
+                    genreList={genreList}
+                    selectedGenres={selectedGenres}
+                    handleGenreChange={handleGenreChange}
+                    originalLanguage={originalLanguage}
+                    setOriginalLanguage={setOriginalLanguage}
+                    releaseDateGte={releaseDateGte}
+                    setReleaseDateGte={setReleaseDateGte}
+                    releaseDateLte={releaseDateLte}
+                    setReleaseDateLte={setReleaseDateLte}
+                    runtime={runtime}
+                    setRuntime={setRuntime}
+                    watchProviderRegionList={watchProviderRegionList}
+                    watchProviders={watchProviders}
+                    setWatchProviders={setWatchProviders}
+                    watchProviderList={watchProviderList}
+                    languageList={languageList}
+                    setIsChanged={setIsChanged}
+                  />
                 </div>
               </SheetContent>
             </Sheet>
