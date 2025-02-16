@@ -23,13 +23,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { cn } from "@/lib/utils";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
 import { DualRangeSlider } from "@/components/ui/dual-range-slider";
 import MultipleSelector, { type Option } from "@/components/ui/multi-selector";
 
@@ -40,16 +33,17 @@ import type {
   streamingProviderList,
   watchProviderRegions,
 } from "@/server/actions/types";
-import type { Dispatch, SetStateAction } from "react";
 
 // icons
-import { SlidersHorizontal, Calendar as CalendarIcon } from "lucide-react";
+import { SlidersHorizontal } from "lucide-react";
 
 import SelectSearch from "@/components/client/SelectSearch";
 import SelectList from "@/components/client/SelectList";
 
 import { format } from "date-fns";
 import { UTCDate } from "@date-fns/utc";
+
+import DateSelector from "@/components/client/DateSelector";
 
 export default function FilterSort({
   genreList,
@@ -293,46 +287,6 @@ export default function FilterSort({
     setIsChanged(false);
   };
 
-  const DateSelector = ({
-    date,
-    setDate,
-  }: {
-    date: Date | null;
-    setDate: Dispatch<SetStateAction<Date | null>>;
-  }) => {
-    return (
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button
-            variant={"outline"}
-            className={cn(
-              "w-full justify-start text-left font-normal",
-              !date && "text-muted-foreground",
-            )}
-          >
-            <CalendarIcon />
-            {date !== null ? (
-              // format(April 29th, 2024) that will display when date selected
-              format(date, "PPP")
-            ) : (
-              <span>Pick a date</span>
-            )}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-auto p-0">
-          <Calendar
-            mode="single"
-            selected={date ? date : undefined}
-            onSelect={(date) => {
-              setDate(date ? date : null);
-              setIsChanged(true);
-            }}
-            initialFocus
-          />
-        </PopoverContent>
-      </Popover>
-    );
-  };
   /**
    * The content of the filter sheet. It contains 3 sections for sorting,
    * selecting genres, and selecting the original language. The sorting options
@@ -391,13 +345,21 @@ export default function FilterSort({
           From:
         </Label>
         <div id="gte" className="ml-4 w-10/12 pb-4">
-          <DateSelector date={releaseDateGte} setDate={setReleaseDateGte} />
+          <DateSelector
+            date={releaseDateGte}
+            setDate={setReleaseDateGte}
+            setIsChanged={setIsChanged}
+          />
         </div>
         <Label htmlFor="lte" className="ml-4">
           To:
         </Label>
         <div id="lte" className="ml-4 w-10/12">
-          <DateSelector date={releaseDateLte} setDate={setReleaseDateLte} />
+          <DateSelector
+            date={releaseDateLte}
+            setDate={setReleaseDateLte}
+            setIsChanged={setIsChanged}
+          />
         </div>
       </div>
       <div className="flex flex-col items-center">
