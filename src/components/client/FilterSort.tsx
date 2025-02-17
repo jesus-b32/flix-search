@@ -269,7 +269,7 @@ export default function FilterSort({
 
   return (
     <>
-      <Card className="w-[95%] divide-y-2 md:w-10/12 lg:w-full">
+      <Card className="w-[95%] border-none md:w-10/12 lg:w-full">
         <CardHeader>
           <CardTitle className="text-center font-bold">
             {mediaType === "movie" ? "Filter Movies" : "Filter TV Shows"}
@@ -304,7 +304,7 @@ export default function FilterSort({
           <div className="lg:hidden">
             <Sheet>
               <SheetTrigger asChild>
-                <Button className="w-full border-none">
+                <Button className="w-full rounded-t-none">
                   <SlidersHorizontal className="mr-2 h-4 w-4" />
                   Filters & Sort
                 </Button>
@@ -317,8 +317,8 @@ export default function FilterSort({
                       : " Filter TV Shows"}
                   </SheetTitle>
                   <SheetDescription>
-                    Apply filters and sorting options to find your perfect
-                    {mediaType === "movie" ? "movie" : "tv show"}.
+                    Apply filters and sorting options to find your perfect{" "}
+                    {mediaType === "movie" ? "movie" : "TV show"}.
                   </SheetDescription>
                 </SheetHeader>
                 <div className="mt-4 flex h-[calc(100vh-8rem)] flex-col overflow-y-auto">
