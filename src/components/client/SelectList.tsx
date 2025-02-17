@@ -45,7 +45,7 @@ export default function SelectList({
 
   return (
     <div className={cn("w-[200px]", className)}>
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover open={open} onOpenChange={setOpen} modal={true}>
         <PopoverTrigger asChild>
           <Button
             variant="secondary"

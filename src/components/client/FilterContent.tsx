@@ -71,7 +71,7 @@ export default function FilterContent({
   setIsChanged,
 }: FilterContentProps) {
   return (
-    <div className="mb-48 w-full space-y-6 divide-y-2">
+    <div className="mb-96 w-full space-y-6 divide-y-2">
       <div className="w-full">
         <h3 className="my-4 ml-4 font-semibold">Sort By</h3>
         <Select value={sortBy} onValueChange={handleSortChange}>
