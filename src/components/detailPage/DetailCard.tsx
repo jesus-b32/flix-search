@@ -53,7 +53,7 @@ export default async function DetailCard({
 
   return (
     <Card className="mt-6 flex h-fit w-[90%] flex-col items-center border-none md:w-10/12 md:flex-row md:items-start">
-      <div className="flex justify-center md:h-[513px] md:w-[342px] md:justify-start">
+      <div className="flex h-[513px] w-[342px] justify-center md:justify-start">
         {/* image is 342x513 */}
         {details?.poster_path ? (
           <img
@@ -66,7 +66,7 @@ export default async function DetailCard({
             className="h-full w-full rounded-lg"
           />
         ) : (
-          <ImageOff className="h-full w-full" />
+          <ImageOff className="max-[379px]:h-[225px] max-[379px]:w-[150px] min-[380px]:h-[513px] min-[380px]:w-[342px]" />
         )}
       </div>
       <div className="flex flex-col md:w-1/2 lg:w-7/12">
