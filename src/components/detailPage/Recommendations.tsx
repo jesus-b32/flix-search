@@ -1,3 +1,4 @@
+import { ImageOff } from "lucide-react";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import type { MovieRecommendations } from "@/server/actions/movies/types";
@@ -38,15 +39,19 @@ export default function Recommendations({
               >
                 <Card className="flex h-[300px] w-[154px] flex-col border-none">
                   <div className="flex h-auto w-full justify-center">
-                    <img
-                      src={`https://image.tmdb.org/t/p/w154${recommendation.poster_path}`}
-                      alt={
-                        "title" in recommendation
-                          ? `${recommendation.title} poster image`
-                          : `${recommendation.name} poster image`
-                      }
-                      className="h-auto w-full max-w-[154px] rounded-t-lg"
-                    />
+                    {recommendation.poster_path ? (
+                      <img
+                        src={`https://image.tmdb.org/t/p/w154${recommendation.poster_path}`}
+                        alt={
+                          "title" in recommendation
+                            ? `${recommendation.title} poster image`
+                            : `${recommendation.name} poster image`
+                        }
+                        className="h-auto w-full max-w-[154px] rounded-t-lg"
+                      />
+                    ) : (
+                      <ImageOff className="h-auto w-full max-w-[154px] rounded-t-lg" />
+                    )}
                   </div>
                   <div>
                     <CardHeader className="px-1 pt-2">
