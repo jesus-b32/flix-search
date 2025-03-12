@@ -29,11 +29,11 @@ export default function AvailabilityByCountry({
   const watchProviders = details["watch/providers"].results;
   const availableCountries = Object.keys(watchProviders);
 
-  // filter countries based on available countries
+  // will only show countries that have availability data for selected movie or tv show
   const filteredCountries = countries.filter((country) =>
     availableCountries.includes(country.iso_3166_1),
   ) as countryList;
-
+  // handle case where US, the default country, is not in the list of available countries
   const watchProviderCountry =
     watchProviders?.[selectedCountry as keyof typeof watchProviders] ??
     watchProviders[availableCountries[0] as keyof typeof watchProviders];

@@ -134,3 +134,16 @@ export const videoLists = createTable(
     unq: unique().on(t.userId, t.name),
   }),
 );
+
+export const verificationTokens = createTable(
+  "verification_tokens",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    email: text("email"),
+    token: text("token").unique(),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
+  },
+  (t) => ({
+    unq: unique().on(t.email, t.token),
+  }),
+);
