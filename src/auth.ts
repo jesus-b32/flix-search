@@ -11,6 +11,7 @@ import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { db } from "@/server/db";
 import { users, accounts, sessions } from "@/server/db/schema";
 import { LoginSchema } from "@/schemas";
+import { getUserById } from "@/data/user";
 import { getUserByEmail } from "@/data/user";
 import { updateUserEmailVerified } from "@/data/user";
 import { createVideoList } from "@/data/videoList";
@@ -126,10 +127,12 @@ const authConfig: NextAuthConfig = {
      * @returns boolean indicating whether signin was successful.
      */
     async signIn({ user }) {
-      //check if user exists
       if (!user.id) return false;
-      // const existingUser = await getUserById(user.id);
-      // if (!existingUser?.emailVerified || !existingUser) return false;
+      const existingUser = await getUserById(user.id);
+      if (!existingUser?.emailVerified) return false;
+
+      //TODO: add 2FA check
+
       return true;
     },
 

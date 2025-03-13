@@ -9,6 +9,7 @@ import { users } from "@/server/db/schema";
 
 import { getUserByEmail } from "@/data/user";
 import { createVideoList } from "@/data/videoList";
+import { generateVerificationToken } from "@/lib/tokens";
 
 /**
  * Validates the form values and returns a success message or an error message
@@ -59,9 +60,11 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     };
   }
 
+  const verificationToken = await generateVerificationToken(email);
+
   //TODO: send verification token email
 
   return {
-    success: "User created!",
+    success: "Confirmation Email Sent!",
   };
 };

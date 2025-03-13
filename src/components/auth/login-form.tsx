@@ -74,9 +74,7 @@ export const LoginForm = () => {
     startTransition(async () => {
       await login(values).then((data) => {
         setError(data?.error ?? "");
-
-        // TODO: add when we do 2fa
-        // setSuccess(data?.success ?? "");
+        setSuccess(data?.success ?? "");
       });
     });
   };
