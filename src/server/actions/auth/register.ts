@@ -5,11 +5,11 @@ import { RegisterSchema } from "@/schemas";
 import bcrypt from "bcryptjs";
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
-// import { eq } from "drizzle-orm";
 
 import { getUserByEmail } from "@/data/user";
 import { createVideoList } from "@/data/videoList";
 import { generateVerificationToken } from "@/lib/tokens";
+import { sendVerificationEmail } from "@/lib/mail";
 
 /**
  * Validates the form values and returns a success message or an error message
@@ -62,7 +62,14 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
 
   const verificationToken = await generateVerificationToken(email);
 
-  //TODO: send verification token email
+  if (!verificationToken[0]?.token || !verificationToken[0]?.email) {
+    return { error: "Error generating verification token!" };
+  }
+
+  await sendVerificationEmail(
+    verificationToken[0].email,
+    verificationToken[0].token,
+  );
 
   return {
     success: "Confirmation Email Sent!",
