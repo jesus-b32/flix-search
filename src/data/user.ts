@@ -25,11 +25,17 @@ export const getUserById = async (id: string) => {
   }
 };
 
-export const updateUserEmailVerified = async (id: string) => {
+/**
+ * Used to update email verified status for all users. Update email as well so this function can be reused when a user wants to modify their email. When user changes email, token is generated with that new email and send verification email to user. Once email is confirmed, then email is updated in db
+ */
+export const updateUserEmailVerified = async (id: string, email: string) => {
   try {
     await db
       .update(users)
-      .set({ emailVerified: new Date() })
+      .set({
+        emailVerified: new Date(),
+        email: email,
+      })
       .where(eq(users.id, id));
     return true;
   } catch {

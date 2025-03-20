@@ -108,8 +108,8 @@ const authConfig: NextAuthConfig = {
      * @param user - The user object containing the user's details.
      */
     async linkAccount({ user }) {
-      if (!user.id) return;
-      await updateUserEmailVerified(user.id);
+      if (!user.id || !user.email) return;
+      await updateUserEmailVerified(user.id, user.email);
       await createVideoList(user.id, "watchlist");
     },
   },
@@ -137,7 +137,7 @@ const authConfig: NextAuthConfig = {
     },
 
     /**
-     * This is a custom `jwt` function that adds a `credentials` key to the `token` object when the user logs in with the credentials provider.
+     * This is a custom `jwt` function that adds a `credentials` key to the `token` object when the user logs in with the credentials provider. Will be used in custom encode function below for creating session tokens for credential users.
      * @param params - The parameters passed to the `jwt` function
      * @returns The updated token object
      */
@@ -170,7 +170,7 @@ const authConfig: NextAuthConfig = {
   /**
    * JSON Web Tokens can be used for session tokens if enabled with session: { strategy: "jwt" } option.
    * JSON Web Tokens are enabled by default if you have not specified an adapter.
-   * JSON Web Tokens are encrypted (JWE) by default. We recommend you keep this behaviour.
+   * JSON Web Tokens are encrypted (JWE) by default. We recommend you keep this behavior.
    * https://next-auth.js.org/configuration/options#jwt
    */
   jwt: {

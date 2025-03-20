@@ -9,6 +9,7 @@ export const publicRoutes = [
   "/about",
   "/search/movie",
   "/search/tv",
+  "/auth/new-verification",
 ];
 
 /**
