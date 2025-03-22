@@ -19,15 +19,16 @@ export const newVerification = async (token: string) => {
     return { error: "Token has expired!" };
   }
 
-  if (existingToken.email) {
-    const existingUser = await getUserByEmail(existingToken.email);
-    if (!existingUser) {
-      return { error: "Email does not exist!" };
-    }
-
-    await updateUserEmailVerified(existingUser.id, existingToken.email);
+  if (!existingToken.email) {
+    return { error: "Email not found!" };
   }
 
+  const existingUser = await getUserByEmail(existingToken.email);
+  if (!existingUser) {
+    return { error: "Email does not exist!" };
+  }
+
+  await updateUserEmailVerified(existingUser.id, existingToken.email);
   await deleteVerificationToken(existingToken.id);
 
   return { success: "Email verified!" };

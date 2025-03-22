@@ -74,3 +74,18 @@ export const updateUserImage = async (id: string, imageUrl: string) => {
     return null;
   }
 };
+
+export const updateUserPassword = async (
+  id: string,
+  hashedPassword: string,
+) => {
+  try {
+    await db
+      .update(users)
+      .set({ password: hashedPassword })
+      .where(eq(users.id, id));
+    return true;
+  } catch {
+    return null;
+  }
+};
