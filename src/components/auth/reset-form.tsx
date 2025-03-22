@@ -24,10 +24,8 @@ import { FormSuccess } from "@/components/auth/form-success";
 
 //other imports
 import { useTransition, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { LoginSchema } from "@/schemas";
-import { login } from "@/server/actions/auth/login";
-import Link from "next/link";
+import { ResetSchema } from "@/schemas";
+import { reset } from "@/server/actions/auth/reset";
 
 /**
  * LoginForm is a component that renders a login form with an email and
@@ -37,13 +35,7 @@ import Link from "next/link";
  * The form displays any errors that occur during login, and also displays
  * a success message when the login is successful.
  */
-export const LoginForm = () => {
-  const searchParams = useSearchParams();
-  const urlError =
-    searchParams.get("error") === "OAuthAccountNotLinked"
-      ? "Email already in use with a different provider"
-      : "";
-
+export const ResetForm = () => {
   /**
    * useTransition is a React Hook that lets you update the state without blocking the UI.
    * The isPending flag that tells you whether there is a pending Transition. In the form it is used to show a loading state when the form is submitting.
@@ -54,11 +46,10 @@ export const LoginForm = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const form = useForm<z.infer<typeof LoginSchema>>({
-    resolver: zodResolver(LoginSchema),
+  const form = useForm<z.infer<typeof ResetSchema>>({
+    resolver: zodResolver(ResetSchema),
     defaultValues: {
       email: "",
-      password: "",
     },
   });
 
@@ -66,14 +57,14 @@ export const LoginForm = () => {
    * onSubmit is a function that is called when the form is submitted. It calls the
    * login action with the form data and sets the error and success states
    * based on the response.
-   * @param {z.infer<typeof LoginSchema>} values - The form data.
+   * @param {z.infer<typeof ResetSchema>} values - The form data.
    */
-  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+  const onSubmit = (values: z.infer<typeof ResetSchema>) => {
     setError("");
     setSuccess("");
 
     startTransition(async () => {
-      await login(values).then((data) => {
+      await reset(values).then((data) => {
         setError(data?.error ?? "");
         setSuccess(data?.success ?? "");
       });
@@ -81,10 +72,9 @@ export const LoginForm = () => {
   };
   return (
     <CardWrapper
-      headerLabels="Welcome Back"
-      backButtonLabel="Don't have an account?"
-      backButtonHref="/auth/register"
-      showSocial
+      headerLabels="Forgot your password?"
+      backButtonLabel="Back to login"
+      backButtonHref="/auth/login"
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -107,37 +97,11 @@ export const LoginForm = () => {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      placeholder="******"
-                      type="password"
-                      disabled={isPending}
-                    />
-                  </FormControl>
-                  <Button
-                    size="sm"
-                    variant="link"
-                    asChild
-                    className="px-0 font-normal"
-                  >
-                    <Link href="/auth/reset">Forgot password?</Link>
-                  </Button>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
           </div>
-          <FormError message={error || urlError} />
+          <FormError message={error} />
           <FormSuccess message={success} />
           <Button type="submit" className="w-full" disabled={isPending}>
-            Login
+            Send reset email
           </Button>
         </form>
       </Form>

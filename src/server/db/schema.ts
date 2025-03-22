@@ -147,3 +147,16 @@ export const verificationTokens = createTable(
     unq: unique().on(t.email, t.token),
   }),
 );
+
+export const passwordResetTokens = createTable(
+  "password_reset_tokens",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    email: text("email"),
+    token: text("token").unique(),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
+  },
+  (t) => ({
+    unq: unique().on(t.email, t.token),
+  }),
+);

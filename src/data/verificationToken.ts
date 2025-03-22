@@ -34,3 +34,27 @@ export const deleteVerificationToken = async (id: string) => {
     return null;
   }
 };
+
+export const createVerificationToken = async (
+  email: string,
+  token: string,
+  expires: Date,
+) => {
+  try {
+    const verificationToken = await db
+      .insert(verificationTokens)
+      .values({
+        email,
+        token,
+        expires,
+      })
+      .returning({
+        email: verificationTokens.email,
+        token: verificationTokens.token,
+      });
+
+    return verificationToken;
+  } catch {
+    return null;
+  }
+};

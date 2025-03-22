@@ -21,6 +21,10 @@ export const RegisterSchema = z
     path: ["confirmPassword"],
   });
 
+export const ResetSchema = z.object({
+  email: z.string().email({ message: "Email is required" }),
+});
+
 export const NewImageSchema = z.object({
   password: z.string().optional(),
   image: z.string().url({ message: "Invalid image url" }),

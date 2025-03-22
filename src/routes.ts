@@ -27,7 +27,12 @@ export const protectedRoutes = [
  * An array of routes that are used for authentication
  * These routes will redirect users to settings page
  */
-export const authRoutes = ["/auth/login", "/auth/register", "/auth/error"];
+export const authRoutes = [
+  "/auth/login",
+  "/auth/register",
+  "/auth/error",
+  "/auth/reset",
+];
 
 /**
  * A prefix for API authentication routes
