@@ -27,11 +27,9 @@ export const deleteTwoFactorConfirmation = async (id: string) => {
 
 export const createTwoFactorConfirmation = async (userId: string) => {
   try {
-    const twoFactorConfirmation = await db
-      .insert(twoFactorConfirmations)
-      .values({
-        userId,
-      });
+    await db.insert(twoFactorConfirmations).values({
+      userId,
+    });
 
     return true;
   } catch {

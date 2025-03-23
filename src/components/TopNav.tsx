@@ -1,13 +1,4 @@
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
-import {
   Sheet,
   SheetClose,
   SheetContent,
@@ -16,12 +7,12 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet";
 
-import { Clapperboard, Menu, CircleUserRound } from "lucide-react";
+import { Clapperboard, Menu } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import SearchPopover from "@/components/client/SearchPopover";
-// import { LoginButton } from "@/components/auth/login-button";
-import { signOut, auth } from "@/auth";
+import { auth } from "@/auth";
+import { UserButton } from "@/components/auth/user-button";
 
 /**
  * The navigation bar component. It displays the Flix Search logo,
@@ -36,7 +27,6 @@ import { signOut, auth } from "@/auth";
  */
 export default async function TopNav() {
   const session = await auth();
-  const name = session?.user?.name ?? "";
   return (
     <header className="fixed top-0 z-50 flex h-16 w-full items-center gap-4 bg-slate-600 px-6 text-black">
       <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
@@ -125,47 +115,10 @@ export default async function TopNav() {
           <SearchPopover />
         </div>
         {!session ? null : (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button size="icon" className="rounded-full">
-                {session?.user?.image ? (
-                  <img
-                    src={session?.user?.image ?? ""}
-                    alt="Profile picture"
-                    className="h-10 w-10 rounded-full"
-                  />
-                ) : (
-                  <CircleUserRound className="h-10 w-10" strokeWidth={1} />
-                )}
-                <span className="sr-only">Toggle user menu</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <Link href={`/user/${name}/watchlist`}>Watchlist</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Link href={"/settings/profile"}>Settings</Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <form
-                  action={async () => {
-                    "use server";
-                    await signOut({
-                      redirectTo: "/auth/login",
-                    });
-                  }}
-                >
-                  <Button type="submit" variant="destructive" size={"sm"}>
-                    Sign out
-                  </Button>
-                </form>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <UserButton
+            imageLink={session.user?.image ?? ""}
+            name={session.user?.name ?? ""}
+          />
         )}
       </div>
     </header>
