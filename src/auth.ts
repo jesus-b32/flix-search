@@ -15,6 +15,10 @@ import { getUserById } from "@/data/user";
 import { getUserByEmail } from "@/data/user";
 import { updateUserEmailVerified } from "@/data/user";
 import { createVideoList } from "@/data/videoList";
+import {
+  getTwoFactorConfirmationByUserId,
+  deleteTwoFactorConfirmation,
+} from "@/data/twoFactorConfirmation";
 
 //other imports
 import { env } from "@/env";
@@ -131,7 +135,16 @@ const authConfig: NextAuthConfig = {
       const existingUser = await getUserById(user.id);
       if (!existingUser?.emailVerified) return false;
 
-      //TODO: add 2FA check
+      if (existingUser.isTwoFactorEnabled) {
+        const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(
+          existingUser.id,
+        );
+
+        if (!twoFactorConfirmation) return false;
+
+        // Delete two factor confirmation for next sign in
+        await deleteTwoFactorConfirmation(twoFactorConfirmation.id);
+      }
 
       return true;
     },
