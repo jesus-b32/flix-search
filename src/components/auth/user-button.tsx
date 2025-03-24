@@ -12,6 +12,7 @@ import { CircleUserRound } from "lucide-react";
 import Link from "next/link";
 import { LogoutButton } from "@/components/auth/logout-button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import React from "react";
 
 interface UserButtonProps {
   imageLink: string;
@@ -19,8 +20,10 @@ interface UserButtonProps {
 }
 
 export const UserButton = ({ imageLink, name }: UserButtonProps) => {
+  const [open, setOpen] = React.useState(false);
+
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger>
         <Avatar>
           <AvatarImage src={imageLink} className="h-10 w-10 rounded-full" />
@@ -32,11 +35,15 @@ export const UserButton = ({ imageLink, name }: UserButtonProps) => {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <Link href={`/user/${name}/watchlist`}>Watchlist</Link>
+        <DropdownMenuItem asChild>
+          <Link href={`/user/${name}/watchlist`} className="cursor-pointer">
+            Watchlist
+          </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Link href={"/settings/profile"}>Settings</Link>
+        <DropdownMenuItem asChild>
+          <Link href={"/settings/profile"} className="cursor-pointer">
+            Settings
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
