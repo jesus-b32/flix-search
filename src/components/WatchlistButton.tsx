@@ -33,6 +33,7 @@ export default function WatchlistButton({
   const [inWatchlist, setInWatchlist] = useState(isVideoInWatchlist ?? false);
   return (
     <form
+      className="w-full md:w-auto"
       action={async () => {
         await updateWatchlist(
           tmdbId,
@@ -56,8 +57,9 @@ export default function WatchlistButton({
         variant={inWatchlist ? "destructive" : "default"}
         size={"sm"}
         disabled={userId === ""}
+        className="w-full md:w-auto"
       >
-        {inWatchlist ? "Remove from Watchlist" : "Add to Watchlist"}
+        {inWatchlist ? "Remove" : "Add to Watchlist"}
       </Button>
     </form>
   );

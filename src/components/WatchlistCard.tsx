@@ -47,8 +47,8 @@ export default async function WatchlistCard({
    *   Main text content (inside `CardContent`)
    */
   return (
-    <Card className="flex w-full flex-col items-center border-none md:w-10/12 md:flex-row">
-      <div className="flex h-[278px] w-[185px] justify-center md:justify-start">
+    <Card className="flex w-[95%] flex-col items-center border-none md:w-10/12 md:flex-row">
+      <div className="flex h-auto max-h-[278px] w-auto max-w-[185px] justify-center md:justify-start">
         {/* imagge is 185x278 */}
         <Link
           href={
@@ -61,10 +61,10 @@ export default async function WatchlistCard({
             <img
               src={`https://image.tmdb.org/t/p/w185${cinema.posterPath}`}
               alt="Movie or show image"
-              className="h-full w-full rounded-none md:rounded-l-lg"
+              className="h-full w-full rounded-none object-contain md:rounded-l-lg"
             />
           ) : (
-            <ImageOff className="h-full w-full rounded-none md:rounded-l-lg" />
+            <ImageOff className="h-[188px] w-[125px] rounded-none md:h-[278px] md:w-[185px] md:rounded-l-lg" />
           )}
         </Link>
       </div>
@@ -84,7 +84,7 @@ export default async function WatchlistCard({
         <CardContent className="text-center md:text-left">
           <p className="line-clamp-4">{cinema?.overview || "No Overview"}</p>
         </CardContent>
-        <CardFooter className="flex justify-center md:justify-start">
+        <CardFooter className="flex w-full justify-center md:justify-start">
           <WatchlistButton
             tmdbId={cinema.tmdbId}
             mediaType={cinema.mediaType}
