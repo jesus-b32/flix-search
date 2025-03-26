@@ -24,21 +24,32 @@ import {
 import { env } from "@/env";
 import { v4 as uuid } from "uuid";
 import bcrypt from "bcryptjs";
+import type { Adapter } from "@auth/core/adapters";
 
 const adapter = DrizzleAdapter(db, {
   usersTable: users,
   accountsTable: accounts,
   sessionsTable: sessions,
-});
+}) as Adapter;
 
 declare module "next-auth" {
   /**
    * Returned by `auth`, `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
    */
   interface Session {
-    // default User session has property of: id, name, email, image
-    // https://next-auth.js.org/getting-started/typescript
-    user: DefaultSession["user"];
+    user: ExtendedUser;
+  }
+
+  // default User session has property of: id, name, email, image
+  // added isTwoFactorEnabled
+  // https://next-auth.js.org/getting-started/typescript
+  type ExtendedUser = {
+    isTwoFactorEnabled: boolean;
+  } & DefaultSession["user"];
+
+  // Keep this to ensure the User interface includes our custom properties
+  interface User {
+    isTwoFactorEnabled: boolean;
   }
 }
 
@@ -171,10 +182,8 @@ const authConfig: NextAuthConfig = {
       return {
         ...session,
         user: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          image: user.image,
+          ...session.user,
+          isTwoFactorEnabled: user.isTwoFactorEnabled,
         },
       };
     },

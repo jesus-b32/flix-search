@@ -11,7 +11,7 @@ import { ImageOff } from "lucide-react";
 import Link from "next/link";
 
 import WatchlistButton from "@/components/WatchlistButton";
-import { auth } from "@/auth";
+import { currentUser } from "@/lib/auth";
 import { type watchlist as watchlistType } from "@/server/actions/types";
 
 /**
@@ -36,7 +36,7 @@ export default async function WatchlistCard({
   watchlist: watchlistType;
   isVideoInWatchlist: boolean | null;
 }) {
-  const session = await auth();
+  const user = await currentUser();
   /**
    * Card Responsive:
    *   On small screens, the image appears above the content and is centered
@@ -92,7 +92,7 @@ export default async function WatchlistCard({
             overview={cinema.overview}
             releaseDate={cinema.releaseDate}
             posterPath={cinema.posterPath}
-            userId={session?.user?.id ?? ""}
+            userId={user?.id ?? ""}
             videoId={cinema.videoId}
             watchlist={watchlist}
             isVideoInWatchlist={isVideoInWatchlist}

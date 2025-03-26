@@ -11,7 +11,7 @@ import { Clapperboard, Menu } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import SearchPopover from "@/components/client/SearchPopover";
-import { auth } from "@/auth";
+import { currentUser } from "@/lib/auth";
 import { UserButton } from "@/components/auth/user-button";
 
 /**
@@ -26,7 +26,7 @@ import { UserButton } from "@/components/auth/user-button";
  * @returns The navigation bar component.
  */
 export default async function TopNav() {
-  const session = await auth();
+  const user = await currentUser();
   return (
     <header className="fixed top-0 z-50 flex h-16 w-full items-center gap-4 bg-slate-600 px-6 text-black">
       <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
@@ -41,7 +41,7 @@ export default async function TopNav() {
           Discover Movies
         </Link>
         <Link href="/tv?sort_by=popularity.desc&page=1">Discover Shows</Link>
-        {!session ? (
+        {!user ? (
           <>
             <Link href="/auth/register">Signup</Link>
             <Link href="/auth/login">Login</Link>
@@ -87,7 +87,7 @@ export default async function TopNav() {
                 Discover Shows
               </Link>
             </SheetClose>
-            {!session ? (
+            {!user ? (
               <>
                 <SheetClose asChild>
                   <Link
@@ -114,11 +114,8 @@ export default async function TopNav() {
         <div className="ml-auto flex-initial">
           <SearchPopover />
         </div>
-        {!session ? null : (
-          <UserButton
-            imageLink={session.user?.image ?? ""}
-            name={session.user?.name ?? ""}
-          />
+        {!user ? null : (
+          <UserButton imageLink={user?.image ?? ""} name={user?.name ?? ""} />
         )}
       </div>
     </header>

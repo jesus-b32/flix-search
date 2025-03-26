@@ -1,5 +1,5 @@
 import { type Metadata } from "next";
-import { auth } from "@/auth";
+import { currentUser } from "@/lib/auth";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,8 +13,8 @@ export const metadata: Metadata = {
 };
 
 export default async function SettingProfilePage() {
-  const session = await auth();
-  const isOauth = await isOauthUser(session?.user?.id ?? "");
+  const user = await currentUser();
+  const isOauth = await isOauthUser(user?.id ?? "");
 
   return (
     <div className="w-full">
@@ -26,7 +26,7 @@ export default async function SettingProfilePage() {
         <Input
           id="name"
           className="w-full text-black"
-          defaultValue={session?.user?.name ?? ""}
+          defaultValue={user?.name ?? ""}
           disabled
         />
         <Label htmlFor="email" className="font-semibold">
@@ -35,7 +35,7 @@ export default async function SettingProfilePage() {
         <Input
           id="email"
           className="w-full text-black"
-          defaultValue={session?.user?.email ?? ""}
+          defaultValue={user?.email ?? ""}
           disabled
         />
         <Label htmlFor="image" className="font-semibold">
@@ -44,11 +44,11 @@ export default async function SettingProfilePage() {
         <Input
           id="image"
           className="w-full text-black"
-          defaultValue={session?.user?.image ?? ""}
+          defaultValue={user?.image ?? ""}
           disabled
         />
         <ProfileEditWrapper valueBeingEdited="image" isOauth={isOauth}>
-          <ImageForm isOauth={isOauth} userId={session?.user?.id ?? ""} />
+          <ImageForm isOauth={isOauth} userId={user?.id ?? ""} />
         </ProfileEditWrapper>
       </section>
     </div>
