@@ -56,7 +56,6 @@ export const ImageForm = ({
    * onSubmit is a function that is called when the form is submitted. It calls the
    * image action with the form data and sets the error and success states
    * based on the response.
-   * @param {z.infer<typeof LoginSchema>} values - The form data.
    */
   const onSubmit = (values: z.infer<typeof NewImageSchema>) => {
     setError("");
