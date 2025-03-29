@@ -25,6 +25,7 @@ import { env } from "@/env";
 import { v4 as uuid } from "uuid";
 import bcrypt from "bcryptjs";
 import type { Adapter } from "@auth/core/adapters";
+import { getAccountByUserId } from "@/data/account";
 
 const adapter = DrizzleAdapter(db, {
   usersTable: users,
@@ -45,11 +46,19 @@ declare module "next-auth" {
   // https://next-auth.js.org/getting-started/typescript
   type ExtendedUser = {
     isTwoFactorEnabled: boolean;
+    isOAuth: boolean;
   } & DefaultSession["user"];
 
   // Keep this to ensure the User interface includes our custom properties
   interface User {
     isTwoFactorEnabled: boolean;
+  }
+}
+
+declare module "next-auth/jwt" {
+  /** Returned by the `jwt` callback and `auth`, when using JWT sessions */
+  interface JWT {
+    credentials: boolean;
   }
 }
 
@@ -141,11 +150,15 @@ const authConfig: NextAuthConfig = {
      * @param user - The user object containing the user's details.
      * @returns boolean indicating whether signin was successful.
      */
-    async signIn({ user }) {
-      if (!user.id) return false;
-      const existingUser = await getUserById(user.id);
-      if (!existingUser?.emailVerified) return false;
+    async signIn({ user, account }) {
+      // Allow Oauth without Email verification
+      if (account?.provider !== "credentials") return true;
 
+      if (!user.id) return false;
+
+      const existingUser = await getUserById(user.id);
+
+      if (!existingUser?.emailVerified) return false;
       if (existingUser.isTwoFactorEnabled) {
         const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(
           existingUser.id,
@@ -161,9 +174,7 @@ const authConfig: NextAuthConfig = {
     },
 
     /**
-     * This is a custom `jwt` function that adds a `credentials` key to the `token` object when the user logs in with the credentials provider. Will be used in custom encode function below for creating session tokens for credential users.
-     * @param params - The parameters passed to the `jwt` function
-     * @returns The updated token object
+     * This is a `jwt` callback that adds a `credentials` key to the `token` object when the user logs in with the credentials provider. Will be used in custom encode function below for creating session tokens for credential users.
      */
     async jwt({ token, account }) {
       if (account?.provider === "credentials") {
@@ -173,17 +184,20 @@ const authConfig: NextAuthConfig = {
     },
 
     /**
-     * This is a custom `session` function that adds the desired user's data to the session.
-     * @param session - The session object
-     * @param user - The user object
-     * @returns The updated session object
+     * This `session` callback adds the desired user's data to the session.
      */
-    session({ session, user }) {
+    async session({ session, user }) {
+      const account = await getAccountByUserId(user.id);
+
       return {
         ...session,
         user: {
-          ...session.user,
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          image: user.image,
           isTwoFactorEnabled: user.isTwoFactorEnabled,
+          isOAuth: !!account,
         },
       };
     },

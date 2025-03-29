@@ -1,6 +1,5 @@
 import { type Metadata } from "next";
 import { currentUser } from "@/lib/auth";
-import { isOauthUser } from "@/data/user";
 import { DeleteAccountForm } from "@/components/form/DeleteAccountForm";
 
 export const metadata: Metadata = {
@@ -9,7 +8,6 @@ export const metadata: Metadata = {
 
 export default async function DeleteAccountPage() {
   const user = await currentUser();
-  const isOauth = await isOauthUser(user?.id ?? "");
 
   return (
     <div className="w-full">
@@ -20,7 +18,7 @@ export default async function DeleteAccountPage() {
           continue and remove your account, you can do so by entering your
           password below and confirming the prompts.
         </p>
-        <DeleteAccountForm isOauth={isOauth} userId={user?.id ?? ""} />
+        <DeleteAccountForm isOauth={user?.isOAuth} userId={user?.id ?? ""} />
       </section>
     </div>
   );

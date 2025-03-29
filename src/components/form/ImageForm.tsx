@@ -31,7 +31,7 @@ export const ImageForm = ({
   isOauth,
   userId,
 }: {
-  isOauth: boolean | null;
+  isOauth: boolean | undefined;
   userId: string;
 }) => {
   /**

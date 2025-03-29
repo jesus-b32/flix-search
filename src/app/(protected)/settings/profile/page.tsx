@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 import ProfileEditWrapper from "@/components/ProfileEditWrapper";
-import { isOauthUser } from "@/data/user";
 import { ImageForm } from "@/components/form/ImageForm";
 
 export const metadata: Metadata = {
@@ -14,7 +13,6 @@ export const metadata: Metadata = {
 
 export default async function SettingProfilePage() {
   const user = await currentUser();
-  const isOauth = await isOauthUser(user?.id ?? "");
 
   return (
     <div className="w-full">
@@ -47,8 +45,8 @@ export default async function SettingProfilePage() {
           defaultValue={user?.image ?? ""}
           disabled
         />
-        <ProfileEditWrapper valueBeingEdited="image" isOauth={isOauth}>
-          <ImageForm isOauth={isOauth} userId={user?.id ?? ""} />
+        <ProfileEditWrapper valueBeingEdited="image" isOauth={user?.isOAuth}>
+          <ImageForm isOauth={user?.isOAuth} userId={user?.id ?? ""} />
         </ProfileEditWrapper>
       </section>
     </div>

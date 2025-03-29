@@ -18,7 +18,7 @@ export default function SettingCard() {
         href="/settings/profile"
         className="w-full text-center hover:bg-slate-300"
       >
-        Edit Profile
+        Profile
       </Link>
       <Link
         href="/settings/delete-account"

@@ -10,7 +10,7 @@ import {
 
 interface ProfileFormProps {
   valueBeingEdited: "name" | "image" | "password" | "email";
-  isOauth: boolean | null;
+  isOauth: boolean | undefined;
   children: React.ReactNode;
 }
 

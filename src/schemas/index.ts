@@ -45,6 +45,14 @@ export const NewImageSchema = z.object({
   image: z.string().url({ message: "Invalid image url" }),
 });
 
+export const NewEmailSchema = z.object({
+  email: z.string().optional(),
+});
+
+export const NewNameSchema = z.object({
+  name: z.string(),
+});
+
 export const DeleteAccountSchema = z.object({
   password: z.string().optional(),
 });
