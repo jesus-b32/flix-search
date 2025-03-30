@@ -69,6 +69,18 @@ export const updateUserName = async (id: string, name: string) => {
   }
 };
 
+export const updateUserEmail = async (id: string, email: string) => {
+  try {
+    await db
+      .update(users)
+      .set({ email: email, emailVerified: null })
+      .where(eq(users.id, id));
+    return true;
+  } catch {
+    return null;
+  }
+};
+
 export const updateUserPassword = async (
   id: string,
   hashedPassword: string,

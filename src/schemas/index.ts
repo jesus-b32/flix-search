@@ -47,6 +47,7 @@ export const NewImageSchema = z.object({
 
 export const NewEmailSchema = z.object({
   email: z.string().email({ message: "Email is required" }),
+  password: z.string().min(1, { message: "Password is required" }),
 });
 
 export const NewNameSchema = z.object({

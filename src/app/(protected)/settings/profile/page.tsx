@@ -5,8 +5,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 import ProfileEditWrapper from "@/components/ProfileEditWrapper";
+
+//forms
 import { ImageForm } from "@/components/form/ImageForm";
 import { NameForm } from "@/components/form/NameForm";
+import { UpdateEmailForm } from "@/components/form/UpdateEmailForm";
 
 export const metadata: Metadata = {
   title: "My Profile",
@@ -43,15 +46,25 @@ export default async function SettingProfilePage() {
         <ProfileEditWrapper valueBeingEdited="Image" isOauth={user?.isOAuth}>
           <ImageForm isOauth={user?.isOAuth} userId={user?.id ?? ""} />
         </ProfileEditWrapper>
-        <Label htmlFor="email" className="font-semibold">
-          Email
-        </Label>
-        <Input
-          id="email"
-          className="w-full text-black"
-          defaultValue={user?.email ?? ""}
-          disabled
-        />
+        {!user?.isOAuth && (
+          <>
+            <Label htmlFor="email" className="font-semibold">
+              Email
+            </Label>
+            <Input
+              id="email"
+              className="w-full text-black"
+              defaultValue={user?.email ?? ""}
+              disabled
+            />
+            <ProfileEditWrapper
+              valueBeingEdited="Email"
+              isOauth={user?.isOAuth}
+            >
+              <UpdateEmailForm userId={user?.id ?? ""} />
+            </ProfileEditWrapper>
+          </>
+        )}
       </section>
     </div>
   );
