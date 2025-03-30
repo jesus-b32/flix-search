@@ -22,11 +22,11 @@ export const RegisterSchema = z
     path: ["confirmPassword"],
   });
 
-export const ResetSchema = z.object({
+export const ResetPasswordSchema = z.object({
   email: z.string().email({ message: "Email is required" }),
 });
 
-export const NewPasswordSchema = z
+export const NewPasswordFromEmailSchema = z
   .object({
     password: z
       .string()
@@ -53,6 +53,23 @@ export const NewEmailSchema = z.object({
 export const NewNameSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
 });
+
+export const NewPasswordSchema = z
+  .object({
+    currentPassword: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters long" }),
+    newPassword: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters long" }),
+    confirmNewPassword: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters long" }),
+  })
+  .refine((data) => data.newPassword === data.confirmNewPassword, {
+    message: "Passwords do not match",
+    path: ["confirmNewPassword"],
+  });
 
 export const DeleteAccountSchema = z.object({
   password: z.string().optional(),

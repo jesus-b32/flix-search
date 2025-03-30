@@ -10,7 +10,7 @@ import { encode as defaultEncode } from "next-auth/jwt";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { db } from "@/server/db";
 import { users, accounts, sessions } from "@/server/db/schema";
-import { LoginSchema } from "@/schemas";
+import { LoginSchema } from "@/schemas/schema";
 import { getUserById } from "@/data/user";
 import { getUserByEmail } from "@/data/user";
 import { updateUserEmailVerified } from "@/data/user";

@@ -1,7 +1,7 @@
 "use server";
 
 import type * as z from "zod";
-import { DeleteAccountSchema } from "@/schemas";
+import { DeleteAccountSchema } from "@/schemas/schema";
 import { getUserById, deleteUserById } from "@/data/user";
 import { signOut } from "@/auth";
 

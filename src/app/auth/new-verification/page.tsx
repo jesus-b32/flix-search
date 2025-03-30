@@ -1,5 +1,5 @@
-import { NewVerificationForm } from "@/components/auth/new-verification-form";
+import { EmailVerificationCard } from "@/components/auth/EmailVerificationCard";
 
 export default function NewVerificationPage() {
-  return <NewVerificationForm />;
+  return <EmailVerificationCard />;
 }

@@ -11,8 +11,8 @@ import { Clapperboard, Menu } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import SearchPopover from "@/components/client/SearchPopover";
-import { currentUser } from "@/lib/auth";
-import { UserButton } from "@/components/auth/user-button";
+import { currentUser } from "@/lib/currentUser";
+import { UserButton } from "@/components/auth/UserButton";
 
 /**
  * The navigation bar component. It displays the Flix Search logo,

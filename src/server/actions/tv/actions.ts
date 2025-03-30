@@ -1,6 +1,6 @@
 "use server";
 
-import { getData } from "@/lib/tmdapi";
+import { getData } from "@/lib/tmdbApi";
 import type { tvDetails, tvSearchResult } from "@/server/actions/tv/types";
 import type { streamingProviderList, genresList } from "@/server/actions/types";
 

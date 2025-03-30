@@ -3,7 +3,7 @@ import { type Metadata } from "next";
 import { getVideoList } from "@/data/videoList";
 import WatchlistCard from "@/components/WatchlistCard";
 import { getVideosFromList } from "@/data/videoList";
-import { currentUser } from "@/lib/auth";
+import { currentUser } from "@/lib/currentUser";
 
 export const metadata: Metadata = {
   title: "My Watchlist",

@@ -18,22 +18,21 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 // custom components
-import { CardWrapper } from "@/components/auth/card-wrapper";
-import { FormError } from "@/components/auth/form-error";
-import { FormSuccess } from "@/components/auth/form-success";
+import { CardWrapper } from "@/components/auth/CardWrapper";
+import { FormError } from "@/components/auth/FormError";
+import { FormSuccess } from "@/components/auth/FormSuccess";
 
 //other imports
-import { RegisterSchema } from "@/schemas";
+import { RegisterSchema } from "@/schemas/schema";
 import { register } from "@/server/actions/auth/register";
 import { useTransition, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { login } from "@/server/actions/auth/login";
 
 /**
- * RegisterForm is a component that renders a register form with an email,
- * password, and name field. It uses the react-hook-form library to handle form
- * state and validation. The form is submitted to the register action, which is
- * a server-side action that validates the form data and registers a new user.
+ * A register form with an email, password, and name field.
+ * It uses the react-hook-form library to handle form state and validation.
+ * The form is submitted to the register server action that validates the form data and registers a new user.
  * The form displays any errors that occur during registration, and also displays
  * a success message when the registration is successful.
  */

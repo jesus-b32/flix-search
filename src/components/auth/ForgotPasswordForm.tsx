@@ -18,14 +18,14 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 // custom components
-import { CardWrapper } from "@/components/auth/card-wrapper";
-import { FormError } from "@/components/auth/form-error";
-import { FormSuccess } from "@/components/auth/form-success";
+import { CardWrapper } from "@/components/auth/CardWrapper";
+import { FormError } from "@/components/auth/FormError";
+import { FormSuccess } from "@/components/auth/FormSuccess";
 
 //other imports
 import { useTransition, useState } from "react";
-import { NewPasswordSchema } from "@/schemas";
-import { newPassword } from "@/server/actions/auth/new-password";
+import { NewPasswordFromEmailSchema } from "@/schemas/schema";
+import { forgotPassword } from "@/server/actions/auth/forgotPassword";
 import { useSearchParams } from "next/navigation";
 
 /**
@@ -36,7 +36,7 @@ import { useSearchParams } from "next/navigation";
  * The form displays any errors that occur during login, and also displays
  * a success message when the login is successful.
  */
-export const NewPasswordForm = () => {
+export const ForgotPasswordForm = () => {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   /**
@@ -48,8 +48,8 @@ export const NewPasswordForm = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const form = useForm<z.infer<typeof NewPasswordSchema>>({
-    resolver: zodResolver(NewPasswordSchema),
+  const form = useForm<z.infer<typeof NewPasswordFromEmailSchema>>({
+    resolver: zodResolver(NewPasswordFromEmailSchema),
     defaultValues: {
       password: "",
       confirmPassword: "",
@@ -62,12 +62,12 @@ export const NewPasswordForm = () => {
    * based on the response.
    * @param {z.infer<typeof ResetSchema>} values - The form data.
    */
-  const onSubmit = (values: z.infer<typeof NewPasswordSchema>) => {
+  const onSubmit = (values: z.infer<typeof NewPasswordFromEmailSchema>) => {
     setError("");
     setSuccess("");
 
     startTransition(async () => {
-      await newPassword(values, token).then((data) => {
+      await forgotPassword(values, token).then((data) => {
         setError(data?.error ?? "");
         setSuccess(data?.success ?? "");
       });

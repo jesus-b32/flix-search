@@ -1,28 +1,33 @@
 "use client";
 
-import { CardWrapper } from "@/components/auth/card-wrapper";
-import { newVerification } from "@/server/actions/auth/new-verification";
-import { FormError } from "@/components/auth/form-error";
-import { FormSuccess } from "@/components/auth/form-success";
+import { CardWrapper } from "@/components/auth/CardWrapper";
+import { emailVerification } from "@/server/actions/auth/emailVerification";
+import { FormError } from "@/components/auth/FormError";
+import { FormSuccess } from "@/components/auth/FormSuccess";
 
 import { CgSpinnerTwo } from "react-icons/cg";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
-export const NewVerificationForm = () => {
+/**
+ * Card that is displayed when user clicks confirm email link.
+ * Will retrieve the email verification token from url and verify it.
+ * Displays a spinner while token is being validated.
+ * Will display success message if token is valid.
+ * Otherwise will display an error message.
+ */
+export const EmailVerificationCard = () => {
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
   const onSubmit = useCallback(() => {
-    // if (success || error) return;
-
     if (!token) {
       setError("Missing token!");
       return;
     }
-    newVerification(token)
+    emailVerification(token)
       .then((data) => {
         setSuccess(data.success);
         setError(data.error);
@@ -48,7 +53,6 @@ export const NewVerificationForm = () => {
         )}
         <FormSuccess message={success ? success : ""} />
         <FormError message={error ? error : ""} />
-        {/* {!success && <FormError message={error ? error : ""} />} */}
       </div>
     </CardWrapper>
   );

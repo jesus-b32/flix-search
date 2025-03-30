@@ -1,5 +1,5 @@
 import { type Metadata } from "next";
-import { currentUser } from "@/lib/auth";
+import { currentUser } from "@/lib/currentUser";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,8 +7,8 @@ import { Label } from "@/components/ui/label";
 import ProfileEditWrapper from "@/components/ProfileEditWrapper";
 
 //forms
-import { ImageForm } from "@/components/form/ImageForm";
-import { NameForm } from "@/components/form/NameForm";
+import { UpdateImageForm } from "@/components/form/UpdateImageForm";
+import { UpdateNameForm } from "@/components/form/UpdateNameForm";
 import { UpdateEmailForm } from "@/components/form/UpdateEmailForm";
 
 export const metadata: Metadata = {
@@ -32,7 +32,7 @@ export default async function SettingProfilePage() {
           disabled
         />
         <ProfileEditWrapper valueBeingEdited="Name" isOauth={user?.isOAuth}>
-          <NameForm userId={user?.id ?? ""} />
+          <UpdateNameForm userId={user?.id ?? ""} />
         </ProfileEditWrapper>
         <Label htmlFor="image" className="font-semibold">
           Profile Image
@@ -44,7 +44,7 @@ export default async function SettingProfilePage() {
           disabled
         />
         <ProfileEditWrapper valueBeingEdited="Image" isOauth={user?.isOAuth}>
-          <ImageForm isOauth={user?.isOAuth} userId={user?.id ?? ""} />
+          <UpdateImageForm isOauth={user?.isOAuth} userId={user?.id ?? ""} />
         </ProfileEditWrapper>
         {!user?.isOAuth && (
           <>

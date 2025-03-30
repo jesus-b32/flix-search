@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { CircleUserRound } from "lucide-react";
 import Link from "next/link";
-import { LogoutButton } from "@/components/auth/logout-button";
+import { LogoutButton } from "@/components/auth/LogoutButton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import React from "react";
 
@@ -19,6 +19,10 @@ interface UserButtonProps {
   name: string;
 }
 
+/**
+ * A dropdown menu button that is rendered for logged in users.
+ * Dropdown menu includes links to settings, watchlist, and a logout button.
+ */
 export const UserButton = ({ imageLink, name }: UserButtonProps) => {
   const [open, setOpen] = React.useState(false);
 

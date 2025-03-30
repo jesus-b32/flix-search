@@ -1,5 +1,5 @@
 import { type Metadata } from "next";
-import { currentUser } from "@/lib/auth";
+import { currentUser } from "@/lib/currentUser";
 import { DeleteAccountForm } from "@/components/form/DeleteAccountForm";
 
 export const metadata: Metadata = {

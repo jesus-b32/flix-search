@@ -11,14 +11,11 @@ interface HeaderProps {
 }
 
 /**
- * Header component that displays a title and a label.
+ * Header component that displays a title and a label for CardWrapper component.
  * The title has a dynamic classname that includes a Poppins font style.
  * The label is displayed below the title with muted styling.
- *
- * @param {Object} props - Component props.
- * @param {string} props.label - The text to display as the label.
  */
-export const Header = ({ label }: HeaderProps) => {
+export const CardWrapperHeader = ({ label }: HeaderProps) => {
   return (
     <div className="flex w-full flex-col items-center justify-center gap-y-4">
       {/* makes the classname dynamic */}

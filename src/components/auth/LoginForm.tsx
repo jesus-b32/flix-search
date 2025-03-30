@@ -18,22 +18,22 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 // custom components
-import { CardWrapper } from "@/components/auth/card-wrapper";
-import { FormError } from "@/components/auth/form-error";
-import { FormSuccess } from "@/components/auth/form-success";
+import { CardWrapper } from "@/components/auth/CardWrapper";
+import { FormError } from "@/components/auth/FormError";
+import { FormSuccess } from "@/components/auth/FormSuccess";
 
 //other imports
 import { useTransition, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { LoginSchema } from "@/schemas";
+import { LoginSchema } from "@/schemas/schema";
 import { login } from "@/server/actions/auth/login";
 import Link from "next/link";
 
 /**
- * LoginForm is a component that renders a login form with an email and
- * password field. It uses the react-hook-form library to handle form state
- * and validation. The form is submitted to the login action, which is
- * a server-side action that validates the form data and logs in a user.
+ * Renders a login form with an email and a password field.
+ * It uses the react-hook-form library to handle form state and validation.
+ * The form is submitted to the login server action,
+ * which validates the form data and logs in the user.
  * The form displays any errors that occur during login, and also displays
  * a success message when the login is successful.
  */

@@ -1,6 +1,6 @@
 "use server";
 
-import { getData } from "@/lib/tmdapi";
+import { getData } from "@/lib/tmdbApi";
 import type {
   movieDetails,
   movieSearchResult,

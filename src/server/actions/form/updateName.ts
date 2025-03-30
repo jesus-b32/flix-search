@@ -1,14 +1,14 @@
 "use server";
 
 import type * as z from "zod";
-import { NewNameSchema } from "@/schemas";
+import { NewNameSchema } from "@/schemas/schema";
 import { updateUserName } from "@/data/user";
 
 /**
  * Validates the form values and returns a success message or an error message
  * @returns an object with a success message or an error message
  */
-export const name = async (
+export const updateName = async (
   values: z.infer<typeof NewNameSchema>,
   userId: string,
 ) => {

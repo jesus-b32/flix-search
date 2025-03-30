@@ -1,12 +1,12 @@
 "use server";
 
 import type * as z from "zod";
-import { RegisterSchema } from "@/schemas";
+import { RegisterSchema } from "@/schemas/schema";
 import bcrypt from "bcryptjs";
 import { getUserByEmail, createNewUser } from "@/data/user";
 import { createVideoList } from "@/data/videoList";
-import { generateVerificationToken } from "@/lib/tokens";
-import { sendVerificationEmail } from "@/lib/mail";
+import { generateVerificationToken } from "@/lib/generateToken";
+import { sendVerificationEmail } from "@/lib/sendEmail";
 
 /**
  * Validates the form values from a new registered user. Returns a success or error message.

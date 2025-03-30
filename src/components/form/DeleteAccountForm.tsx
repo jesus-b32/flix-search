@@ -17,11 +17,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 // custom components
-import { FormError } from "@/components/auth/form-error";
-import { FormSuccess } from "@/components/auth/form-success";
+import { FormError } from "@/components/auth/FormError";
+import { FormSuccess } from "@/components/auth/FormSuccess";
 
 //other imports
-import { DeleteAccountSchema } from "@/schemas";
+import { DeleteAccountSchema } from "@/schemas/schema";
 import { useTransition, useState } from "react";
 import { deleteAccount } from "@/server/actions/form/deleteAccount";
 

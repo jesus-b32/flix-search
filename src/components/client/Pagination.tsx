@@ -9,7 +9,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { generatePagination } from "@/lib/utils";
+import { generatePagination } from "@/lib/generatePagination";
 import { usePathname, useSearchParams } from "next/navigation";
 
 /**

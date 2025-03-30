@@ -10,7 +10,7 @@ import { getCountries } from "@/server/actions/actions";
 import AvailabilityByProvider from "@/components/detailPage/AvailabilityByProvider";
 import AvailabilityByCountry from "@/components/detailPage/AvailabilityByCountry";
 import Recommendations from "@/components/detailPage/Recommendations";
-import { currentUser } from "@/lib/auth";
+import { currentUser } from "@/lib/currentUser";
 
 type Props = {
   params: { id: string };

@@ -12,7 +12,7 @@ import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
  *
  * This component is intended to be used in the {@link CardWrapper} component.
  */
-export const Social = () => {
+export const SocialButtons = () => {
   const onClick = async (provider: "google" | "github") => {
     await signIn(provider, {
       callbackUrl: DEFAULT_LOGIN_REDIRECT,

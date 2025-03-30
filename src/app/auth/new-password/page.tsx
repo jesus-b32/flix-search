@@ -1,5 +1,5 @@
-import { NewPasswordForm } from "@/components/auth/new-password-form";
+import { ForgotPasswordForm } from "@/components/auth/ForgotPasswordForm";
 
 export default function NewPasswordPage() {
-  return <NewPasswordForm />;
+  return <ForgotPasswordForm />;
 }

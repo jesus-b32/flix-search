@@ -18,24 +18,20 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 // custom components
-import { CardWrapper } from "@/components/auth/card-wrapper";
-import { FormError } from "@/components/auth/form-error";
-import { FormSuccess } from "@/components/auth/form-success";
+import { CardWrapper } from "@/components/auth/CardWrapper";
+import { FormError } from "@/components/auth/FormError";
+import { FormSuccess } from "@/components/auth/FormSuccess";
 
 //other imports
 import { useTransition, useState } from "react";
-import { ResetSchema } from "@/schemas";
-import { reset } from "@/server/actions/auth/reset";
+import { ResetPasswordSchema } from "@/schemas/schema";
+import { resetPassword } from "@/server/actions/auth/resetPassword";
 
 /**
- * LoginForm is a component that renders a login form with an email and
- * password field. It uses the react-hook-form library to handle form state
- * and validation. The form is submitted to the login action, which is
- * a server-side action that validates the form data and logs in a user.
- * The form displays any errors that occur during login, and also displays
- * a success message when the login is successful.
+ * This is a form containing an email field.
+ * When a valid email is submitted, an email is sent to user to help reset their password.
  */
-export const ResetForm = () => {
+export const ResetPasswordForm = () => {
   /**
    * useTransition is a React Hook that lets you update the state without blocking the UI.
    * The isPending flag that tells you whether there is a pending Transition. In the form it is used to show a loading state when the form is submitting.
@@ -46,8 +42,8 @@ export const ResetForm = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const form = useForm<z.infer<typeof ResetSchema>>({
-    resolver: zodResolver(ResetSchema),
+  const form = useForm<z.infer<typeof ResetPasswordSchema>>({
+    resolver: zodResolver(ResetPasswordSchema),
     defaultValues: {
       email: "",
     },
@@ -57,14 +53,14 @@ export const ResetForm = () => {
    * onSubmit is a function that is called when the form is submitted. It calls the
    * login action with the form data and sets the error and success states
    * based on the response.
-   * @param {z.infer<typeof ResetSchema>} values - The form data.
+   * @param {z.infer<typeof ResetPasswordSchema>} values - The form data.
    */
-  const onSubmit = (values: z.infer<typeof ResetSchema>) => {
+  const onSubmit = (values: z.infer<typeof ResetPasswordSchema>) => {
     setError("");
     setSuccess("");
 
     startTransition(async () => {
-      await reset(values).then((data) => {
+      await resetPassword(values).then((data) => {
         setError(data?.error ?? "");
         setSuccess(data?.success ?? "");
       });

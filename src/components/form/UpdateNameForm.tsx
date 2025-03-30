@@ -17,17 +17,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 // custom components
-import { FormError } from "@/components/auth/form-error";
-import { FormSuccess } from "@/components/auth/form-success";
+import { FormError } from "@/components/auth/FormError";
+import { FormSuccess } from "@/components/auth/FormSuccess";
 
 //other imports
-import { NewNameSchema } from "@/schemas";
+import { NewNameSchema } from "@/schemas/schema";
 import { useTransition, useState } from "react";
-import { name } from "@/server/actions/form/name";
+import { updateName } from "@/server/actions/form/updateName";
 
 import { useRouter } from "next/navigation";
 
-export const NameForm = ({ userId }: { userId: string }) => {
+export const UpdateNameForm = ({ userId }: { userId: string }) => {
   /**
    * useTransition is a React Hook that lets you update the state without blocking the UI.
    * The isPending flag that tells you whether there is a pending Transition. In the form it is used to show a loading state when the form is submitting.
@@ -55,7 +55,7 @@ export const NameForm = ({ userId }: { userId: string }) => {
     setSuccess("");
 
     startTransition(async () => {
-      const uploadName = await name(values, userId);
+      const uploadName = await updateName(values, userId);
       setError(uploadName?.error ?? "");
       setSuccess(uploadName?.success ?? "");
 

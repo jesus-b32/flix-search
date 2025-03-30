@@ -11,7 +11,7 @@ import { ImageOff } from "lucide-react";
 import Link from "next/link";
 
 import WatchlistButton from "@/components/WatchlistButton";
-import { currentUser } from "@/lib/auth";
+import { currentUser } from "@/lib/currentUser";
 import { type watchlist as watchlistType } from "@/server/actions/types";
 
 /**

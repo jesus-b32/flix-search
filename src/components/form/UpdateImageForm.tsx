@@ -17,17 +17,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 // custom components
-import { FormError } from "@/components/auth/form-error";
-import { FormSuccess } from "@/components/auth/form-success";
+import { FormError } from "@/components/auth/FormError";
+import { FormSuccess } from "@/components/auth/FormSuccess";
 
 //other imports
-import { NewImageSchema } from "@/schemas";
+import { NewImageSchema } from "@/schemas/schema";
 import { useTransition, useState } from "react";
-import { image } from "@/server/actions/form/image";
+import { updateImage } from "@/server/actions/form/updateImage";
 
 import { useRouter } from "next/navigation";
 
-export const ImageForm = ({
+export const UpdateImageForm = ({
   isOauth,
   userId,
 }: {
@@ -62,7 +62,7 @@ export const ImageForm = ({
     setSuccess("");
 
     startTransition(async () => {
-      const uploadImage = await image(values, isOauth, userId);
+      const uploadImage = await updateImage(values, isOauth, userId);
       setError(uploadImage?.error ?? "");
       setSuccess(uploadImage?.success ?? "");
 

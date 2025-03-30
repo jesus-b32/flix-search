@@ -1,11 +1,11 @@
 "use server";
 
 import type * as z from "zod";
-import { NewEmailSchema } from "@/schemas";
+import { NewEmailSchema } from "@/schemas/schema";
 import { getUserById, getUserByEmail, updateUserEmail } from "@/data/user";
 import bcrypt from "bcryptjs";
-import { generateVerificationToken } from "@/lib/tokens";
-import { sendVerificationEmail } from "@/lib/mail";
+import { generateVerificationToken } from "@/lib/generateToken";
+import { sendVerificationEmail } from "@/lib/sendEmail";
 
 /**
  * Validates the form values and returns a success message or an error message

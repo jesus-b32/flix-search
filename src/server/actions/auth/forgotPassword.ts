@@ -2,22 +2,22 @@
 
 import type * as z from "zod";
 import bcrypt from "bcryptjs";
-import { NewPasswordSchema } from "@/schemas";
+import { NewPasswordFromEmailSchema } from "@/schemas/schema";
 import {
   deletePasswordRestToken,
   getPasswordRestTokenByToken,
 } from "@/data/passwordResetToken";
 import { getUserByEmail, updateUserPassword } from "@/data/user";
 
-export const newPassword = async (
-  values: z.infer<typeof NewPasswordSchema>,
+export const forgotPassword = async (
+  values: z.infer<typeof NewPasswordFromEmailSchema>,
   token?: string | null,
 ) => {
   if (!token) {
     return { error: "Missing token!" };
   }
 
-  const validatedFields = NewPasswordSchema.safeParse(values);
+  const validatedFields = NewPasswordFromEmailSchema.safeParse(values);
 
   if (!validatedFields.success) {
     return { error: "Invalid fields!" };

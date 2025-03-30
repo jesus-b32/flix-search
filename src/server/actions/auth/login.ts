@@ -1,16 +1,16 @@
 "use server";
 
 import type * as z from "zod";
-import { LoginSchema } from "@/schemas";
+import { LoginSchema } from "@/schemas/schema";
 import { signIn } from "@/auth";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { AuthError } from "next-auth";
 import {
   generateVerificationToken,
   generateTwoFactorToken,
-} from "@/lib/tokens";
+} from "@/lib/generateToken";
 import { getUserByEmail } from "@/data/user";
-import { sendVerificationEmail, sendTwoFactorEmail } from "@/lib/mail";
+import { sendVerificationEmail, sendTwoFactorEmail } from "@/lib/sendEmail";
 import {
   getTwoFactorTokenByEmail,
   deleteTwoFactorToken,
