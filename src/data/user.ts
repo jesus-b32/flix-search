@@ -42,6 +42,29 @@ export const updateUserEmailVerified = async (id: string, email: string) => {
   }
 };
 
+export const createNewUser = async (
+  name: string,
+  email: string,
+  hashedPassword: string,
+) => {
+  try {
+    const newUser = await db
+      .insert(users)
+      .values({
+        name,
+        email,
+        password: hashedPassword,
+      })
+      .returning({
+        id: users.id,
+      });
+
+    return newUser;
+  } catch {
+    return null;
+  }
+};
+
 export const deleteUserById = async (id: string) => {
   try {
     await db.delete(users).where(eq(users.id, id));

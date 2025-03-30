@@ -3,19 +3,13 @@
 import type * as z from "zod";
 import { RegisterSchema } from "@/schemas";
 import bcrypt from "bcryptjs";
-import { db } from "@/server/db";
-import { users } from "@/server/db/schema";
-
-import { getUserByEmail } from "@/data/user";
+import { getUserByEmail, createNewUser } from "@/data/user";
 import { createVideoList } from "@/data/videoList";
 import { generateVerificationToken } from "@/lib/tokens";
 import { sendVerificationEmail } from "@/lib/mail";
 
 /**
- * Validates the form values and returns a success message or an error message
- *
- * @param values - the form values of the new user
- * @returns an object with a success message or an error message
+ * Validates the form values from a new registered user. Returns a success or error message.
  */
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
   const validatedFields = RegisterSchema.safeParse(values);
@@ -35,33 +29,15 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     };
   }
 
-  try {
-    const hashPassword = await bcrypt.hash(password, 10);
+  const hashPassword = await bcrypt.hash(password, 10);
+  const newUser = await createNewUser(name, email, hashPassword);
+  if (!newUser) return { error: "Error creating user!" };
+  if (!newUser[0]?.id) return { error: "Error creating user!" };
+  const userId = newUser[0].id;
 
-    const newUser = await db
-      .insert(users)
-      .values({
-        name,
-        email,
-        password: hashPassword,
-      })
-      .returning({
-        id: users.id,
-      });
-
-    const userId = newUser[0]?.id ?? "";
-
-    await createVideoList(userId, "watchlist");
-    // ...
-  } catch {
-    // Handle the error, for example:
-    return {
-      error: "Error creating user!",
-    };
-  }
+  await createVideoList(userId, "watchlist");
 
   const verificationToken = await generateVerificationToken(email);
-
   if (!verificationToken)
     return { error: "Error generating verification token!" };
   if (!verificationToken[0]?.token || !verificationToken[0]?.email) {
