@@ -46,11 +46,11 @@ export const NewImageSchema = z.object({
 });
 
 export const NewEmailSchema = z.object({
-  email: z.string().optional(),
+  email: z.string().email({ message: "Email is required" }),
 });
 
 export const NewNameSchema = z.object({
-  name: z.string(),
+  name: z.string().min(1, { message: "Name is required" }),
 });
 
 export const DeleteAccountSchema = z.object({

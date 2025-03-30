@@ -14,7 +14,7 @@ import bcrypt from "bcryptjs";
  */
 export const image = async (
   values: z.infer<typeof NewImageSchema>,
-  isOauth: boolean | null,
+  isOauth: boolean | undefined,
   userId: string,
 ) => {
   const validatedFields = NewImageSchema.safeParse(values);

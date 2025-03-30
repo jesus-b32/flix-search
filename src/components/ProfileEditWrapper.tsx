@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 
 interface ProfileFormProps {
-  valueBeingEdited: "name" | "image" | "password" | "email";
+  valueBeingEdited: "Name" | "Image" | "Password" | "Email";
   isOauth: boolean | undefined;
   children: React.ReactNode;
 }
@@ -22,7 +22,7 @@ export default function ProfileEditWrapper({
     <Dialog>
       <DialogTrigger asChild>
         <Button size={"sm"}>
-          {valueBeingEdited === "image"
+          {valueBeingEdited === "Image"
             ? "Update Profile Image"
             : `Update ${valueBeingEdited}`}
         </Button>
@@ -30,7 +30,7 @@ export default function ProfileEditWrapper({
       <DialogContent className="border-none bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>
-            {valueBeingEdited === "image"
+            {valueBeingEdited === "Image"
               ? "Change Profile Image"
               : `Change ${valueBeingEdited}`}
           </DialogTitle>

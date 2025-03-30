@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 
 import ProfileEditWrapper from "@/components/ProfileEditWrapper";
 import { ImageForm } from "@/components/form/ImageForm";
+import { NameForm } from "@/components/form/NameForm";
 
 export const metadata: Metadata = {
   title: "My Profile",
@@ -27,15 +28,9 @@ export default async function SettingProfilePage() {
           defaultValue={user?.name ?? ""}
           disabled
         />
-        <Label htmlFor="email" className="font-semibold">
-          Email
-        </Label>
-        <Input
-          id="email"
-          className="w-full text-black"
-          defaultValue={user?.email ?? ""}
-          disabled
-        />
+        <ProfileEditWrapper valueBeingEdited="Name" isOauth={user?.isOAuth}>
+          <NameForm userId={user?.id ?? ""} />
+        </ProfileEditWrapper>
         <Label htmlFor="image" className="font-semibold">
           Profile Image
         </Label>
@@ -45,9 +40,18 @@ export default async function SettingProfilePage() {
           defaultValue={user?.image ?? ""}
           disabled
         />
-        <ProfileEditWrapper valueBeingEdited="image" isOauth={user?.isOAuth}>
+        <ProfileEditWrapper valueBeingEdited="Image" isOauth={user?.isOAuth}>
           <ImageForm isOauth={user?.isOAuth} userId={user?.id ?? ""} />
         </ProfileEditWrapper>
+        <Label htmlFor="email" className="font-semibold">
+          Email
+        </Label>
+        <Input
+          id="email"
+          className="w-full text-black"
+          defaultValue={user?.email ?? ""}
+          disabled
+        />
       </section>
     </div>
   );
