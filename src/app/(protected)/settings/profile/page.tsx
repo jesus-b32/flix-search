@@ -10,6 +10,7 @@ import ProfileEditWrapper from "@/components/ProfileEditWrapper";
 import { UpdateImageForm } from "@/components/form/UpdateImageForm";
 import { UpdateNameForm } from "@/components/form/UpdateNameForm";
 import { UpdateEmailForm } from "@/components/form/UpdateEmailForm";
+import { UpdatePasswordForm } from "@/components/form/UpdatePasswordForm";
 
 export const metadata: Metadata = {
   title: "My Profile",
@@ -62,6 +63,16 @@ export default async function SettingProfilePage() {
               isOauth={user?.isOAuth}
             >
               <UpdateEmailForm userId={user?.id ?? ""} />
+            </ProfileEditWrapper>
+
+            <Label htmlFor="password" className="font-semibold">
+              Password
+            </Label>
+            <ProfileEditWrapper
+              valueBeingEdited="Password"
+              isOauth={user?.isOAuth}
+            >
+              <UpdatePasswordForm userId={user?.id ?? ""} />
             </ProfileEditWrapper>
           </>
         )}

@@ -56,9 +56,7 @@ export const NewNameSchema = z.object({
 
 export const NewPasswordSchema = z
   .object({
-    currentPassword: z
-      .string()
-      .min(8, { message: "Password must be at least 8 characters long" }),
+    currentPassword: z.string().min(1, { message: "Password is required" }),
     newPassword: z
       .string()
       .min(8, { message: "Password must be at least 8 characters long" }),

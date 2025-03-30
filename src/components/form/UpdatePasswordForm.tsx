@@ -21,19 +21,13 @@ import { FormError } from "@/components/auth/FormError";
 import { FormSuccess } from "@/components/auth/FormSuccess";
 
 //other imports
-import { NewImageSchema } from "@/schemas/schema";
+import { NewPasswordSchema } from "@/schemas/schema";
 import { useTransition, useState } from "react";
-import { updateImage } from "@/server/actions/form/updateImage";
+import { updatePassword } from "@/server/actions/form/updatePassword";
 
 import { useRouter } from "next/navigation";
 
-export const UpdateImageForm = ({
-  isOauth,
-  userId,
-}: {
-  isOauth: boolean | undefined;
-  userId: string;
-}) => {
+export const UpdatePasswordForm = ({ userId }: { userId: string }) => {
   /**
    * useTransition is a React Hook that lets you update the state without blocking the UI.
    * The isPending flag that tells you whether there is a pending Transition. In the form it is used to show a loading state when the form is submitting.
@@ -44,11 +38,12 @@ export const UpdateImageForm = ({
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const form = useForm<z.infer<typeof NewImageSchema>>({
-    resolver: zodResolver(NewImageSchema),
+  const form = useForm<z.infer<typeof NewPasswordSchema>>({
+    resolver: zodResolver(NewPasswordSchema),
     defaultValues: {
-      image: "",
-      password: undefined,
+      currentPassword: "",
+      newPassword: "",
+      confirmNewPassword: "",
     },
   });
 
@@ -57,20 +52,21 @@ export const UpdateImageForm = ({
    * image action with the form data and sets the error and success states
    * based on the response.
    */
-  const onSubmit = (values: z.infer<typeof NewImageSchema>) => {
+  const onSubmit = (values: z.infer<typeof NewPasswordSchema>) => {
     setError("");
     setSuccess("");
 
     startTransition(async () => {
-      const uploadImage = await updateImage(values, isOauth, userId);
-      setError(uploadImage?.error ?? "");
-      setSuccess(uploadImage?.success ?? "");
+      const passwordUpdated = await updatePassword(values, userId);
+      setError(passwordUpdated?.error ?? "");
+      setSuccess(passwordUpdated?.success ?? "");
 
-      if (uploadImage?.success) {
+      if (passwordUpdated?.success) {
         // Reset form fields on successful submission
         form.reset({
-          image: "",
-          password: "",
+          currentPassword: "",
+          newPassword: "",
+          confirmNewPassword: "",
         });
         router.refresh();
       }
@@ -82,15 +78,15 @@ export const UpdateImageForm = ({
         <div className="space-y-4">
           <FormField
             control={form.control}
-            name="image"
+            name="currentPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Profile Image</FormLabel>
+                <FormLabel>Current Password</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
-                    placeholder="image url"
-                    type="url"
+                    placeholder="******"
+                    type="password"
                     disabled={isPending}
                     className="text-black"
                   />
@@ -99,27 +95,44 @@ export const UpdateImageForm = ({
               </FormItem>
             )}
           />
-          {!isOauth ? (
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      placeholder="******"
-                      type="password"
-                      disabled={isPending}
-                      className="text-black"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          ) : null}
+          <FormField
+            control={form.control}
+            name="newPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>New Password</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    placeholder="******"
+                    type="password"
+                    disabled={isPending}
+                    className="text-black"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="confirmNewPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Confirm New Password</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    placeholder="******"
+                    type="password"
+                    disabled={isPending}
+                    className="text-black"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
         <FormError message={error} />
         <FormSuccess message={success} />

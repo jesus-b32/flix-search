@@ -61,6 +61,11 @@ export const UpdateEmailForm = ({ userId }: { userId: string }) => {
       setSuccess(changeEmail?.success ?? "");
 
       if (changeEmail?.success) {
+        // Reset form fields on successful submission
+        form.reset({
+          email: "",
+          password: "",
+        });
         router.refresh();
       }
     });

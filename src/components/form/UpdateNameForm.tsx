@@ -60,6 +60,10 @@ export const UpdateNameForm = ({ userId }: { userId: string }) => {
       setSuccess(uploadName?.success ?? "");
 
       if (uploadName?.success) {
+        // Reset form fields on successful submission
+        form.reset({
+          name: "",
+        });
         router.refresh();
       }
     });
