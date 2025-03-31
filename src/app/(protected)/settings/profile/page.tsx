@@ -11,6 +11,7 @@ import { UpdateImageForm } from "@/components/form/UpdateImageForm";
 import { UpdateNameForm } from "@/components/form/UpdateNameForm";
 import { UpdateEmailForm } from "@/components/form/UpdateEmailForm";
 import { UpdatePasswordForm } from "@/components/form/UpdatePasswordForm";
+import { UpdateTwoFactorForm } from "@/components/form/UpdateTwoFactorForm";
 
 export const metadata: Metadata = {
   title: "My Profile",
@@ -65,14 +66,23 @@ export default async function SettingProfilePage() {
               <UpdateEmailForm userId={user?.id ?? ""} />
             </ProfileEditWrapper>
 
-            <Label htmlFor="password" className="font-semibold">
-              Password
-            </Label>
+            <Label className="font-semibold">Password</Label>
             <ProfileEditWrapper
               valueBeingEdited="Password"
               isOauth={user?.isOAuth}
             >
               <UpdatePasswordForm userId={user?.id ?? ""} />
+            </ProfileEditWrapper>
+
+            <Label className="font-semibold">Two Factor Authentication</Label>
+            <ProfileEditWrapper
+              valueBeingEdited="Two Factor Authentication"
+              isOauth={user?.isOAuth}
+            >
+              <UpdateTwoFactorForm
+                userId={user?.id ?? ""}
+                isTwoFactorEnabled={user?.isTwoFactorEnabled ?? false}
+              />
             </ProfileEditWrapper>
           </>
         )}

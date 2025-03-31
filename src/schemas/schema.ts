@@ -69,6 +69,10 @@ export const NewPasswordSchema = z
     path: ["confirmNewPassword"],
   });
 
+export const TwoFactorSchema = z.object({
+  twoFactor: z.boolean(),
+});
+
 export const DeleteAccountSchema = z.object({
   password: z.string().optional(),
 });

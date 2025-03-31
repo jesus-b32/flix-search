@@ -7,9 +7,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 
 // form validation imports
 import type * as z from "zod";
@@ -21,13 +22,19 @@ import { FormError } from "@/components/auth/FormError";
 import { FormSuccess } from "@/components/auth/FormSuccess";
 
 //other imports
-import { NewNameSchema } from "@/schemas/schema";
+import { TwoFactorSchema } from "@/schemas/schema";
 import { useTransition, useState } from "react";
-import { updateName } from "@/server/actions/form/updateName";
+import { updateTwoFactor } from "@/server/actions/form/updateTwoFactor";
 
 import { useRouter } from "next/navigation";
 
-export const UpdateNameForm = ({ userId }: { userId: string }) => {
+export const UpdateTwoFactorForm = ({
+  userId,
+  isTwoFactorEnabled,
+}: {
+  userId: string;
+  isTwoFactorEnabled: boolean;
+}) => {
   /**
    * useTransition is a React Hook that lets you update the state without blocking the UI.
    * The isPending flag that tells you whether there is a pending Transition. In the form it is used to show a loading state when the form is submitting.
@@ -38,10 +45,10 @@ export const UpdateNameForm = ({ userId }: { userId: string }) => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const form = useForm<z.infer<typeof NewNameSchema>>({
-    resolver: zodResolver(NewNameSchema),
+  const form = useForm<z.infer<typeof TwoFactorSchema>>({
+    resolver: zodResolver(TwoFactorSchema),
     defaultValues: {
-      name: "",
+      twoFactor: isTwoFactorEnabled,
     },
   });
 
@@ -50,41 +57,40 @@ export const UpdateNameForm = ({ userId }: { userId: string }) => {
    * image action with the form data and sets the error and success states
    * based on the response.
    */
-  const onSubmit = (values: z.infer<typeof NewNameSchema>) => {
+  const onSubmit = (values: z.infer<typeof TwoFactorSchema>) => {
     setError("");
     setSuccess("");
 
     startTransition(async () => {
-      const uploadName = await updateName(values, userId);
-      setError(uploadName?.error ?? "");
-      setSuccess(uploadName?.success ?? "");
+      const twoFactorUpdated = await updateTwoFactor(values, userId);
+      setError(twoFactorUpdated?.error ?? "");
+      setSuccess(twoFactorUpdated?.success ?? "");
 
-      if (uploadName?.success) {
-        // Reset form fields on successful submission
-        form.reset({
-          name: "",
-        });
+      if (twoFactorUpdated?.success) {
         router.refresh();
       }
     });
   };
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">
         <div className="space-y-4">
           <FormField
             control={form.control}
-            name="name"
+            name="twoFactor"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
+              <FormItem className="flex flex-row items-center justify-between p-3">
+                <div className="space-y-0.5">
+                  <FormLabel>Two Factor Authentication</FormLabel>
+                  <FormDescription>
+                    Enable two factor authentication for your account.
+                  </FormDescription>
+                </div>
                 <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="John Doe"
-                    type="text"
-                    disabled={isPending}
-                    className="text-black"
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
                   />
                 </FormControl>
                 <FormMessage />

@@ -9,7 +9,12 @@ import {
 } from "@/components/ui/dialog";
 
 interface ProfileFormProps {
-  valueBeingEdited: "Name" | "Image" | "Password" | "Email";
+  valueBeingEdited:
+    | "Name"
+    | "Image"
+    | "Password"
+    | "Email"
+    | "Two Factor Authentication";
   isOauth: boolean | undefined;
   children: React.ReactNode;
 }
@@ -31,8 +36,8 @@ export default function ProfileEditWrapper({
         <DialogHeader>
           <DialogTitle>
             {valueBeingEdited === "Image"
-              ? "Change Profile Image"
-              : `Change ${valueBeingEdited}`}
+              ? "Update Profile Image"
+              : `Update ${valueBeingEdited}`}
           </DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">{children}</div>

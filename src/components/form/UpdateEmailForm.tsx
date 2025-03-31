@@ -115,7 +115,12 @@ export const UpdateEmailForm = ({ userId }: { userId: string }) => {
         </div>
         <FormError message={error} />
         <FormSuccess message={success} />
-        <Button type="submit" className="w-full" disabled={isPending}>
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={isPending}
+          variant="secondary"
+        >
           Save
         </Button>
       </form>

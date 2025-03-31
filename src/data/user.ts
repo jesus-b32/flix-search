@@ -118,3 +118,18 @@ export const updateUserPassword = async (
     return null;
   }
 };
+
+export const updateUserTwoFactorEnabled = async (
+  id: string,
+  isTwoFactorEnabled: boolean,
+) => {
+  try {
+    await db
+      .update(users)
+      .set({ isTwoFactorEnabled: isTwoFactorEnabled })
+      .where(eq(users.id, id));
+    return true;
+  } catch {
+    return null;
+  }
+};
