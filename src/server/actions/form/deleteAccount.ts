@@ -15,7 +15,7 @@ import bcrypt from "bcryptjs";
  */
 export const deleteAccount = async (
   values: z.infer<typeof DeleteAccountSchema>,
-  isOauth: boolean | null,
+  isOauth: boolean | undefined,
   userId: string,
 ) => {
   const validatedFields = DeleteAccountSchema.safeParse(values);
