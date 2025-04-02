@@ -7,10 +7,10 @@ import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | Flix Search",
-    default: "Flix Search",
+    template: "%s | The Flix Search",
+    default: "The Flix Search",
   },
-  description: "Global Streaming Search Engine for Movies and TV Shows",
+  description: "A Global Streaming Search Engine for Movies and TV Shows",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 

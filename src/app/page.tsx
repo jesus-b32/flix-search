@@ -5,7 +5,7 @@ export default function HomePage() {
     <main className="flex min-h-screen flex-col items-center text-white">
       <div className="mt-4 flex flex-col items-center gap-6">
         <h1 className="text-center text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-          <span className="text-[hsl(280,100%,70%)]">Welcome</span> to Flix
+          <span className="text-[hsl(280,100%,70%)]">Welcome</span> to The Flix
           Search
         </h1>
         <p className="text-2xl">Find your next movie or series</p>
@@ -24,8 +24,8 @@ export default function HomePage() {
           Movie and TV Show Searching made Easy
         </h2>
         <p className="text-center text-xl">
-          Flix Search helps you find which streaming services have your favorite
-          movies and series with a simple search.
+          The Flix Search helps you find which streaming services have your
+          favorite movies and series with a simple search.
         </p>
       </div>
     </main>
