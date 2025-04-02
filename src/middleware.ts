@@ -33,7 +33,22 @@ export default auth((req) => {
   }
 
   if (!isLoggedIn && isProtectedRoute) {
-    return Response.redirect(new URL("/auth/login", nextUrl));
+    // Store the current URL path that the user is trying to access
+    let callbackUrl = nextUrl.pathname;
+
+    // If there are query parameters in the URL, append them to the callback URL
+    if (nextUrl.search) {
+      callbackUrl += nextUrl.search;
+    }
+
+    // URL-encode the callback URL to safely include it as a query parameter
+    const encodedCallbackUrl = encodeURIComponent(callbackUrl);
+
+    // Redirect the unauthenticated user to the login page
+    // Include the encoded callback URL as a query parameter so the user can be redirected back to their originally requested page after successful login
+    return Response.redirect(
+      new URL(`/auth/login?callbackUrl=${encodedCallbackUrl}`, nextUrl),
+    );
   }
 
   return;
