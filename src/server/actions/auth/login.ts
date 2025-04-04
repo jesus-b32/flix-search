@@ -20,12 +20,16 @@ import {
   deleteTwoFactorConfirmation,
   createTwoFactorConfirmation,
 } from "@/data/twoFactorConfirmation";
+import bcrypt from "bcryptjs";
 
 /**
- * Validates the form values and returns a success message or an error message
+ * Authentication server action for credential user login with email, password, and optional 2FA code. Returns a success/error messages or a 2FA flag. Will redirect to callback URL after successful login.
  *
- * @param values - the form values of the new user
- * @returns an object with a success message or an error message
+ * This file implements a server-side login action that:
+ * 1. Validates user credentials against the database
+ * 2. Handles email verification flow for unverified accounts
+ * 3. Supports two-factor authentication (2FA) when enabled
+ * 4. Manages authentication tokens and confirmations
  */
 export const login = async (
   values: z.infer<typeof LoginSchema>,
@@ -42,7 +46,6 @@ export const login = async (
   const { email, password, code } = validatedFields.data;
 
   const existingUser = await getUserByEmail(email);
-
   if (!existingUser?.email || !existingUser.password) {
     return { error: "Email does not exist!" };
   }
@@ -57,14 +60,15 @@ export const login = async (
     if (!verificationToken[0]?.token || !verificationToken[0]?.email) {
       return { error: "Error generating verification token!" };
     }
-
     await sendVerificationEmail(
       verificationToken[0].email,
       verificationToken[0].token,
     );
-
     return { success: "Confirmation email sent!" };
   }
+
+  const passwordsMatch = await bcrypt.compare(password, existingUser.password);
+  if (!passwordsMatch) return { error: "Invalid password!" };
 
   if (existingUser.isTwoFactorEnabled && existingUser.email) {
     if (code) {
