@@ -22,19 +22,19 @@ export const EmailVerificationCard = () => {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
-  const onSubmit = useCallback(() => {
+  const onSubmit = useCallback(async () => {
     if (!token) {
       setError("Missing token!");
       return;
     }
-    emailVerification(token)
-      .then((data) => {
-        setSuccess(data.success);
-        setError(data.error);
-      })
-      .catch(() => {
-        setError("Something went wrong!");
-      });
+
+    try {
+      const data = await emailVerification(token);
+      setSuccess(data.success);
+      setError(data.error);
+    } catch (error) {
+      setError("Something went wrong!");
+    }
   }, [token]);
 
   useEffect(() => {

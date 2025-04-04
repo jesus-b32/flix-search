@@ -72,19 +72,13 @@ export const RegisterForm = () => {
     setSuccess("");
 
     startTransition(async () => {
-      await register(values).then((data) => {
+      try {
+        const data = await register(values);
         setError(data.error ?? "");
         setSuccess(data.success ?? "");
-      });
-
-      await login({ email: values.email, password: values.password }).then(
-        (data) => {
-          setError(data?.error ?? "");
-
-          // TODO: add when we do 2fa
-          // setSuccess(data?.success ?? "");
-        },
-      );
+      } catch (error) {
+        setError("Something went wrong during registration.");
+      }
     });
   };
   return (
