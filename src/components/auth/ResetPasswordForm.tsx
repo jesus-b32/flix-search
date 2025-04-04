@@ -60,10 +60,13 @@ export const ResetPasswordForm = () => {
     setSuccess("");
 
     startTransition(async () => {
-      await resetPassword(values).then((data) => {
-        setError(data?.error ?? "");
-        setSuccess(data?.success ?? "");
-      });
+      try {
+        const data = await resetPassword(values);
+        setError(data.error ?? "");
+        setSuccess(data.success ?? "");
+      } catch (error) {
+        setError("Something went wrong during password reset.");
+      }
     });
   };
   return (

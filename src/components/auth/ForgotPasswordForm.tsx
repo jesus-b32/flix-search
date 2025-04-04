@@ -67,10 +67,13 @@ export const ForgotPasswordForm = () => {
     setSuccess("");
 
     startTransition(async () => {
-      await forgotPassword(values, token).then((data) => {
-        setError(data?.error ?? "");
-        setSuccess(data?.success ?? "");
-      });
+      try {
+        const data = await forgotPassword(values, token);
+        setError(data.error ?? "");
+        setSuccess(data.success ?? "");
+      } catch (error) {
+        setError("Something went wrong during password reset.");
+      }
     });
   };
   return (

@@ -74,23 +74,25 @@ export const LoginForm = () => {
     setSuccess("");
 
     startTransition(async () => {
-      login(values, callbackUrl)
-        .then((data) => {
-          if (data?.error) {
-            form.reset();
-            setError(data.error);
-          }
+      try {
+        const data = await login(values, callbackUrl);
 
-          if (data?.success) {
-            form.reset();
-            setSuccess(data.success);
-          }
+        if (data?.error) {
+          form.reset();
+          setError(data.error);
+        }
 
-          if (data?.twoFactor) {
-            setShowTwoFactor(true);
-          }
-        })
-        .catch(() => setError("Something went wrong!"));
+        if (data?.success) {
+          form.reset();
+          setSuccess(data.success);
+        }
+
+        if (data?.twoFactor) {
+          setShowTwoFactor(true);
+        }
+      } catch (error) {
+        setError("Something went wrong!");
+      }
     });
   };
   return (

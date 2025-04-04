@@ -27,7 +27,6 @@ import { RegisterSchema } from "@/schemas/schema";
 import { register } from "@/server/actions/auth/register";
 import { useTransition, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { login } from "@/server/actions/auth/login";
 
 /**
  * A register form with an email, password, and name field.
