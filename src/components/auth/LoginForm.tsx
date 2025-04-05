@@ -28,6 +28,7 @@ import { useSearchParams } from "next/navigation";
 import { LoginSchema } from "@/schemas/schema";
 import { login } from "@/server/actions/auth/login";
 import Link from "next/link";
+import { Eye, EyeOff } from "lucide-react";
 
 /**
  * Renders a login form with an email and a password field.
@@ -54,6 +55,7 @@ export const LoginForm = () => {
   const [showTwoFactor, setShowTwoFactor] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -151,12 +153,31 @@ export const LoginForm = () => {
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <Input
-                          {...field}
-                          placeholder="******"
-                          type="password"
-                          disabled={isPending}
-                        />
+                        <div className="relative">
+                          <Input
+                            {...field}
+                            placeholder="******"
+                            type={showPassword ? "text" : "password"}
+                            disabled={isPending}
+                          />
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                            onClick={() => setShowPassword(!showPassword)}
+                            disabled={isPending}
+                          >
+                            {showPassword ? (
+                              <EyeOff className="h-4 w-4" />
+                            ) : (
+                              <Eye className="h-4 w-4" />
+                            )}
+                            <span className="sr-only">
+                              {showPassword ? "Hide password" : "Show password"}
+                            </span>
+                          </Button>
+                        </div>
                       </FormControl>
                       <Button
                         size="sm"

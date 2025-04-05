@@ -24,8 +24,8 @@ import { FormSuccess } from "@/components/auth/FormSuccess";
 import { NewPasswordSchema } from "@/schemas/schema";
 import { useTransition, useState } from "react";
 import { updatePassword } from "@/server/actions/form/updatePassword";
-
 import { useRouter } from "next/navigation";
+import { Eye, EyeOff } from "lucide-react";
 
 export const UpdatePasswordForm = ({ userId }: { userId: string }) => {
   /**
@@ -37,6 +37,9 @@ export const UpdatePasswordForm = ({ userId }: { userId: string }) => {
   const router = useRouter();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const form = useForm<z.infer<typeof NewPasswordSchema>>({
     resolver: zodResolver(NewPasswordSchema),
@@ -83,13 +86,36 @@ export const UpdatePasswordForm = ({ userId }: { userId: string }) => {
               <FormItem>
                 <FormLabel>Current Password</FormLabel>
                 <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="******"
-                    type="password"
-                    disabled={isPending}
-                    className="text-black"
-                  />
+                  <div className="relative">
+                    <Input
+                      {...field}
+                      placeholder="******"
+                      type={showCurrentPassword ? "text" : "password"}
+                      disabled={isPending}
+                      className="text-black"
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                      onClick={() =>
+                        setShowCurrentPassword(!showCurrentPassword)
+                      }
+                      disabled={isPending}
+                    >
+                      {showCurrentPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                      <span className="sr-only">
+                        {showCurrentPassword
+                          ? "Hide password"
+                          : "Show password"}
+                      </span>
+                    </Button>
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -102,13 +128,32 @@ export const UpdatePasswordForm = ({ userId }: { userId: string }) => {
               <FormItem>
                 <FormLabel>New Password</FormLabel>
                 <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="******"
-                    type="password"
-                    disabled={isPending}
-                    className="text-black"
-                  />
+                  <div className="relative">
+                    <Input
+                      {...field}
+                      placeholder="******"
+                      type={showNewPassword ? "text" : "password"}
+                      disabled={isPending}
+                      className="text-black"
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                      onClick={() => setShowNewPassword(!showNewPassword)}
+                      disabled={isPending}
+                    >
+                      {showNewPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                      <span className="sr-only">
+                        {showNewPassword ? "Hide password" : "Show password"}
+                      </span>
+                    </Button>
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -121,13 +166,36 @@ export const UpdatePasswordForm = ({ userId }: { userId: string }) => {
               <FormItem>
                 <FormLabel>Confirm New Password</FormLabel>
                 <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="******"
-                    type="password"
-                    disabled={isPending}
-                    className="text-black"
-                  />
+                  <div className="relative">
+                    <Input
+                      {...field}
+                      placeholder="******"
+                      type={showConfirmPassword ? "text" : "password"}
+                      disabled={isPending}
+                      className="text-black"
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
+                      disabled={isPending}
+                    >
+                      {showConfirmPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                      <span className="sr-only">
+                        {showConfirmPassword
+                          ? "Hide password"
+                          : "Show password"}
+                      </span>
+                    </Button>
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
