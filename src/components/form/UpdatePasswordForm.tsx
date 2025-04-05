@@ -77,131 +77,121 @@ export const UpdatePasswordForm = ({ userId }: { userId: string }) => {
   };
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="space-y-4">
-          <FormField
-            control={form.control}
-            name="currentPassword"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Current Password</FormLabel>
-                <FormControl>
-                  <div className="relative">
-                    <Input
-                      {...field}
-                      placeholder="******"
-                      type={showCurrentPassword ? "text" : "password"}
-                      disabled={isPending}
-                      className="text-black"
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                      onClick={() =>
-                        setShowCurrentPassword(!showCurrentPassword)
-                      }
-                      disabled={isPending}
-                    >
-                      {showCurrentPassword ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
-                      <span className="sr-only">
-                        {showCurrentPassword
-                          ? "Hide password"
-                          : "Show password"}
-                      </span>
-                    </Button>
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="newPassword"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>New Password</FormLabel>
-                <FormControl>
-                  <div className="relative">
-                    <Input
-                      {...field}
-                      placeholder="******"
-                      type={showNewPassword ? "text" : "password"}
-                      disabled={isPending}
-                      className="text-black"
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                      onClick={() => setShowNewPassword(!showNewPassword)}
-                      disabled={isPending}
-                    >
-                      {showNewPassword ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
-                      <span className="sr-only">
-                        {showNewPassword ? "Hide password" : "Show password"}
-                      </span>
-                    </Button>
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="confirmNewPassword"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Confirm New Password</FormLabel>
-                <FormControl>
-                  <div className="relative">
-                    <Input
-                      {...field}
-                      placeholder="******"
-                      type={showConfirmPassword ? "text" : "password"}
-                      disabled={isPending}
-                      className="text-black"
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                      onClick={() =>
-                        setShowConfirmPassword(!showConfirmPassword)
-                      }
-                      disabled={isPending}
-                    >
-                      {showConfirmPassword ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
-                      <span className="sr-only">
-                        {showConfirmPassword
-                          ? "Hide password"
-                          : "Show password"}
-                      </span>
-                    </Button>
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <FormField
+          control={form.control}
+          name="currentPassword"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Current Password</FormLabel>
+              <FormControl>
+                <div className="relative">
+                  <Input
+                    {...field}
+                    placeholder="******"
+                    type={showCurrentPassword ? "text" : "password"}
+                    disabled={isPending}
+                    className="text-black"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                    disabled={isPending}
+                  >
+                    {showCurrentPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                    <span className="sr-only">
+                      {showCurrentPassword ? "Hide password" : "Show password"}
+                    </span>
+                  </Button>
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="newPassword"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>New Password</FormLabel>
+              <FormControl>
+                <div className="relative">
+                  <Input
+                    {...field}
+                    placeholder="******"
+                    type={showNewPassword ? "text" : "password"}
+                    disabled={isPending}
+                    className="text-black"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={() => setShowNewPassword(!showNewPassword)}
+                    disabled={isPending}
+                  >
+                    {showNewPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                    <span className="sr-only">
+                      {showNewPassword ? "Hide password" : "Show password"}
+                    </span>
+                  </Button>
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="confirmNewPassword"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Confirm New Password</FormLabel>
+              <FormControl>
+                <div className="relative">
+                  <Input
+                    {...field}
+                    placeholder="******"
+                    type={showConfirmPassword ? "text" : "password"}
+                    disabled={isPending}
+                    className="text-black"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    disabled={isPending}
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                    <span className="sr-only">
+                      {showConfirmPassword ? "Hide password" : "Show password"}
+                    </span>
+                  </Button>
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormError message={error} />
         <FormSuccess message={success} />
         <Button
@@ -210,7 +200,7 @@ export const UpdatePasswordForm = ({ userId }: { userId: string }) => {
           disabled={isPending}
           variant="secondary"
         >
-          Save
+          Update
         </Button>
       </form>
     </Form>

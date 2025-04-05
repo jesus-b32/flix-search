@@ -1,6 +1,7 @@
 import { type Metadata } from "next";
 import { currentUser } from "@/lib/currentUser";
 import { DeleteAccountForm } from "@/components/form/DeleteAccountForm";
+import ProfileEditWrapper from "@/components/ProfileEditWrapper";
 
 export const metadata: Metadata = {
   title: "Delete My Account",
@@ -26,7 +27,9 @@ export default async function DeleteAccountPage() {
             password below and confirming the prompts.
           </p>
         )}
-        <DeleteAccountForm isOauth={user?.isOAuth} userId={user?.id ?? ""} />
+        <ProfileEditWrapper buttonName="Delete Account" isOauth={user?.isOAuth}>
+          <DeleteAccountForm isOauth={user?.isOAuth} userId={user?.id ?? ""} />
+        </ProfileEditWrapper>
       </section>
     </div>
   );

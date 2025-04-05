@@ -78,19 +78,38 @@ export const UpdateImageForm = ({
   };
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <FormField
+          control={form.control}
+          name="image"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Profile Image</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  placeholder="image url"
+                  type="url"
+                  disabled={isPending}
+                  className="text-black"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {!isOauth ? (
           <FormField
             control={form.control}
-            name="image"
+            name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Profile Image</FormLabel>
+                <FormLabel>Password</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
-                    placeholder="image url"
-                    type="url"
+                    placeholder="******"
+                    type="password"
                     disabled={isPending}
                     className="text-black"
                   />
@@ -99,28 +118,7 @@ export const UpdateImageForm = ({
               </FormItem>
             )}
           />
-          {!isOauth ? (
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      placeholder="******"
-                      type="password"
-                      disabled={isPending}
-                      className="text-black"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          ) : null}
-        </div>
+        ) : null}
         <FormError message={error} />
         <FormSuccess message={success} />
         <Button
@@ -129,7 +127,7 @@ export const UpdateImageForm = ({
           disabled={isPending}
           variant="secondary"
         >
-          Save
+          Update
         </Button>
       </form>
     </Form>

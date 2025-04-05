@@ -74,30 +74,28 @@ export const UpdateTwoFactorForm = ({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">
-        <div className="space-y-4">
-          <FormField
-            control={form.control}
-            name="twoFactor"
-            render={({ field }) => (
-              <FormItem className="flex flex-row items-center justify-between p-3">
-                <div className="space-y-0.5">
-                  <FormLabel>Two Factor Authentication</FormLabel>
-                  <FormDescription>
-                    Enable two factor authentication for your account.
-                  </FormDescription>
-                </div>
-                <FormControl>
-                  <Switch
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8">
+        <FormField
+          control={form.control}
+          name="twoFactor"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-center justify-between p-3">
+              <div className="space-y-0.5">
+                <FormLabel>Two Factor Authentication</FormLabel>
+                <FormDescription>
+                  Enable two factor authentication for your account.
+                </FormDescription>
+              </div>
+              <FormControl>
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormError message={error} />
         <FormSuccess message={success} />
         <Button
@@ -106,7 +104,7 @@ export const UpdateTwoFactorForm = ({
           disabled={isPending}
           variant="secondary"
         >
-          Save
+          Update
         </Button>
       </form>
     </Form>

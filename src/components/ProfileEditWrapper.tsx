@@ -9,38 +9,25 @@ import {
 } from "@/components/ui/dialog";
 
 interface ProfileFormProps {
-  valueBeingEdited:
-    | "Name"
-    | "Image"
-    | "Password"
-    | "Email"
-    | "Two Factor Authentication";
+  buttonName: string;
   isOauth: boolean | undefined;
   children: React.ReactNode;
 }
 
 export default function ProfileEditWrapper({
-  valueBeingEdited,
+  buttonName,
   children,
 }: ProfileFormProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size={"sm"}>
-          {valueBeingEdited === "Image"
-            ? "Update Profile Image"
-            : `Update ${valueBeingEdited}`}
-        </Button>
+        <Button size={"sm"}>{buttonName}</Button>
       </DialogTrigger>
       <DialogContent className="border-none bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>
-            {valueBeingEdited === "Image"
-              ? "Update Profile Image"
-              : `Update ${valueBeingEdited}`}
-          </DialogTitle>
+          <DialogTitle>{buttonName}</DialogTitle>
         </DialogHeader>
-        <div className="grid gap-4 py-4">{children}</div>
+        {children}
       </DialogContent>
     </Dialog>
   );

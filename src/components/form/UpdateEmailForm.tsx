@@ -72,47 +72,45 @@ export const UpdateEmailForm = ({ userId }: { userId: string }) => {
   };
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="space-y-4">
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="john.doe@example.com"
-                    type="email"
-                    disabled={isPending}
-                    className="text-black"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="******"
-                    type="password"
-                    disabled={isPending}
-                    className="text-black"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  placeholder="john.doe@example.com"
+                  type="email"
+                  disabled={isPending}
+                  className="text-black"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  placeholder="******"
+                  type="password"
+                  disabled={isPending}
+                  className="text-black"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormError message={error} />
         <FormSuccess message={success} />
         <Button
@@ -121,7 +119,7 @@ export const UpdateEmailForm = ({ userId }: { userId: string }) => {
           disabled={isPending}
           variant="secondary"
         >
-          Save
+          Update
         </Button>
       </form>
     </Form>
