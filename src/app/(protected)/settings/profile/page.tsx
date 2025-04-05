@@ -33,7 +33,7 @@ export default async function SettingProfilePage() {
           defaultValue={user?.name ?? ""}
           disabled
         />
-        <ProfileEditWrapper valueBeingEdited="Name" isOauth={user?.isOAuth}>
+        <ProfileEditWrapper buttonName="Update Name" isOauth={user?.isOAuth}>
           <UpdateNameForm userId={user?.id ?? ""} />
         </ProfileEditWrapper>
         <Label htmlFor="image" className="font-semibold">
@@ -45,7 +45,10 @@ export default async function SettingProfilePage() {
           defaultValue={user?.image ?? ""}
           disabled
         />
-        <ProfileEditWrapper valueBeingEdited="Image" isOauth={user?.isOAuth}>
+        <ProfileEditWrapper
+          buttonName="Update Profile Image"
+          isOauth={user?.isOAuth}
+        >
           <UpdateImageForm isOauth={user?.isOAuth} userId={user?.id ?? ""} />
         </ProfileEditWrapper>
         {!user?.isOAuth && (
@@ -60,7 +63,7 @@ export default async function SettingProfilePage() {
               disabled
             />
             <ProfileEditWrapper
-              valueBeingEdited="Email"
+              buttonName="Update Email"
               isOauth={user?.isOAuth}
             >
               <UpdateEmailForm userId={user?.id ?? ""} />
@@ -68,7 +71,7 @@ export default async function SettingProfilePage() {
 
             <Label className="font-semibold">Password</Label>
             <ProfileEditWrapper
-              valueBeingEdited="Password"
+              buttonName="Update Password"
               isOauth={user?.isOAuth}
             >
               <UpdatePasswordForm userId={user?.id ?? ""} />
@@ -76,7 +79,7 @@ export default async function SettingProfilePage() {
 
             <Label className="font-semibold">Two Factor Authentication</Label>
             <ProfileEditWrapper
-              valueBeingEdited="Two Factor Authentication"
+              buttonName="Update Two Factor Authentication"
               isOauth={user?.isOAuth}
             >
               <UpdateTwoFactorForm

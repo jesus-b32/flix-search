@@ -70,28 +70,26 @@ export const UpdateNameForm = ({ userId }: { userId: string }) => {
   };
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="space-y-4">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="John Doe"
-                    type="text"
-                    disabled={isPending}
-                    className="text-black"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  placeholder="John Doe"
+                  type="text"
+                  disabled={isPending}
+                  className="text-black"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormError message={error} />
         <FormSuccess message={success} />
         <Button
@@ -100,7 +98,7 @@ export const UpdateNameForm = ({ userId }: { userId: string }) => {
           disabled={isPending}
           variant="secondary"
         >
-          Save
+          Update
         </Button>
       </form>
     </Form>
