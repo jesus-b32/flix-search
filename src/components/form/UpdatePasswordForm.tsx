@@ -102,9 +102,9 @@ export const UpdatePasswordForm = ({ userId }: { userId: string }) => {
                     disabled={isPending}
                   >
                     {showCurrentPassword ? (
-                      <EyeOff className="h-4 w-4" />
+                      <EyeOff className="h-4 w-4 text-black" />
                     ) : (
-                      <Eye className="h-4 w-4" />
+                      <Eye className="h-4 w-4 text-black" />
                     )}
                     <span className="sr-only">
                       {showCurrentPassword ? "Hide password" : "Show password"}
@@ -140,9 +140,9 @@ export const UpdatePasswordForm = ({ userId }: { userId: string }) => {
                     disabled={isPending}
                   >
                     {showNewPassword ? (
-                      <EyeOff className="h-4 w-4" />
+                      <EyeOff className="h-4 w-4 text-black" />
                     ) : (
-                      <Eye className="h-4 w-4" />
+                      <Eye className="h-4 w-4 text-black" />
                     )}
                     <span className="sr-only">
                       {showNewPassword ? "Hide password" : "Show password"}
@@ -178,9 +178,9 @@ export const UpdatePasswordForm = ({ userId }: { userId: string }) => {
                     disabled={isPending}
                   >
                     {showConfirmPassword ? (
-                      <EyeOff className="h-4 w-4" />
+                      <EyeOff className="h-4 w-4 text-black" />
                     ) : (
-                      <Eye className="h-4 w-4" />
+                      <Eye className="h-4 w-4 text-black" />
                     )}
                     <span className="sr-only">
                       {showConfirmPassword ? "Hide password" : "Show password"}

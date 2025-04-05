@@ -104,9 +104,9 @@ export const DeleteAccountForm = ({
                       disabled={isPending}
                     >
                       {showPassword ? (
-                        <EyeOff className="h-4 w-4" />
+                        <EyeOff className="h-4 w-4 text-black" />
                       ) : (
-                        <Eye className="h-4 w-4" />
+                        <Eye className="h-4 w-4 text-black" />
                       )}
                       <span className="sr-only">
                         {showPassword ? "Hide password" : "Show password"}
