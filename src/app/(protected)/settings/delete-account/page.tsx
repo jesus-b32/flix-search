@@ -27,7 +27,7 @@ export default async function DeleteAccountPage() {
             password below and confirming the prompts.
           </p>
         )}
-        <ProfileEditWrapper buttonName="Delete Account" isOauth={user?.isOAuth}>
+        <ProfileEditWrapper buttonName="Delete Account">
           <DeleteAccountForm isOauth={user?.isOAuth} userId={user?.id ?? ""} />
         </ProfileEditWrapper>
       </section>

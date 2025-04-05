@@ -33,7 +33,7 @@ export default async function SettingProfilePage() {
           defaultValue={user?.name ?? ""}
           disabled
         />
-        <ProfileEditWrapper buttonName="Update Name" isOauth={user?.isOAuth}>
+        <ProfileEditWrapper buttonName="Update Name">
           <UpdateNameForm userId={user?.id ?? ""} />
         </ProfileEditWrapper>
         <Label htmlFor="image" className="font-semibold">
@@ -45,11 +45,8 @@ export default async function SettingProfilePage() {
           defaultValue={user?.image ?? ""}
           disabled
         />
-        <ProfileEditWrapper
-          buttonName="Update Profile Image"
-          isOauth={user?.isOAuth}
-        >
-          <UpdateImageForm isOauth={user?.isOAuth} userId={user?.id ?? ""} />
+        <ProfileEditWrapper buttonName="Update Profile Image">
+          <UpdateImageForm userId={user?.id ?? ""} />
         </ProfileEditWrapper>
         {!user?.isOAuth && (
           <>
@@ -62,26 +59,17 @@ export default async function SettingProfilePage() {
               defaultValue={user?.email ?? ""}
               disabled
             />
-            <ProfileEditWrapper
-              buttonName="Update Email"
-              isOauth={user?.isOAuth}
-            >
+            <ProfileEditWrapper buttonName="Update Email">
               <UpdateEmailForm userId={user?.id ?? ""} />
             </ProfileEditWrapper>
 
             <Label className="font-semibold">Password</Label>
-            <ProfileEditWrapper
-              buttonName="Update Password"
-              isOauth={user?.isOAuth}
-            >
+            <ProfileEditWrapper buttonName="Update Password">
               <UpdatePasswordForm userId={user?.id ?? ""} />
             </ProfileEditWrapper>
 
             <Label className="font-semibold">Two Factor Authentication</Label>
-            <ProfileEditWrapper
-              buttonName="Update Two Factor Authentication"
-              isOauth={user?.isOAuth}
-            >
+            <ProfileEditWrapper buttonName="Update Two Factor Authentication">
               <UpdateTwoFactorForm
                 userId={user?.id ?? ""}
                 isTwoFactorEnabled={user?.isTwoFactorEnabled ?? false}

@@ -26,13 +26,14 @@ import { useTransition, useState } from "react";
 import { updateEmail } from "@/server/actions/form/updateEmail";
 
 import { useRouter } from "next/navigation";
-
+import { Eye, EyeOff } from "lucide-react";
 export const UpdateEmailForm = ({ userId }: { userId: string }) => {
   /**
    * useTransition is a React Hook that lets you update the state without blocking the UI.
    * The isPending flag that tells you whether there is a pending Transition. In the form it is used to show a loading state when the form is submitting.
    * The startTransition function that lets you mark a state update as a Transition.
    */
+  const [showPassword, setShowPassword] = useState(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const [error, setError] = useState("");
@@ -99,13 +100,32 @@ export const UpdateEmailForm = ({ userId }: { userId: string }) => {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  placeholder="******"
-                  type="password"
-                  disabled={isPending}
-                  className="text-black"
-                />
+                <div className="relative">
+                  <Input
+                    {...field}
+                    placeholder="******"
+                    type={showPassword ? "text" : "password"}
+                    disabled={isPending}
+                    className="text-black"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={() => setShowPassword(!showPassword)}
+                    disabled={isPending}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4 text-black" />
+                    ) : (
+                      <Eye className="h-4 w-4 text-black" />
+                    )}
+                    <span className="sr-only">
+                      {showPassword ? "Hide password" : "Show password"}
+                    </span>
+                  </Button>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>

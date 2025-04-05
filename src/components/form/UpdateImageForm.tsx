@@ -27,13 +27,7 @@ import { updateImage } from "@/server/actions/form/updateImage";
 
 import { useRouter } from "next/navigation";
 
-export const UpdateImageForm = ({
-  isOauth,
-  userId,
-}: {
-  isOauth: boolean | undefined;
-  userId: string;
-}) => {
+export const UpdateImageForm = ({ userId }: { userId: string }) => {
   /**
    * useTransition is a React Hook that lets you update the state without blocking the UI.
    * The isPending flag that tells you whether there is a pending Transition. In the form it is used to show a loading state when the form is submitting.
@@ -48,7 +42,6 @@ export const UpdateImageForm = ({
     resolver: zodResolver(NewImageSchema),
     defaultValues: {
       image: "",
-      password: undefined,
     },
   });
 
@@ -62,7 +55,7 @@ export const UpdateImageForm = ({
     setSuccess("");
 
     startTransition(async () => {
-      const uploadImage = await updateImage(values, isOauth, userId);
+      const uploadImage = await updateImage(values, userId);
       setError(uploadImage?.error ?? "");
       setSuccess(uploadImage?.success ?? "");
 
@@ -70,7 +63,6 @@ export const UpdateImageForm = ({
         // Reset form fields on successful submission
         form.reset({
           image: "",
-          password: "",
         });
         router.refresh();
       }
@@ -98,27 +90,6 @@ export const UpdateImageForm = ({
             </FormItem>
           )}
         />
-        {!isOauth ? (
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="******"
-                    type="password"
-                    disabled={isPending}
-                    className="text-black"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        ) : null}
         <FormError message={error} />
         <FormSuccess message={success} />
         <Button
