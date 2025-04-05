@@ -24,8 +24,8 @@ import { FormSuccess } from "@/components/auth/FormSuccess";
 import { DeleteAccountSchema } from "@/schemas/schema";
 import { useTransition, useState } from "react";
 import { deleteAccount } from "@/server/actions/form/deleteAccount";
-
 import { useRouter } from "next/navigation";
+import { Eye, EyeOff } from "lucide-react";
 
 export const DeleteAccountForm = ({
   isOauth,
@@ -43,6 +43,7 @@ export const DeleteAccountForm = ({
   const router = useRouter();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<z.infer<typeof DeleteAccountSchema>>({
     resolver: zodResolver(DeleteAccountSchema),
@@ -83,13 +84,32 @@ export const DeleteAccountForm = ({
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      placeholder="******"
-                      type="password"
-                      disabled={isPending}
-                      className="text-black"
-                    />
+                    <div className="relative">
+                      <Input
+                        {...field}
+                        placeholder="******"
+                        type={showPassword ? "text" : "password"}
+                        disabled={isPending}
+                        className="text-black"
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        onClick={() => setShowPassword(!showPassword)}
+                        disabled={isPending}
+                      >
+                        {showPassword ? (
+                          <EyeOff className="h-4 w-4" />
+                        ) : (
+                          <Eye className="h-4 w-4" />
+                        )}
+                        <span className="sr-only">
+                          {showPassword ? "Hide password" : "Show password"}
+                        </span>
+                      </Button>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
