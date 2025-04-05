@@ -32,6 +32,7 @@ export const updatePassword = async (
     if (!user?.password || !user)
       return { error: "Failed to retrieve user data!" };
     const passwordsMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!passwordsMatch) return { error: "Invalid current password!" };
     if (passwordsMatch && newPassword === confirmNewPassword) {
       const hashedPassword = await bcrypt.hash(newPassword, 10);
       const passwordUpdated = await updateUserPassword(userId, hashedPassword);
@@ -46,12 +47,12 @@ export const updatePassword = async (
       }
     } else {
       return {
-        error: "Incorrect current password or Passwords do not match!",
+        error: "New passwords do not match!",
       };
     }
   } catch {
     return {
-      error: "Failed to update password!",
+      error: "Something went wrong!",
     };
   }
 };
