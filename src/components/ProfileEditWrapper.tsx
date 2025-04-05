@@ -10,7 +10,6 @@ import {
 
 interface ProfileFormProps {
   buttonName: string;
-  isOauth: boolean | undefined;
   children: React.ReactNode;
 }
 
