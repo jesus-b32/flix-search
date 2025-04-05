@@ -7,13 +7,13 @@ import {
 } from "@/routes";
 
 /**
- * Middleware that checks if the user is logged in or not.
- * If the user is not logged in, it will redirect the user to the login page on protected routes
- * If the user is logged in, it will redirect the user to the settings page on auth routes
+ * Middleware checks if a user is logged in or not.
+ * If the user is not logged in and tries to access protectedRoutes, it will redirect the user to the login page.
+ * If the user is logged in and tries to access authRoutes, it will redirect the user to the home page.
  */
 export default auth((req) => {
   const { nextUrl } = req;
-  const isLoggedIn = !!req.auth;
+  const isLoggedIn = !!req.auth; //"!!" turn req.auth to a boolean
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
   const isProtectedRoute =
@@ -23,21 +23,35 @@ export default auth((req) => {
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
   //must be in this order when checking routes
-  // if (isApiAuthRoute) return null;
+  if (isApiAuthRoute) return;
 
   if (isAuthRoute) {
     if (isLoggedIn) {
       return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
     }
-    // return null;
+    return;
   }
 
   if (!isLoggedIn && isProtectedRoute) {
-    return Response.redirect(new URL("/auth/login", nextUrl));
+    // Store the current URL path that the user is trying to access
+    let callbackUrl = nextUrl.pathname;
+
+    // If there are query parameters in the URL, append them to the callback URL
+    if (nextUrl.search) {
+      callbackUrl += nextUrl.search;
+    }
+
+    // URL-encode the callback URL to safely include it as a query parameter
+    const encodedCallbackUrl = encodeURIComponent(callbackUrl);
+
+    // Redirect the unauthenticated user to the login page
+    // Include the encoded callback URL as a query parameter so the user can be redirected back to their originally requested page after successful login
+    return Response.redirect(
+      new URL(`/auth/login?callbackUrl=${encodedCallbackUrl}`, nextUrl),
+    );
   }
 
-  // default is to all every other route
-  // return null;
+  return;
 });
 
 // Don't invoke Middleware on the paths that match the regex pattern below

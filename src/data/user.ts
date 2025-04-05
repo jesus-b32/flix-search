@@ -1,6 +1,5 @@
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
-import { accounts } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
 
 export const getUserByEmail = async (email: string) => {
@@ -25,13 +24,42 @@ export const getUserById = async (id: string) => {
   }
 };
 
-export const updateUserEmailVerified = async (id: string) => {
+/**
+ * Used to update email verified status for all users. Update email as well so this function can be reused when a user wants to modify their email. When user changes email, token is generated with that new email and send verification email to user. Once email is confirmed, then email is updated in db
+ */
+export const updateUserEmailVerified = async (id: string, email: string) => {
   try {
     await db
       .update(users)
-      .set({ emailVerified: new Date() })
+      .set({
+        emailVerified: new Date(),
+        email: email,
+      })
       .where(eq(users.id, id));
     return true;
+  } catch {
+    return null;
+  }
+};
+
+export const createNewUser = async (
+  name: string,
+  email: string,
+  hashedPassword: string,
+) => {
+  try {
+    const newUser = await db
+      .insert(users)
+      .values({
+        name,
+        email,
+        password: hashedPassword,
+      })
+      .returning({
+        id: users.id,
+      });
+
+    return newUser;
   } catch {
     return null;
   }
@@ -46,23 +74,60 @@ export const deleteUserById = async (id: string) => {
   }
 };
 
-export const isOauthUser = async (id: string) => {
+export const updateUserImage = async (id: string, imageUrl: string) => {
   try {
-    const account = await db.query.accounts.findFirst({
-      where: eq(accounts.userId, id),
-    });
-
-    if (!account) return false;
-
+    await db.update(users).set({ image: imageUrl }).where(eq(users.id, id));
     return true;
   } catch {
     return null;
   }
 };
 
-export const updateUserImage = async (id: string, imageUrl: string) => {
+export const updateUserName = async (id: string, name: string) => {
   try {
-    await db.update(users).set({ image: imageUrl }).where(eq(users.id, id));
+    await db.update(users).set({ name: name }).where(eq(users.id, id));
+    return true;
+  } catch {
+    return null;
+  }
+};
+
+export const updateUserEmail = async (id: string, email: string) => {
+  try {
+    await db
+      .update(users)
+      .set({ email: email, emailVerified: null })
+      .where(eq(users.id, id));
+    return true;
+  } catch {
+    return null;
+  }
+};
+
+export const updateUserPassword = async (
+  id: string,
+  hashedPassword: string,
+) => {
+  try {
+    await db
+      .update(users)
+      .set({ password: hashedPassword })
+      .where(eq(users.id, id));
+    return true;
+  } catch {
+    return null;
+  }
+};
+
+export const updateUserTwoFactorEnabled = async (
+  id: string,
+  isTwoFactorEnabled: boolean,
+) => {
+  try {
+    await db
+      .update(users)
+      .set({ isTwoFactorEnabled: isTwoFactorEnabled })
+      .where(eq(users.id, id));
     return true;
   } catch {
     return null;

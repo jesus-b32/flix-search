@@ -14,7 +14,7 @@ import { getVideoList, isVideoInList, getVideo } from "@/data/videoList";
 import WatchlistButton from "@/components/WatchlistButton";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import type { Session } from "next-auth";
+import type { ExtendedUser } from "next-auth";
 
 /**
  * Creates a server component that displays a movie or TV show's details
@@ -23,10 +23,10 @@ import type { Session } from "next-auth";
  */
 export default async function DetailCard({
   details,
-  session,
+  user,
 }: {
   details: movieDetails | tvDetails;
-  session: Session | null;
+  user: ExtendedUser | undefined;
 }) {
   // session is null if user is not logged in
   const mediaType = "title" in details ? "movie" : "tv";
@@ -39,9 +39,9 @@ export default async function DetailCard({
    * get watchlist from db if user is logged in;
    * code breaks if watchlist set to null
    */
-  const watchlist = !session
+  const watchlist = !user
     ? false
-    : await getVideoList(session.user?.id ?? "", "watchlist");
+    : await getVideoList(user?.id ?? "", "watchlist");
 
   /**
    * check if video is in watchlist
@@ -87,7 +87,7 @@ export default async function DetailCard({
           <p>{details?.overview || "No Overview"}</p>
         </CardContent>
         <CardFooter className="flex justify-center md:justify-start">
-          {session ? (
+          {user ? (
             <WatchlistButton
               tmdbId={details.id}
               mediaType={mediaType}
@@ -99,7 +99,7 @@ export default async function DetailCard({
                   : (details?.first_air_date ?? "")
               }
               posterPath={details?.poster_path ?? ""}
-              userId={session?.user?.id ?? ""}
+              userId={user?.id ?? ""}
               videoId={videoId}
               watchlist={watchlist}
               isVideoInWatchlist={isVideoInWatchlist}

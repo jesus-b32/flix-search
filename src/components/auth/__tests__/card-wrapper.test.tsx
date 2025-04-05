@@ -1,6 +1,6 @@
 import { expect, it, describe } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { CardWrapper } from "@/components/auth/card-wrapper";
+import { CardWrapper } from "@/components/auth/CardWrapper";
 
 describe("CardWrapper", () => {
   it("should render the card wrapper", () => {

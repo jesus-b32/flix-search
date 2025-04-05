@@ -10,7 +10,7 @@ import { getCountries } from "@/server/actions/actions";
 import AvailabilityByProvider from "@/components/detailPage/AvailabilityByProvider";
 import AvailabilityByCountry from "@/components/detailPage/AvailabilityByCountry";
 import Recommendations from "@/components/detailPage/Recommendations";
-import { auth } from "@/auth";
+import { currentUser } from "@/lib/currentUser";
 
 type Props = {
   params: { id: string };
@@ -43,7 +43,7 @@ export default async function MovieDetails({
     watch_region: string;
   };
 }) {
-  const session = await auth();
+  const user = await currentUser();
 
   const movieId = Number(params.id);
   const movie = await getMovieDetails(movieId);
@@ -69,7 +69,7 @@ export default async function MovieDetails({
 
   return (
     <div className="flex min-h-screen flex-col items-center divide-y-2 divide-slate-300">
-      <DetailCard details={movie} session={session} />
+      <DetailCard details={movie} user={user} />
       <JustWatchAttribution title={movie.title} />
       <AvailabilityByProvider
         // list of streaming providers for combo box

@@ -1,7 +1,7 @@
 "use server";
 
 import type * as z from "zod";
-import { NewImageSchema } from "@/schemas";
+import { NewImageSchema } from "@/schemas/schema";
 import { getUserById, updateUserImage } from "@/data/user";
 
 import bcrypt from "bcryptjs";
@@ -12,9 +12,9 @@ import bcrypt from "bcryptjs";
  * @param values - the form values of a new image
  * @returns an object with a success message or an error message
  */
-export const image = async (
+export const updateImage = async (
   values: z.infer<typeof NewImageSchema>,
-  isOauth: boolean | null,
+  isOauth: boolean | undefined,
   userId: string,
 ) => {
   const validatedFields = NewImageSchema.safeParse(values);

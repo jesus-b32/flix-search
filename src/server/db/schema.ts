@@ -8,6 +8,7 @@ import {
   unique,
   uuid,
   uniqueIndex,
+  boolean,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
 
@@ -30,6 +31,7 @@ export const users = createTable(
     password: text("password"),
     emailVerified: timestamp("email_verified", { mode: "date" }),
     image: text("image"),
+    isTwoFactorEnabled: boolean("isTwoFactorEnabled").default(false).notNull(),
   },
   (t) => {
     return {
@@ -147,3 +149,37 @@ export const verificationTokens = createTable(
     unq: unique().on(t.email, t.token),
   }),
 );
+
+export const passwordResetTokens = createTable(
+  "password_reset_tokens",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    email: text("email"),
+    token: text("token").unique(),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
+  },
+  (t) => ({
+    unq: unique().on(t.email, t.token),
+  }),
+);
+
+export const twoFactorTokens = createTable(
+  "two-factor-tokens",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    email: text("email"),
+    token: text("token").unique(),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
+  },
+  (t) => ({
+    unq: unique().on(t.email, t.token),
+  }),
+);
+
+export const twoFactorConfirmations = createTable("two-factor-confirmations", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: text("user_id")
+    .notNull()
+    .unique()
+    .references(() => users.id, { onDelete: "cascade" }),
+});

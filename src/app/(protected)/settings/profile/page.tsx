@@ -1,20 +1,24 @@
 import { type Metadata } from "next";
-import { auth } from "@/auth";
+import { currentUser } from "@/lib/currentUser";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 import ProfileEditWrapper from "@/components/ProfileEditWrapper";
-import { isOauthUser } from "@/data/user";
-import { ImageForm } from "@/components/form/ImageForm";
+
+//forms
+import { UpdateImageForm } from "@/components/form/UpdateImageForm";
+import { UpdateNameForm } from "@/components/form/UpdateNameForm";
+import { UpdateEmailForm } from "@/components/form/UpdateEmailForm";
+import { UpdatePasswordForm } from "@/components/form/UpdatePasswordForm";
+import { UpdateTwoFactorForm } from "@/components/form/UpdateTwoFactorForm";
 
 export const metadata: Metadata = {
   title: "My Profile",
 };
 
 export default async function SettingProfilePage() {
-  const session = await auth();
-  const isOauth = await isOauthUser(session?.user?.id ?? "");
+  const user = await currentUser();
 
   return (
     <div className="w-full">
@@ -26,30 +30,62 @@ export default async function SettingProfilePage() {
         <Input
           id="name"
           className="w-full text-black"
-          defaultValue={session?.user?.name ?? ""}
+          defaultValue={user?.name ?? ""}
           disabled
         />
-        <Label htmlFor="email" className="font-semibold">
-          Email
-        </Label>
-        <Input
-          id="email"
-          className="w-full text-black"
-          defaultValue={session?.user?.email ?? ""}
-          disabled
-        />
+        <ProfileEditWrapper valueBeingEdited="Name" isOauth={user?.isOAuth}>
+          <UpdateNameForm userId={user?.id ?? ""} />
+        </ProfileEditWrapper>
         <Label htmlFor="image" className="font-semibold">
           Profile Image
         </Label>
         <Input
           id="image"
           className="w-full text-black"
-          defaultValue={session?.user?.image ?? ""}
+          defaultValue={user?.image ?? ""}
           disabled
         />
-        <ProfileEditWrapper valueBeingEdited="image" isOauth={isOauth}>
-          <ImageForm isOauth={isOauth} userId={session?.user?.id ?? ""} />
+        <ProfileEditWrapper valueBeingEdited="Image" isOauth={user?.isOAuth}>
+          <UpdateImageForm isOauth={user?.isOAuth} userId={user?.id ?? ""} />
         </ProfileEditWrapper>
+        {!user?.isOAuth && (
+          <>
+            <Label htmlFor="email" className="font-semibold">
+              Email
+            </Label>
+            <Input
+              id="email"
+              className="w-full text-black"
+              defaultValue={user?.email ?? ""}
+              disabled
+            />
+            <ProfileEditWrapper
+              valueBeingEdited="Email"
+              isOauth={user?.isOAuth}
+            >
+              <UpdateEmailForm userId={user?.id ?? ""} />
+            </ProfileEditWrapper>
+
+            <Label className="font-semibold">Password</Label>
+            <ProfileEditWrapper
+              valueBeingEdited="Password"
+              isOauth={user?.isOAuth}
+            >
+              <UpdatePasswordForm userId={user?.id ?? ""} />
+            </ProfileEditWrapper>
+
+            <Label className="font-semibold">Two Factor Authentication</Label>
+            <ProfileEditWrapper
+              valueBeingEdited="Two Factor Authentication"
+              isOauth={user?.isOAuth}
+            >
+              <UpdateTwoFactorForm
+                userId={user?.id ?? ""}
+                isTwoFactorEnabled={user?.isTwoFactorEnabled ?? false}
+              />
+            </ProfileEditWrapper>
+          </>
+        )}
       </section>
     </div>
   );

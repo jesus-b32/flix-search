@@ -1,6 +1,6 @@
 // src/lib/tmdapi.test.ts
 import { describe, expect, it, vi } from "vitest";
-import { getData } from "@/lib/tmdapi";
+import { getData } from "@/lib/tmdbApi";
 
 vi.mock("../env", () => ({
   env: { TMDB_API_KEY: "mock-tmdb-api-key" },

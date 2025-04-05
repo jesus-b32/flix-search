@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { FormSuccess } from "@/components/auth/form-success";
+import { FormSuccess } from "@/components/auth/FormSuccess";
 
 describe("FormSuccess", () => {
   it("should render the form success with message", () => {

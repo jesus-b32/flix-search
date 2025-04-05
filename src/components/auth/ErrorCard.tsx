@@ -1,4 +1,4 @@
-import { CardWrapper } from "@/components/auth/card-wrapper";
+import { CardWrapper } from "@/components/auth/CardWrapper";
 import { TriangleAlert } from "lucide-react";
 
 /**

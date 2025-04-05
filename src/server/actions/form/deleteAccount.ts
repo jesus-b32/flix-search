@@ -1,7 +1,7 @@
 "use server";
 
 import type * as z from "zod";
-import { DeleteAccountSchema } from "@/schemas";
+import { DeleteAccountSchema } from "@/schemas/schema";
 import { getUserById, deleteUserById } from "@/data/user";
 import { signOut } from "@/auth";
 
@@ -15,7 +15,7 @@ import bcrypt from "bcryptjs";
  */
 export const deleteAccount = async (
   values: z.infer<typeof DeleteAccountSchema>,
-  isOauth: boolean | null,
+  isOauth: boolean | undefined,
   userId: string,
 ) => {
   const validatedFields = DeleteAccountSchema.safeParse(values);

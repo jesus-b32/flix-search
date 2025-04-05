@@ -33,7 +33,9 @@ export const env = createEnv({
     //   // VERCEL_URL doesn't include `https` so it cant be validated as a URL
     //   process.env.VERCEL ? z.string() : z.string().url(),
     // ),
+    RESEND_API_KEY: z.string(),
     TMDB_API_KEY: z.string(),
+    APP_DOMAIN: z.string(),
   },
 
   /**
@@ -64,7 +66,9 @@ export const env = createEnv({
         : process.env.GITHUB_CLIENT_SECRET_DEV,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+    RESEND_API_KEY: process.env.RESEND_API_KEY,
     TMDB_API_KEY: process.env.TMDB_API_KEY,
+    APP_DOMAIN: process.env.APP_DOMAIN,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

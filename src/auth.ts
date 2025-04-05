@@ -10,30 +10,55 @@ import { encode as defaultEncode } from "next-auth/jwt";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { db } from "@/server/db";
 import { users, accounts, sessions } from "@/server/db/schema";
-import { LoginSchema } from "@/schemas";
+import { LoginSchema } from "@/schemas/schema";
+import { getUserById } from "@/data/user";
 import { getUserByEmail } from "@/data/user";
 import { updateUserEmailVerified } from "@/data/user";
 import { createVideoList } from "@/data/videoList";
+import {
+  getTwoFactorConfirmationByUserId,
+  deleteTwoFactorConfirmation,
+} from "@/data/twoFactorConfirmation";
 
 //other imports
 import { env } from "@/env";
 import { v4 as uuid } from "uuid";
 import bcrypt from "bcryptjs";
+import type { Adapter } from "@auth/core/adapters";
+import { getAccountByUserId } from "@/data/account";
 
 const adapter = DrizzleAdapter(db, {
   usersTable: users,
   accountsTable: accounts,
   sessionsTable: sessions,
-});
+}) as Adapter;
 
 declare module "next-auth" {
   /**
    * Returned by `auth`, `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
    */
   interface Session {
-    // default User session has property of: id, name, email, image
-    // https://next-auth.js.org/getting-started/typescript
-    user: DefaultSession["user"];
+    user: ExtendedUser;
+  }
+
+  // default User session has property of: id, name, email, image
+  // added isTwoFactorEnabled
+  // https://next-auth.js.org/getting-started/typescript
+  type ExtendedUser = {
+    isTwoFactorEnabled: boolean;
+    isOAuth: boolean;
+  } & DefaultSession["user"];
+
+  // Keep this to ensure the User interface includes our custom properties
+  interface User {
+    isTwoFactorEnabled: boolean;
+  }
+}
+
+declare module "next-auth/jwt" {
+  /** Returned by the `jwt` callback and `auth`, when using JWT sessions */
+  interface JWT {
+    credentials: boolean;
   }
 }
 
@@ -107,8 +132,8 @@ const authConfig: NextAuthConfig = {
      * @param user - The user object containing the user's details.
      */
     async linkAccount({ user }) {
-      if (!user.id) return;
-      await updateUserEmailVerified(user.id);
+      if (!user.id || !user.email) return;
+      await updateUserEmailVerified(user.id, user.email);
       await createVideoList(user.id, "watchlist");
     },
   },
@@ -125,18 +150,31 @@ const authConfig: NextAuthConfig = {
      * @param user - The user object containing the user's details.
      * @returns boolean indicating whether signin was successful.
      */
-    async signIn({ user }) {
-      //check if user exists
+    async signIn({ user, account }) {
+      // Allow Oauth without Email verification
+      if (account?.provider !== "credentials") return true;
+
       if (!user.id) return false;
-      // const existingUser = await getUserById(user.id);
-      // if (!existingUser?.emailVerified || !existingUser) return false;
+
+      const existingUser = await getUserById(user.id);
+
+      if (!existingUser?.emailVerified) return false;
+      if (existingUser.isTwoFactorEnabled) {
+        const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(
+          existingUser.id,
+        );
+
+        if (!twoFactorConfirmation) return false;
+
+        // Delete two factor confirmation for next sign in
+        await deleteTwoFactorConfirmation(twoFactorConfirmation.id);
+      }
+
       return true;
     },
 
     /**
-     * This is a custom `jwt` function that adds a `credentials` key to the `token` object when the user logs in with the credentials provider.
-     * @param params - The parameters passed to the `jwt` function
-     * @returns The updated token object
+     * This is a `jwt` callback that adds a `credentials` key to the `token` object when the user logs in with the credentials provider. Will be used in custom encode function below for creating session tokens for credential users.
      */
     async jwt({ token, account }) {
       if (account?.provider === "credentials") {
@@ -146,12 +184,11 @@ const authConfig: NextAuthConfig = {
     },
 
     /**
-     * This is a custom `session` function that adds the desired user's data to the session.
-     * @param session - The session object
-     * @param user - The user object
-     * @returns The updated session object
+     * This `session` callback adds the desired user's data to the session.
      */
-    session({ session, user }) {
+    async session({ session, user }) {
+      const account = await getAccountByUserId(user.id);
+
       return {
         ...session,
         user: {
@@ -159,6 +196,8 @@ const authConfig: NextAuthConfig = {
           name: user.name,
           email: user.email,
           image: user.image,
+          isTwoFactorEnabled: user.isTwoFactorEnabled,
+          isOAuth: !!account,
         },
       };
     },
@@ -167,7 +206,7 @@ const authConfig: NextAuthConfig = {
   /**
    * JSON Web Tokens can be used for session tokens if enabled with session: { strategy: "jwt" } option.
    * JSON Web Tokens are enabled by default if you have not specified an adapter.
-   * JSON Web Tokens are encrypted (JWE) by default. We recommend you keep this behaviour.
+   * JSON Web Tokens are encrypted (JWE) by default. We recommend you keep this behavior.
    * https://next-auth.js.org/configuration/options#jwt
    */
   jwt: {
