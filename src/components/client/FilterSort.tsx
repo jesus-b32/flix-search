@@ -272,7 +272,7 @@ export default function FilterSort({
       <Card className="w-[95%] border-none md:w-10/12 lg:w-full">
         <CardHeader>
           <CardTitle className="text-center font-bold">
-            {mediaType === "movie" ? "Filter Movies" : "Filter TV Shows"}
+            {mediaType === "movie" ? "Filter Movies" : "Filter Shows"}
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
@@ -312,13 +312,11 @@ export default function FilterSort({
               <SheetContent side="left" className="text-black">
                 <SheetHeader>
                   <SheetTitle>
-                    {mediaType === "movie"
-                      ? "Filter Movies"
-                      : " Filter TV Shows"}
+                    {mediaType === "movie" ? "Filter Movies" : "Filter Shows"}
                   </SheetTitle>
                   <SheetDescription>
                     Apply filters and sorting options to find your perfect{" "}
-                    {mediaType === "movie" ? "movie" : "TV show"}.
+                    {mediaType === "movie" ? "movie" : "show"}.
                   </SheetDescription>
                 </SheetHeader>
                 <div className="mt-4 flex h-[calc(100vh-8rem)] flex-col overflow-y-auto">

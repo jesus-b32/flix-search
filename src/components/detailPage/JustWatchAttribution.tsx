@@ -19,7 +19,7 @@ export default function JustWatchAttribution({ title }: { title: string }) {
       </h2>
       <p className="text-center md:text-left">
         JustWatch makes it easy to find out where you can legally watch your
-        favorite movies & TV shows online. Visit{" "}
+        favorite movies & shows online. Visit{" "}
         <a href="https://www.justwatch.com/" className="underline">
           JustWatch
         </a>{" "}

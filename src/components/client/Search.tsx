@@ -68,7 +68,7 @@ export default function Search({ onSearch }: SearchProps) {
     } else if (mediaType === "tv-show") {
       router.push(`/search/tv/?${params.toString()}`);
     }
-    
+
     // Call the onSearch callback if provided
     onSearch?.();
   }
@@ -87,7 +87,7 @@ export default function Search({ onSearch }: SearchProps) {
               <FormItem className="flex-grow">
                 <FormControl>
                   <Input
-                    placeholder="Search Movies & TV Shows"
+                    placeholder="Search movies & shows"
                     {...field}
                     className="text-black"
                     aria-label="search term"
@@ -128,7 +128,7 @@ export default function Search({ onSearch }: SearchProps) {
                         className="border-white text-white"
                       />
                     </FormControl>
-                    <span>TV Show</span>
+                    <span>Show</span>
                   </FormItem>
                 </RadioGroup>
               </FormControl>

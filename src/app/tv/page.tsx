@@ -78,7 +78,7 @@ export default async function DiscoverTvShowPage({
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center overflow-x-hidden px-4">
-      <h1 className="my-5 text-4xl font-bold">Discover TV Shows</h1>
+      <h1 className="my-5 text-4xl font-bold">Discover Shows</h1>
       <div className="flex w-full flex-col gap-y-6 md:items-center lg:w-11/12 lg:flex-row lg:items-start lg:gap-x-4">
         <div className="flex w-full justify-center md:w-full lg:w-60">
           <FilterSort
@@ -97,7 +97,7 @@ export default async function DiscoverTvShowPage({
             ))
           ) : (
             <h2 className="text-2xl font-bold">
-              No TV shows found that match your selected filter options.
+              No shows found that match your selected filter options.
             </h2>
           )}
         </div>
