@@ -1,11 +1,11 @@
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
   CardFooter,
 } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 import { ImageOff } from "lucide-react";
 import type { movieDetails } from "@/server/actions/movies/types";
@@ -15,6 +15,7 @@ import WatchlistButton from "@/components/WatchlistButton";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import type { ExtendedUser } from "next-auth";
+import { timeConvert } from "@/lib/timeConvert";
 
 /**
  * Creates a server component that displays a movie or TV show's details
@@ -72,21 +73,56 @@ export default async function DetailCard({
       <div className="flex flex-col md:w-1/2 lg:w-7/12">
         <CardHeader className="pb-0 text-center md:text-left">
           <CardTitle className="font-bold">
-            {"title" in details ? details.title : details.name}
-          </CardTitle>
-          <CardDescription>
             {"title" in details
-              ? `${details?.release_date || "No Release Date"} | ${details?.runtime || "?"} minutes`
-              : `${details?.first_air_date || "FIrst Air Date Unknown"} | ${details?.number_of_seasons || "?"} seasons | ${details?.number_of_episodes || "?"} episodes`}
-          </CardDescription>
+              ? `${details.title} ${details.release_date ? `(${details.release_date.slice(0, 4)})` : ""}`
+              : `${details.name} ${details.first_air_date ? `(${details.first_air_date.slice(0, 4)})` : ""}`}
+          </CardTitle>
+          <div className="flex flex-wrap justify-center gap-2 md:justify-start">
+            {details.vote_average ? (
+              <Badge>{`⭐ ${details.vote_average.toFixed(1)}/10`}</Badge>
+            ) : null}
+            {details.vote_count ? (
+              <Badge>{`${details.vote_count.toLocaleString()} votes`}</Badge>
+            ) : null}
+            {"title" in details ? (
+              <>
+                {details.runtime ? (
+                  <Badge>{timeConvert(details.runtime)}</Badge>
+                ) : null}
+              </>
+            ) : (
+              <>
+                {details.number_of_seasons ? (
+                  <Badge>{`${details.number_of_seasons} ${details.number_of_seasons <= 1 ? "Season" : "Seasons"} ${details.number_of_episodes} ${details.number_of_episodes <= 1 ? "Episode" : "Episodes"}`}</Badge>
+                ) : null}
+              </>
+            )}
+          </div>
         </CardHeader>
-        <CardContent className="pb-3 text-center md:text-left">
-          <h4 className="text-lg font-semibold">Genres</h4>
-          <p>{`${details?.genres.map((genre) => genre.name).join(", ") || "N/A"}`}</p>
-          <h4 className="text-lg font-semibold">Overview</h4>
+        <CardContent className="py-3 text-center md:text-left">
+          {details.genres.length > 0 && (
+            <>
+              <h4 className="text-lg font-semibold">
+                {details.genres.length > 1 ? "Genres" : "Genre"}
+              </h4>
+              <div className="flex flex-wrap justify-center gap-2 md:justify-start">
+                {details.genres.map((genre) => (
+                  <Badge key={genre.id}>{genre.name}</Badge>
+                ))}
+              </div>
+            </>
+          )}
+          <h4 className="pt-3 text-lg font-semibold">Overview</h4>
           <p>{details?.overview || "No Overview"}</p>
         </CardContent>
-        <CardFooter className="flex justify-center md:justify-start">
+        <CardFooter className="flex flex-col justify-center gap-2 md:flex-row md:justify-start">
+          {"title" in details && details.imdb_id ? (
+            <Button asChild size={"sm"} className="bg-yellow-500">
+              <Link href={`https://www.imdb.com/title/${details.imdb_id}/`}>
+                IMDb
+              </Link>
+            </Button>
+          ) : null}
           {user ? (
             <WatchlistButton
               tmdbId={details.id}
@@ -106,7 +142,7 @@ export default async function DetailCard({
             />
           ) : (
             <Button asChild size={"sm"}>
-              <Link href="/auth/login">Login to add to watchlist</Link>
+              <Link href="/auth/login">+ Watchlist</Link>
             </Button>
           )}
         </CardFooter>
