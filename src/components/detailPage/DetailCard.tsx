@@ -1,6 +1,7 @@
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
   CardFooter,
@@ -54,7 +55,7 @@ export default async function DetailCard({
 
   return (
     <Card className="mt-6 flex h-fit w-[90%] flex-col items-center border-none md:w-10/12 md:flex-row md:items-start">
-      <div className="flex h-[513px] w-[342px] justify-center md:justify-start">
+      <div className="flex h-auto max-h-[513px] w-auto max-w-[342px] justify-center object-contain md:justify-start">
         {/* image is 342x513 */}
         {details?.poster_path ? (
           <img
@@ -72,12 +73,12 @@ export default async function DetailCard({
       </div>
       <div className="flex flex-col md:w-1/2 lg:w-7/12">
         <CardHeader className="pb-0 text-center md:text-left">
-          <CardTitle className="font-bold">
+          <CardTitle className="text-2xl font-extrabold">
             {"title" in details
               ? `${details.title} ${details.release_date ? `(${details.release_date.slice(0, 4)})` : ""}`
               : `${details.name} ${details.first_air_date ? `(${details.first_air_date.slice(0, 4)})` : ""}`}
           </CardTitle>
-          <div className="flex flex-wrap justify-center gap-2 md:justify-start">
+          <CardDescription className="flex flex-wrap justify-center gap-2 md:justify-start">
             {details.vote_average ? (
               <Badge>{`⭐ ${details.vote_average.toFixed(1)}/10`}</Badge>
             ) : null}
@@ -97,7 +98,7 @@ export default async function DetailCard({
                 ) : null}
               </>
             )}
-          </div>
+          </CardDescription>
         </CardHeader>
         <CardContent className="py-3 text-center md:text-left">
           {details.genres.length > 0 && (
@@ -112,8 +113,7 @@ export default async function DetailCard({
               </div>
             </>
           )}
-          <h4 className="pt-3 text-lg font-semibold">Overview</h4>
-          <p>{details?.overview || "No Overview"}</p>
+          <p className="pt-3">{details?.overview || "No Overview"}</p>
         </CardContent>
         <CardFooter className="flex flex-col justify-center gap-2 md:flex-row md:justify-start">
           {"title" in details
