@@ -116,13 +116,31 @@ export default async function DetailCard({
           <p>{details?.overview || "No Overview"}</p>
         </CardContent>
         <CardFooter className="flex flex-col justify-center gap-2 md:flex-row md:justify-start">
-          {"title" in details && details.imdb_id ? (
-            <Button asChild size={"sm"} className="bg-yellow-500">
-              <Link href={`https://www.imdb.com/title/${details.imdb_id}/`}>
-                IMDb
-              </Link>
-            </Button>
-          ) : null}
+          {"title" in details
+            ? details.imdb_id && (
+                <Button
+                  asChild
+                  size={"sm"}
+                  className="bg-yellow-500 hover:bg-yellow-500/80"
+                >
+                  <Link href={`https://www.imdb.com/title/${details.imdb_id}/`}>
+                    IMDb
+                  </Link>
+                </Button>
+              )
+            : details.external_ids.imdb_id && (
+                <Button
+                  asChild
+                  size={"sm"}
+                  className="bg-yellow-500 hover:bg-yellow-500/80"
+                >
+                  <Link
+                    href={`https://www.imdb.com/title/${details.external_ids.imdb_id}/`}
+                  >
+                    IMDb
+                  </Link>
+                </Button>
+              )}
           {user ? (
             <WatchlistButton
               tmdbId={details.id}

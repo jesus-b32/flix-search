@@ -60,6 +60,19 @@ export type TvRecommendations = {
   total_results: number;
 };
 
+export type externalIds = {
+  id: number;
+  imdb_id: string | null;
+  freebase_mid: string | null;
+  freebase_id: string | null;
+  tvdb_id: number | null;
+  tvrage_id: number | null;
+  wikidata_id: string | null;
+  facebook_id: string | null;
+  instagram_id: string | null;
+  twitter_id: string | null;
+};
+
 /**
  * type for tv show details
  * @see https://developer.themoviedb.org/reference/tv-series-details
@@ -141,4 +154,5 @@ export type tvDetails = {
     results: watchProviders;
   };
   recommendations: TvRecommendations;
+  external_ids: externalIds;
 };

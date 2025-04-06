@@ -281,6 +281,18 @@ export const mockTvDetails: tvDetails = {
       },
     },
   },
+  external_ids: {
+    id: 1,
+    imdb_id: "tt1234567",
+    freebase_mid: "tt1234567",
+    freebase_id: "tt1234567",
+    tvdb_id: 1234567,
+    tvrage_id: 1234567,
+    wikidata_id: "tt1234567",
+    facebook_id: "tt1234567",
+    instagram_id: "tt1234567",
+    twitter_id: "tt1234567",
+  },
 };
 
 export const mockNoWatchProviderData: movieDetails = {
