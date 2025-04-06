@@ -59,7 +59,7 @@ export default function WatchlistButton({
         disabled={userId === ""}
         className="w-full md:w-auto"
       >
-        {inWatchlist ? "Remove" : "Add to Watchlist"}
+        {inWatchlist ? "- Watchlist" : "+ Watchlist"}
       </Button>
     </form>
   );

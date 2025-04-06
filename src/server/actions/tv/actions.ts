@@ -33,7 +33,7 @@ export async function searchTvShows(searchTerm: string, page = 1) {
  */
 export async function getTvShowDetails(seriesId: number) {
   const results = await getData<tvDetails>(
-    `/tv/${seriesId}?append_to_response=watch%2Fproviders,recommendations&language=en-US`,
+    `/tv/${seriesId}?append_to_response=watch%2Fproviders,recommendations,external_ids&language=en-US`,
   );
   return results;
 }
