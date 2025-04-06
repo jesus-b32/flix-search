@@ -11,14 +11,13 @@ export default function About() {
       <section className="flex w-10/12 flex-col items-center md:items-start">
         <h2 className="text-2xl font-semibold">What is The Flix Search?</h2>
         <p className="text-justify">
-          The Flix Search is a web application that will help you easily find
-          what streaming services host your favorite movies and TV shows. You
-          can check the streaming availability of a movie or TV show by country
-          to see all streaming platform that has that movie or TV show
-          available. Another way to view streaming availability is by streaming
-          platform. You can select a streaming platform and see which countries
-          have the movie or TV show you want to watch available on that
-          platform.
+          The Flix Search will help you easily find what streaming services host
+          your favorite movies and shows. You can check the streaming
+          availability of a movie or show by country to see all streaming
+          platform that has that movie or show available. Another way to view
+          streaming availability is by streaming platform. You can select a
+          streaming platform and see which countries have the movie or show you
+          want to watch available on that platform.
         </p>
       </section>
 
@@ -27,15 +26,15 @@ export default function About() {
           How do I use The Flix Search?
         </h2>
         <p className="text-justify">
-          Just simply search for what you want to watch. Select the movie or TV
+          Just simply search for what you want to watch. Select the movie or
           show you want to watch. Find out which streaming services has the
-          movie or TV show available and in which countries. Save it to your
-          favorites or watchlist.
+          movie or show available and in which countries. Save it to your
+          watchlist.
         </p>
       </section>
 
       <section className="flex w-10/12 flex-col items-center md:items-start">
-        <h2 className="text-2xl font-semibold">Movie and TV Data Source</h2>
+        <h2 className="text-2xl font-semibold">Movie and Show Data Source</h2>
         <p className="text-justify">
           The Flix Search uses The Movie Database (TMDB) and the TMDB APIs to
           access movie and show data., The Flix Search is not endorsed,

@@ -8,10 +8,10 @@ export default function HomePage() {
           <span className="text-[hsl(280,100%,70%)]">Welcome</span> to The Flix
           Search
         </h1>
-        <p className="text-2xl">Find your next movie or series</p>
+        <p className="text-2xl">Find your next favorite movie or show</p>
       </div>
 
-      {/* search bar component for movies and series searching*/}
+      {/* search bar component for movies and show searching*/}
       <Search />
 
       <div className="my-6 flex w-10/12 flex-col items-center gap-4">
@@ -21,11 +21,11 @@ export default function HomePage() {
           alt="Image of some streaming providers"
         />
         <h2 className="text-center text-2xl font-semibold">
-          Movie and TV Show Searching made Easy
+          Movie and Show Searching made Easy
         </h2>
         <p className="text-center text-xl">
           The Flix Search helps you find which streaming services have your
-          favorite movies and series with a simple search.
+          favorite movies and shows with a simple search.
         </p>
       </div>
     </main>
