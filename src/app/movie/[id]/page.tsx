@@ -11,6 +11,7 @@ import AvailabilityByProvider from "@/components/detailPage/AvailabilityByProvid
 import AvailabilityByCountry from "@/components/detailPage/AvailabilityByCountry";
 import Recommendations from "@/components/detailPage/Recommendations";
 import { currentUser } from "@/lib/currentUser";
+import AvailabilityToggle from "@/components/client/AvailabilityToggle";
 
 type Props = {
   params: { id: string };
@@ -52,7 +53,6 @@ export default async function MovieDetails({
   // get the selected streaming provider from the search params
   // if not provided, default to '8'(Netflix)
   const selectedStreamingProvider = searchParams?.streamingProvider || "8";
-
   const selectedCountry = searchParams?.watch_region || "US";
 
   if (movie instanceof Error) {
@@ -67,22 +67,31 @@ export default async function MovieDetails({
     throw new Error(`Failed to fetch country data: ${countries}`);
   }
 
+  // Pre-render the server components
+  const providerView = (
+    <AvailabilityByProvider
+      streamingProviderList={streamingProviders}
+      details={movie}
+      selectedStreamingProviderId={selectedStreamingProvider}
+      countries={countries}
+    />
+  );
+
+  const countryView = (
+    <AvailabilityByCountry
+      details={movie}
+      selectedCountry={selectedCountry}
+      countries={countries}
+    />
+  );
+
   return (
-    <div className="flex min-h-screen flex-col items-center divide-y-2 divide-slate-300">
+    <div className="flex min-h-screen flex-col items-center">
       <DetailCard details={movie} user={user} />
       <JustWatchAttribution title={movie.title} />
-      <AvailabilityByProvider
-        // list of streaming providers for combo box
-        streamingProviderList={streamingProviders}
-        // will have countries that match the selected streaming provider
-        details={movie}
-        selectedStreamingProviderId={selectedStreamingProvider}
-        countries={countries}
-      />
-      <AvailabilityByCountry
-        details={movie}
-        selectedCountry={selectedCountry}
-        countries={countries}
+      <AvailabilityToggle
+        providerView={providerView}
+        countryView={countryView}
       />
       <Recommendations recommendations={movie.recommendations} />
     </div>

@@ -57,42 +57,53 @@ export default function AvailabilityByProvider({
               {`${title} is available on ${selectedStreamingProviderName} in the following countries:`}
             </h2>
             <div className="grid grid-cols-1 justify-items-center gap-4 min-[370px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+              {/* gets all the provider categories ("flatrate", "rent", "buy") for a country */}
               {Object.entries(watchProviders).map(
-                ([country, providerCountry]) =>
-                  Object.values(providerCountry).map((providerDetails) =>
-                    typeof providerDetails !== "string"
-                      ? providerDetails.map((provider) =>
+                ([country, providerCountry]) => {
+                  // Check if the selected streaming provider exists in any category for this country
+                  const hasSelectedProvider = Object.values(
+                    providerCountry,
+                  ).some(
+                    //checks if at least one category contains our provider
+                    (providerDetails) =>
+                      typeof providerDetails !== "string" &&
+                      providerDetails.some(
+                        //checks if any provider in the category has an ID matching our selected provider
+                        (provider) =>
                           provider.provider_id.toString() ===
-                          selectedStreamingProviderId ? (
-                            <Card
-                              key={country}
-                              className="flex h-48 w-40 flex-col items-center border-none"
-                            >
-                              <div className="flex justify-center">
-                                <img
-                                  alt={`${
-                                    countries.find(
-                                      (nation) => nation.iso_3166_1 === country,
-                                    )?.native_name ?? "N/A"
-                                  } flag`}
-                                  src={`http://purecatamphetamine.github.io/country-flag-icons/3x2/${country}.svg`}
-                                  className="h-auto w-40 rounded-t-lg border-b border-slate-300 object-cover"
-                                />
-                              </div>
-                              <div className="flex flex-col flex-wrap">
-                                <CardHeader className="px-1 pt-2">
-                                  <CardTitle className="text-center text-xl">
-                                    {countries.find(
-                                      (nation) => nation.iso_3166_1 === country,
-                                    )?.native_name ?? "N/A"}
-                                  </CardTitle>
-                                </CardHeader>
-                              </div>
-                            </Card>
-                          ) : null,
-                        )
-                      : null,
-                  ),
+                          selectedStreamingProviderId,
+                      ),
+                  );
+
+                  //This prevents duplicate country cards by only rendering a country once if the selected provider is available there, regardless of how many different ways it's available (streaming, rental, purchase, etc.).
+                  return hasSelectedProvider ? (
+                    <Card
+                      key={country}
+                      className="flex h-48 w-40 flex-col items-center border-none"
+                    >
+                      <div className="flex justify-center">
+                        <img
+                          alt={`${
+                            countries.find(
+                              (nation) => nation.iso_3166_1 === country,
+                            )?.native_name ?? "N/A"
+                          } flag`}
+                          src={`http://purecatamphetamine.github.io/country-flag-icons/3x2/${country}.svg`}
+                          className="h-auto w-40 rounded-t-lg border-b border-slate-300 object-cover"
+                        />
+                      </div>
+                      <div className="flex flex-col flex-wrap">
+                        <CardHeader className="px-1 pt-2">
+                          <CardTitle className="text-center text-xl">
+                            {countries.find(
+                              (nation) => nation.iso_3166_1 === country,
+                            )?.native_name ?? "N/A"}
+                          </CardTitle>
+                        </CardHeader>
+                      </div>
+                    </Card>
+                  ) : null;
+                },
               )}
             </div>
           </div>
