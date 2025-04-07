@@ -7,6 +7,7 @@ import {
 import DetailCard from "@/components/detailPage/DetailCard";
 import JustWatchAttribution from "@/components/detailPage/JustWatchAttribution";
 import { getCountries } from "@/server/actions/actions";
+import AvailabilityToggle from "@/components/client/AvailabilityToggle";
 import AvailabilityByProvider from "@/components/detailPage/AvailabilityByProvider";
 import AvailabilityByCountry from "@/components/detailPage/AvailabilityByCountry";
 import Recommendations from "@/components/detailPage/Recommendations";
@@ -52,7 +53,6 @@ export default async function TvDetails({
   // get the selected streaming provider from the search params
   // if not provided, default to '8'(Netflix)
   const selectedStreamingProvider = searchParams?.streamingProvider || "8";
-
   const selectedCountry = searchParams?.watch_region || "US";
 
   if (TvShow instanceof Error) {
@@ -67,22 +67,31 @@ export default async function TvDetails({
     throw new Error(`Failed to fetch country data: ${countries}`);
   }
 
+  // Pre-render the server components
+  const providerView = (
+    <AvailabilityByProvider
+      streamingProviderList={streamingProviders}
+      details={TvShow}
+      selectedStreamingProviderId={selectedStreamingProvider}
+      countries={countries}
+    />
+  );
+
+  const countryView = (
+    <AvailabilityByCountry
+      details={TvShow}
+      selectedCountry={selectedCountry}
+      countries={countries}
+    />
+  );
+
   return (
-    <div className="flex min-h-screen flex-col items-center divide-y-2 divide-slate-300">
+    <div className="flex min-h-screen flex-col items-center">
       <DetailCard details={TvShow} user={user} />
       <JustWatchAttribution title={TvShow.name} />
-      <AvailabilityByProvider
-        // list of streaming providers for combo box
-        streamingProviderList={streamingProviders}
-        // will have countries that match the selected streaming provider
-        details={TvShow}
-        selectedStreamingProviderId={selectedStreamingProvider}
-        countries={countries}
-      />
-      <AvailabilityByCountry
-        details={TvShow}
-        selectedCountry={selectedCountry}
-        countries={countries}
+      <AvailabilityToggle
+        providerView={providerView}
+        countryView={countryView}
       />
       <Recommendations recommendations={TvShow.recommendations} />
     </div>
