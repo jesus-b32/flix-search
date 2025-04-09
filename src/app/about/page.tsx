@@ -52,11 +52,12 @@ export default function About() {
       <section className="flex w-10/12 flex-col items-center md:items-start">
         <h2 className="text-2xl font-semibold">Streaming Data Source</h2>
         <p className="text-justify">
-          The Streaming info in The Flix Search comes from{" "}
+          The Streaming data in The Flix Search comes from{" "}
           <a href="https://www.justwatch.com/" className="underline">
             JustWatch
           </a>
-          . Visit JustWatch for more information.{" "}
+          . JustWatch makes it easy to find out where you can legally watch your
+          favorite movies & shows online. Visit JustWatch for more information.{" "}
           <img
             src="/justwatch.svg"
             alt="Just Watch Logo"

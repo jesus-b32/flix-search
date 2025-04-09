@@ -5,7 +5,6 @@ import {
   getMovieProviders,
 } from "@/server/actions/movies/actions";
 import DetailCard from "@/components/detailPage/DetailCard";
-import JustWatchAttribution from "@/components/detailPage/JustWatchAttribution";
 import { getCountries } from "@/server/actions/actions";
 import AvailabilityByProvider from "@/components/detailPage/AvailabilityByProvider";
 import AvailabilityByCountry from "@/components/detailPage/AvailabilityByCountry";
@@ -88,7 +87,6 @@ export default async function MovieDetails({
   return (
     <div className="flex min-h-screen flex-col items-center">
       <DetailCard details={movie} user={user} />
-      <JustWatchAttribution title={movie.title} />
       <AvailabilityToggle
         providerView={providerView}
         countryView={countryView}
