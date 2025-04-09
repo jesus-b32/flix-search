@@ -5,7 +5,6 @@ import {
   getTvShowProviders,
 } from "@/server/actions/tv/actions";
 import DetailCard from "@/components/detailPage/DetailCard";
-import JustWatchAttribution from "@/components/detailPage/JustWatchAttribution";
 import { getCountries } from "@/server/actions/actions";
 import AvailabilityToggle from "@/components/client/AvailabilityToggle";
 import AvailabilityByProvider from "@/components/detailPage/AvailabilityByProvider";
@@ -88,7 +87,6 @@ export default async function TvDetails({
   return (
     <div className="flex min-h-screen flex-col items-center">
       <DetailCard details={TvShow} user={user} />
-      <JustWatchAttribution title={TvShow.name} />
       <AvailabilityToggle
         providerView={providerView}
         countryView={countryView}

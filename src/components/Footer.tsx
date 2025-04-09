@@ -1,26 +1,90 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { Clapperboard } from "lucide-react";
 
-export default function Footer() {
+export const Footer = () => {
   return (
-    <footer className="bg-slate-600">
-      <div className="px-4 sm:px-6 lg:px-4">
-        <div className="flex flex-col items-start justify-between gap-4 divide-y py-10 md:h-24 md:flex-row md:items-center md:divide-y-0 md:py-0">
-          <div className="flex w-full flex-row justify-center gap-4 px-8 md:justify-start md:gap-2 md:px-0">
-            <Clapperboard className="h-6 w-6" />
-            <span className="text-lg font-bold">The Flix Search</span>
+    <footer className="relative bg-slate-600 text-foreground transition-colors duration-300">
+      <div className="container mx-auto px-4 py-12 md:px-6 lg:px-8">
+        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-3">
+          <div className="relative">
+            <h2 className="mb-4 flex items-center gap-2 text-2xl font-bold tracking-tight">
+              <Clapperboard className="h-6 w-6" />
+              The Flix Search
+            </h2>
+            <p className="text-muted-foreground">
+              The best way to find where your favorite movies and shows are
+              streaming. Discover global streaming availability easily, and
+              access geo-restricted content using a VPN.
+            </p>
+            <div className="absolute -right-4 top-0 h-24 w-24 rounded-full bg-primary/10 blur-2xl" />
           </div>
-          <nav className="flex w-full justify-center gap-4 sm:gap-6 md:justify-end">
-            <Button asChild variant="link">
-              <Link href="/">Home</Link>
-            </Button>
-            <Button asChild variant="link">
-              <Link href="/about">About</Link>
-            </Button>
+          <div>
+            <h3 className="mb-4 text-lg font-semibold">Quick Links</h3>
+            <nav className="space-y-2 text-sm">
+              <Link
+                href="/"
+                className="block transition-colors hover:text-primary"
+              >
+                Home
+              </Link>
+              <Link
+                href="/about"
+                className="block transition-colors hover:text-primary"
+              >
+                About
+              </Link>
+            </nav>
+          </div>
+          <div>
+            <h3 className="mb-4 text-lg font-semibold">Powered by</h3>
+            <Link
+              href="https://www.themoviedb.org/"
+              className="block transition-colors hover:text-primary"
+            >
+              <img
+                src="/tmdb.svg"
+                alt="TMDB Logo"
+                height="15"
+                width="100"
+                className="inline-block"
+              />
+            </Link>
+            <p className="text-xs text-muted-foreground">
+              The Flix Search uses the TMDB API, but is not endorsed, certified,
+              or otherwise approved by TMDB.
+            </p>
+
+            <h4 className="my-2 font-semibold">Streaming Availability Data</h4>
+            <Link
+              href="https://www.justwatch.com/"
+              className="block transition-colors hover:text-primary"
+            >
+              <img
+                src="/justwatch.svg"
+                alt="JustWatch Logo"
+                height="15"
+                width="100"
+              />
+            </Link>
+          </div>
+        </div>
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t pt-8 text-center md:flex-row">
+          <p className="text-sm text-muted-foreground">
+            © 2025 The Flix Search. All rights reserved.
+          </p>
+          <nav className="flex gap-4 text-sm">
+            <a href="#" className="transition-colors hover:text-primary">
+              Privacy Policy
+            </a>
+            <a href="#" className="transition-colors hover:text-primary">
+              Terms of Service
+            </a>
+            <a href="#" className="transition-colors hover:text-primary">
+              Cookie Settings
+            </a>
           </nav>
         </div>
       </div>
     </footer>
   );
-}
+};

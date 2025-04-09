@@ -47,7 +47,7 @@ export default function AvailabilityByCountry({
   return (
     <div className="flex w-full flex-col items-center justify-center py-6 md:w-10/12 md:justify-start">
       {availableCountries.length === 0 ? (
-        <h1 className="text-2xl font-bold">
+        <h1 className="text-center text-2xl font-bold md:text-left">
           {`No Streaming data available for ${title}`}
         </h1>
       ) : (

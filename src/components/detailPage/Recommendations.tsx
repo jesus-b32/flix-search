@@ -19,16 +19,14 @@ export default function Recommendations({
    * Display recommendations based on the provided list of movie or TV show recommendations. Recommendation results can be empty
    */
   return (
-    <div className="flex w-full flex-col items-center py-6 md:w-10/12 md:items-start">
-      <h2 className="mb-3 w-[90%] text-center text-xl font-semibold md:w-full md:text-left">
-        Recommendations:
-      </h2>
-      <ScrollArea className="w-[90%] rounded-lg bg-slate-700 md:w-full">
-        <div className="flex w-max space-x-4 p-4">
-          {recommendations.results.length === 0 ? (
-            <h1 className="text-xl font-bold">No Recommendations Available</h1>
-          ) : (
-            recommendations.results.map((recommendation) => (
+    recommendations.results.length !== 0 && (
+      <div className="flex w-full flex-col items-center py-6 md:w-10/12 md:items-start">
+        <h2 className="mb-3 w-[90%] text-center text-xl font-semibold md:w-full md:text-left">
+          Recommendations:
+        </h2>
+        <ScrollArea className="w-[90%] rounded-lg bg-slate-700 md:w-full">
+          <div className="flex w-max space-x-4 p-4">
+            {recommendations.results.map((recommendation) => (
               <Link
                 key={recommendation.id}
                 href={
@@ -64,11 +62,11 @@ export default function Recommendations({
                   </div>
                 </Card>
               </Link>
-            ))
-          )}
-        </div>
-        <ScrollBar orientation="horizontal" />
-      </ScrollArea>
-    </div>
+            ))}
+          </div>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
+      </div>
+    )
   );
 }
