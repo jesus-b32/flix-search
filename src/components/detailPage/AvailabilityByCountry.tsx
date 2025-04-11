@@ -45,13 +45,13 @@ export default function AvailabilityByCountry({
         ?.native_name;
 
   return (
-    <div className="flex w-full flex-col items-center justify-center py-6 md:w-10/12 md:justify-start">
+    <>
       {availableCountries.length === 0 ? (
-        <h1 className="text-center text-2xl font-bold md:text-left">
-          {`No Streaming data available for ${title}`}
+        <h1 className="mb-6 text-center text-xl font-bold">
+          {`Wow! Looks like ${title} is not available on any streaming services in the world!`}
         </h1>
       ) : (
-        <>
+        <div className="flex w-full flex-col items-center justify-center py-6 md:w-10/12 md:justify-start">
           <div className="flex w-full flex-col items-center justify-center gap-4 md:flex-row md:justify-start">
             <span className="text-xl font-semibold">Select Country:</span>
             <SelectSearch data={filteredCountries} />
@@ -104,8 +104,8 @@ export default function AvailabilityByCountry({
                   ) : null,
               )}
           </div>
-        </>
+        </div>
       )}
-    </div>
+    </>
   );
 }
