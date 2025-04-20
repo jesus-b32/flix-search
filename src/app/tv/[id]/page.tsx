@@ -1,9 +1,6 @@
 import { type Metadata } from "next";
 
-import {
-  getTvShowDetails,
-  getTvShowProviders,
-} from "@/server/actions/tv/actions";
+import { getTvShowDetails } from "@/server/actions/tv/actions";
 import DetailCard from "@/components/detailPage/DetailCard";
 import { getCountries } from "@/server/actions/actions";
 import AvailabilityToggle from "@/components/client/AvailabilityToggle";
@@ -47,20 +44,12 @@ export default async function TvDetails({
 
   const TvShowId = Number(params.id);
   const TvShow = await getTvShowDetails(TvShowId);
-  const streamingProviders = await getTvShowProviders();
   const countries = await getCountries();
-  // get the selected streaming provider from the search params
-  // if not provided, default to '8'(Netflix)
-  const selectedStreamingProvider = searchParams?.streamingProvider || "8";
+  const selectedStreamingProvider = searchParams?.streamingProvider || "8"; // default to Netflix
   const selectedCountry = searchParams?.watch_region || "US";
 
   if (TvShow instanceof Error) {
     throw new Error(`Failed to fetch movie data: ${TvShow}`);
-  }
-  if (streamingProviders instanceof Error) {
-    throw new Error(
-      `Failed to fetch streaming provider data: ${streamingProviders}`,
-    );
   }
   if (countries instanceof Error) {
     throw new Error(`Failed to fetch country data: ${countries}`);
@@ -69,7 +58,6 @@ export default async function TvDetails({
   // Pre-render the server components
   const providerView = (
     <AvailabilityByProvider
-      streamingProviderList={streamingProviders}
       details={TvShow}
       selectedStreamingProviderId={selectedStreamingProvider}
       countries={countries}

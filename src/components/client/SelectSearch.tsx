@@ -44,13 +44,15 @@ export default function SelectSearch({
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
+  const watchProviderId =
+    searchParams.get("streamingProvider") ??
+    ("results" in data ? data.results[0]?.provider_id.toString() : "");
+
   const [open, setOpen] = React.useState(false);
   const [watchRegion, setWatchRegion] = React.useState(
     searchParams.get("watch_region") ?? "US",
   );
-  const [watchProvider, setWatchProvider] = React.useState(
-    searchParams.get("streamingProvider") ?? "8",
-  );
+  const [watchProvider, setWatchProvider] = React.useState(watchProviderId);
 
   return (
     <div className={cn("w-[200px]", className)}>

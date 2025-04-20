@@ -22,12 +22,10 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
  * @returns - server component that displays country flags with the country name in a card
  */
 export default function AvailabilityByProvider({
-  streamingProviderList,
   details,
   selectedStreamingProviderId,
   countries,
 }: {
-  streamingProviderList: streamingProviderList;
   details: movieDetails | tvDetails;
   selectedStreamingProviderId: string;
   countries: countryList;
@@ -35,39 +33,44 @@ export default function AvailabilityByProvider({
   const title = "title" in details ? details.title : details.name;
   const watchProviders = details["watch/providers"].results;
 
-  const streamingList = Object.values(watchProviders)
+  const streamingProviders = Object.values(watchProviders)
     .map((provider) => {
       return provider.flatrate || provider.ads || provider.free || null;
     })
     .filter((provider) => provider !== null);
 
-  const uniqueStreamingList: WatchProviderDetail[] = [];
+  const uniqueStreamingProviders: WatchProviderDetail[] = [];
 
-  for (const providers of streamingList) {
+  for (const providers of streamingProviders) {
     if (providers) {
       for (const provider of providers) {
-        //checks if the provider is already in the uniqueStreamingList
+        //checks if the provider is already in the uniqueStreamingProviders array
         if (
-          !uniqueStreamingList.some(
+          !uniqueStreamingProviders.some(
             (p) => p.provider_id === provider.provider_id,
           )
         ) {
-          uniqueStreamingList.push(provider);
+          uniqueStreamingProviders.push(provider);
         }
       }
     }
   }
 
-  // console.log(uniqueStreamingList);
+  const selectedStreamingProviderName =
+    uniqueStreamingProviders.find(
+      (provider) =>
+        provider.provider_id.toString() === selectedStreamingProviderId,
+    )?.provider_name ?? uniqueStreamingProviders[0]?.provider_name;
 
-  const uniqueProviderList: streamingProviderList = {
-    results: uniqueStreamingList,
+  const uniqueStreamingProviderList: streamingProviderList = {
+    results: uniqueStreamingProviders,
   };
 
-  const selectedStreamingProviderName = streamingProviderList.results.find(
-    (provider) =>
-      provider.provider_id.toString() === selectedStreamingProviderId,
-  )?.provider_name;
+  const updatedSelectedStreamingProviderId = uniqueStreamingProviderList.results
+    .find(
+      (provider) => provider.provider_name === selectedStreamingProviderName,
+    )
+    ?.provider_id.toString();
 
   return (
     <>
@@ -81,7 +84,7 @@ export default function AvailabilityByProvider({
             <span className="text-xl font-semibold">
               Select Streaming Provider:
             </span>
-            <SelectSearch data={streamingProviderList} />
+            <SelectSearch data={uniqueStreamingProviderList} />
           </div>
           <div className="mt-6 flex w-full flex-col">
             <h2 className="mb-3 px-6 text-center text-xl font-bold md:px-0 md:text-left">
@@ -102,7 +105,7 @@ export default function AvailabilityByProvider({
                         //checks if any provider in the category has an ID matching our selected provider
                         (provider) =>
                           provider.provider_id.toString() ===
-                          selectedStreamingProviderId,
+                          updatedSelectedStreamingProviderId,
                       ),
                   );
 
