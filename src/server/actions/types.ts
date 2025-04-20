@@ -13,7 +13,7 @@ export type countryList = {
  * @see https://developer.themoviedb.org/reference/movie-watch-providers
  * @see https://developer.themoviedb.org/reference/tv-series-watch-providers
  */
-type WatchProviderDetail = {
+export type WatchProviderDetail = {
   logo_path: string;
   provider_id: number;
   provider_name: string;

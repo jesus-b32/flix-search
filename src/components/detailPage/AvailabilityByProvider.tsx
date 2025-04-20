@@ -1,6 +1,7 @@
 import type {
   streamingProviderList,
   countryList,
+  WatchProviderDetail,
 } from "@/server/actions/types";
 import SelectSearch from "@/components/client/SelectSearch";
 import type { movieDetails } from "@/server/actions/movies/types";
@@ -33,6 +34,36 @@ export default function AvailabilityByProvider({
 }) {
   const title = "title" in details ? details.title : details.name;
   const watchProviders = details["watch/providers"].results;
+
+  const streamingList = Object.values(watchProviders)
+    .map((provider) => {
+      return provider.flatrate || provider.ads || provider.free || null;
+    })
+    .filter((provider) => provider !== null);
+
+  const uniqueStreamingList: WatchProviderDetail[] = [];
+
+  for (const providers of streamingList) {
+    if (providers) {
+      for (const provider of providers) {
+        //checks if the provider is already in the uniqueStreamingList
+        if (
+          !uniqueStreamingList.some(
+            (p) => p.provider_id === provider.provider_id,
+          )
+        ) {
+          uniqueStreamingList.push(provider);
+        }
+      }
+    }
+  }
+
+  // console.log(uniqueStreamingList);
+
+  const uniqueProviderList: streamingProviderList = {
+    results: uniqueStreamingList,
+  };
+
   const selectedStreamingProviderName = streamingProviderList.results.find(
     (provider) =>
       provider.provider_id.toString() === selectedStreamingProviderId,
