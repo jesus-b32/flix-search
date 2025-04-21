@@ -45,8 +45,8 @@ export default async function MovieDetails({
   const movieId = Number(params.id);
   const movie = await getMovieDetails(movieId);
   const countries = await getCountries();
-  const selectedStreamingProvider = searchParams?.streamingProvider || "8"; // default to Netflix
-  const selectedCountry = searchParams?.watch_region || "US";
+  const selectedStreamingProvider = searchParams.streamingProvider;
+  const selectedCountry = searchParams.watch_region || "US";
 
   if (movie instanceof Error) {
     throw new Error(`Failed to fetch movie data: ${movie}`);
