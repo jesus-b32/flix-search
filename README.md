@@ -36,7 +36,7 @@
 <h3 align="center">Flix Search</h3>
 
   <p align="center">
-    Flix Search is a web app that utilizes the <a href="https://developer.themoviedb.org/docs/getting-started"><strong>TMBD API</strong></a> to get streaming data on movies and TV shows.
+    The Flix Search is a web app that utilizes the <a href="https://developer.themoviedb.org/docs/getting-started"><strong>TMBD API</strong></a> to get streaming data on movies and shows.
     <!-- <br />
     <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>
     <br />
@@ -73,17 +73,17 @@
 
 ![Streaming platform Image](/public/streamingProviders.jpg "Flix Search")
 
-Flix Search will help you easily find on what platforms your favorite movies and TV shows are streaming on. You can view streaming availability by country to see all the streaming platform that has that movie or TV show available. Another way to view streaming availability is by streaming platform. You can select a streaming platform and see which countries have that movie or TV show available for the selected streaming platform. [Click here](https://flix-search.vercel.app/) to access the Flix Search website and give it a try.
+The Flix Search will help you easily find on what streaming services your favorite movies and shows are streaming on. You can view streaming availability by country to see all the streaming platform that has that movie or show available. Another way to view streaming availability is by streaming platform. You can select a streaming platform and see which countries have that movie or show available for the selected streaming platform. [Click here](https://www.theflixsearch.com/) to access The Flix Search website and give it a try.
 
 ### Key Features
 
-- Can search for any movie or TV show that exist
-- See details of movie or TV show selected
-- Able to see the streaming data for selected movie or TV show. There are two ways to view the streaming data:
-  - By Country: Select a country to see on which platforms the movie or TV show is available on.
-  - By Streaming Platform: Select a streaming provider to see which countries is this movie or TV show available in for the provider selected.
-- Can check discover pages and apply various filters for both movies and TV shows to narrow down your search.
-- Create an account to store your favorite movies and TV shows to your watchlist.
+- Can search for any movie or show that exist
+- See details of movie or show selected
+- Able to see the streaming data for selected movie or show. There are two ways to view the streaming data:
+  - By Country: Select a country to see on which platforms the movie or show is available on.
+  - By Streaming Platform: Select a streaming provider to see which countries is this movie or show available in for the provider selected.
+- Can check discover pages and apply various filters for both movies and shows to narrow down your search.
+- Create an account to store your favorite movies and shows to your watchlist.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -103,17 +103,17 @@ Flix Search will help you easily find on what platforms your favorite movies and
 ## User Flow
 
 - On the main page, user has the following options:
-  - Use the search bar to find a movie or TV show
+  - Use the search bar to find a movie or show
   - Check out the discover pages on the navbar
   - Sign in the their account
   - Create a new account
-- After user submits their search query, a list movies or TV shows will be shown that match the search term.
-  - Can switch between movie and TV show result pages
-- After user select movie or TV show title from the result page, a detail page that contains basic detail of the movie or TV show selected, streaming availability information, and a recommendation section at the bottom.
+- After user submits their search query, a list movies or shows will be shown that match the search term.
+  - Can switch between movie and show result pages
+- After user select movie or show title from the result page, a detail page that contains basic detail of the movie or show selected, streaming availability information, and a recommendation section at the bottom.
   - The streaming availability data has two section: where you can watch current title for the selected country and what countries have the current title for the selected streaming provider.
-  - User can also add this movie or TV show to their watchlist if they are logged in to their account.
+  - User can also add this movie or show to their watchlist if they are logged in to their account.
 - When a user is logged in:
-  - They can add or remove movies or TV shows to their watchlist.
+  - They can add or remove movies or shows to their watchlist.
   - They can edit their profile image or delete their account.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

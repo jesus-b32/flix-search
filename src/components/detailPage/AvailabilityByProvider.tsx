@@ -1,6 +1,7 @@
 import type {
   streamingProviderList,
   countryList,
+  WatchProviderDetail,
 } from "@/server/actions/types";
 import SelectSearch from "@/components/client/SelectSearch";
 import type { movieDetails } from "@/server/actions/movies/types";
@@ -21,22 +22,58 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
  * @returns - server component that displays country flags with the country name in a card
  */
 export default function AvailabilityByProvider({
-  streamingProviderList,
   details,
   selectedStreamingProviderId,
   countries,
 }: {
-  streamingProviderList: streamingProviderList;
   details: movieDetails | tvDetails;
   selectedStreamingProviderId: string;
   countries: countryList;
 }) {
   const title = "title" in details ? details.title : details.name;
   const watchProviders = details["watch/providers"].results;
-  const selectedStreamingProviderName = streamingProviderList.results.find(
-    (provider) =>
-      provider.provider_id.toString() === selectedStreamingProviderId,
-  )?.provider_name;
+
+  const streamingProviders = Object.values(watchProviders)
+    .map((provider) => {
+      return provider.flatrate || provider.ads || provider.free || null;
+    })
+    .filter((provider) => provider !== null);
+
+  const uniqueStreamingProviders: WatchProviderDetail[] = [];
+
+  for (const providers of streamingProviders) {
+    if (providers) {
+      for (const provider of providers) {
+        //checks if the provider is already in the uniqueStreamingProviders array
+        if (
+          !uniqueStreamingProviders.some(
+            (p) => p.provider_id === provider.provider_id,
+          )
+        ) {
+          uniqueStreamingProviders.push(provider);
+        }
+      }
+    }
+  }
+
+  const selectedStreamingProviderName =
+    uniqueStreamingProviders.find(
+      (provider) =>
+        provider.provider_id.toString() === selectedStreamingProviderId,
+    )?.provider_name ?? uniqueStreamingProviders[0]?.provider_name;
+
+  const updatedSelectedStreamingProviderId = !selectedStreamingProviderId
+    ? uniqueStreamingProviders
+        .find(
+          (provider) =>
+            provider.provider_name === selectedStreamingProviderName,
+        )
+        ?.provider_id.toString()
+    : selectedStreamingProviderId;
+
+  const uniqueStreamingProviderList: streamingProviderList = {
+    results: uniqueStreamingProviders,
+  };
 
   return (
     <>
@@ -50,7 +87,7 @@ export default function AvailabilityByProvider({
             <span className="text-xl font-semibold">
               Select Streaming Provider:
             </span>
-            <SelectSearch data={streamingProviderList} />
+            <SelectSearch data={uniqueStreamingProviderList} />
           </div>
           <div className="mt-6 flex w-full flex-col">
             <h2 className="mb-3 px-6 text-center text-xl font-bold md:px-0 md:text-left">
@@ -64,18 +101,17 @@ export default function AvailabilityByProvider({
                   const hasSelectedProvider = Object.values(
                     providerCountry,
                   ).some(
-                    //checks if at least one category contains our provider
                     (providerDetails) =>
+                      // ignore elements that are strings
                       typeof providerDetails !== "string" &&
                       providerDetails.some(
-                        //checks if any provider in the category has an ID matching our selected provider
                         (provider) =>
                           provider.provider_id.toString() ===
-                          selectedStreamingProviderId,
+                          updatedSelectedStreamingProviderId,
                       ),
                   );
 
-                  //This prevents duplicate country cards by only rendering a country once if the selected provider is available there, regardless of how many different ways it's available (streaming, rental, purchase, etc.).
+                  //hasSelectedProvider prevents duplicate country cards by only rendering a country once if the selected provider is available there, regardless of how many different ways it's available (streaming, rental, purchase, etc.).
                   return hasSelectedProvider ? (
                     <Card
                       key={country}

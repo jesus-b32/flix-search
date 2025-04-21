@@ -1,9 +1,6 @@
 import { type Metadata } from "next";
 
-import {
-  getMovieDetails,
-  getMovieProviders,
-} from "@/server/actions/movies/actions";
+import { getMovieDetails } from "@/server/actions/movies/actions";
 import DetailCard from "@/components/detailPage/DetailCard";
 import { getCountries } from "@/server/actions/actions";
 import AvailabilityByProvider from "@/components/detailPage/AvailabilityByProvider";
@@ -47,20 +44,12 @@ export default async function MovieDetails({
 
   const movieId = Number(params.id);
   const movie = await getMovieDetails(movieId);
-  const streamingProviders = await getMovieProviders();
   const countries = await getCountries();
-  // get the selected streaming provider from the search params
-  // if not provided, default to '8'(Netflix)
-  const selectedStreamingProvider = searchParams?.streamingProvider || "8";
-  const selectedCountry = searchParams?.watch_region || "US";
+  const selectedStreamingProvider = searchParams.streamingProvider;
+  const selectedCountry = searchParams.watch_region || "US";
 
   if (movie instanceof Error) {
     throw new Error(`Failed to fetch movie data: ${movie}`);
-  }
-  if (streamingProviders instanceof Error) {
-    throw new Error(
-      `Failed to fetch streaming provider data: ${streamingProviders}`,
-    );
   }
   if (countries instanceof Error) {
     throw new Error(`Failed to fetch country data: ${countries}`);
@@ -69,7 +58,6 @@ export default async function MovieDetails({
   // Pre-render the server components
   const providerView = (
     <AvailabilityByProvider
-      streamingProviderList={streamingProviders}
       details={movie}
       selectedStreamingProviderId={selectedStreamingProvider}
       countries={countries}
