@@ -33,37 +33,76 @@ export default function AvailabilityByProvider({
   const title = "title" in details ? details.title : details.name;
   const watchProviders = details["watch/providers"].results;
 
+  /**
+   * Extracts all streaming options from the watch providers data
+   *
+   * This code:
+   * 1. Takes the watchProviders object (organized by country code)
+   * 2. For each country, extracts the streaming options (flatrate, ads, or free)
+   * 3. Filters out any null values (countries without streaming options)
+   * 4. Returns an array of arrays, where each inner array contains provider objects
+   *    for a specific country that offer the content via streaming (not rental/purchase)
+   */
   const streamingProviders = Object.values(watchProviders)
-    .map((provider) => {
-      return provider.flatrate || provider.ads || provider.free || null;
+    .map((WatchProviderCountry) => {
+      return (
+        WatchProviderCountry.flatrate ||
+        WatchProviderCountry.ads ||
+        WatchProviderCountry.free ||
+        null
+      );
     })
-    .filter((provider) => provider !== null);
+    .filter((WatchProviderDetail) => WatchProviderDetail !== null);
 
   const uniqueStreamingProviders: WatchProviderDetail[] = [];
 
+  /**
+   * Builds a unique list of streaming providers
+   *
+   * This code:
+   * 1. Iterates through the nested arrays of streaming providers (from all countries)
+   * 2. For each provider found, checks if it already exists in our unique list
+   * 3. Only adds providers that haven't been seen before (based on provider_id)
+   * 4. Results in uniqueStreamingProviders containing one entry for each distinct
+   *    streaming service, regardless of how many countries it appears in
+   */
   for (const providers of streamingProviders) {
     if (providers) {
-      for (const provider of providers) {
+      for (const providerDetail of providers) {
         //checks if the provider is already in the uniqueStreamingProviders array
         if (
           !uniqueStreamingProviders.some(
-            (p) => p.provider_id === provider.provider_id,
+            (p) => p.provider_id === providerDetail.provider_id,
           )
         ) {
-          uniqueStreamingProviders.push(provider);
+          uniqueStreamingProviders.push(providerDetail);
         }
       }
     }
   }
 
+  /**
+   * Sorts the unique streaming providers alphabetically by name
+   *
+   * This code:
+   * 1. Takes the uniqueStreamingProviders array created earlier
+   * 2. Sorts it alphabetically based on the provider_name property
+   * 3. Returns a new sorted array that maintains all provider details
+   *    but presents them in a user-friendly alphabetical order
+   * 4. This sorted list will be used for display in the UI
+   */
+  const uniqueStreamingProvidersAlphabetical = uniqueStreamingProviders.sort(
+    (a, b) => a.provider_name.localeCompare(b.provider_name),
+  );
+
   const selectedStreamingProviderName =
-    uniqueStreamingProviders.find(
+    uniqueStreamingProvidersAlphabetical.find(
       (provider) =>
         provider.provider_id.toString() === selectedStreamingProviderId,
-    )?.provider_name ?? uniqueStreamingProviders[0]?.provider_name;
+    )?.provider_name ?? uniqueStreamingProvidersAlphabetical[0]?.provider_name;
 
   const updatedSelectedStreamingProviderId = !selectedStreamingProviderId
-    ? uniqueStreamingProviders
+    ? uniqueStreamingProvidersAlphabetical
         .find(
           (provider) =>
             provider.provider_name === selectedStreamingProviderName,
@@ -72,7 +111,7 @@ export default function AvailabilityByProvider({
     : selectedStreamingProviderId;
 
   const uniqueStreamingProviderList: streamingProviderList = {
-    results: uniqueStreamingProviders,
+    results: uniqueStreamingProvidersAlphabetical,
   };
 
   return (
