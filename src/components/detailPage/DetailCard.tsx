@@ -80,21 +80,23 @@ export default async function DetailCard({
           </CardTitle>
           <CardDescription className="flex flex-wrap justify-center gap-2 md:justify-start">
             {details.vote_average ? (
-              <Badge>{`⭐ ${details.vote_average.toFixed(1)}/10`}</Badge>
+              <Badge className="hover:bg-primary">{`⭐ ${details.vote_average.toFixed(1)}/10`}</Badge>
             ) : null}
             {details.vote_count ? (
-              <Badge>{`${details.vote_count.toLocaleString()} votes`}</Badge>
+              <Badge className="hover:bg-primary">{`${details.vote_count.toLocaleString()} votes`}</Badge>
             ) : null}
             {"title" in details ? (
               <>
                 {details.runtime ? (
-                  <Badge>{timeConvert(details.runtime)}</Badge>
+                  <Badge className="hover:bg-primary">
+                    {timeConvert(details.runtime)}
+                  </Badge>
                 ) : null}
               </>
             ) : (
               <>
                 {details.number_of_seasons ? (
-                  <Badge>{`${details.number_of_seasons} ${details.number_of_seasons <= 1 ? "Season" : "Seasons"} ${details.number_of_episodes} ${details.number_of_episodes <= 1 ? "Episode" : "Episodes"}`}</Badge>
+                  <Badge className="hover:bg-primary">{`${details.number_of_seasons} ${details.number_of_seasons <= 1 ? "Season" : "Seasons"} ${details.number_of_episodes} ${details.number_of_episodes <= 1 ? "Episode" : "Episodes"}`}</Badge>
                 ) : null}
               </>
             )}
@@ -108,7 +110,9 @@ export default async function DetailCard({
               </h4>
               <div className="flex flex-wrap justify-center gap-2 md:justify-start">
                 {details.genres.map((genre) => (
-                  <Badge key={genre.id}>{genre.name}</Badge>
+                  <Badge key={genre.id} className="hover:bg-primary">
+                    {genre.name}
+                  </Badge>
                 ))}
               </div>
             </>

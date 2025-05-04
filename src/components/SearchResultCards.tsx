@@ -11,7 +11,7 @@ import { ImageOff } from "lucide-react";
 import type { movieSearchResult } from "@/server/actions/movies/types";
 import type { tvSearchResult } from "@/server/actions/tv/types";
 import Link from "next/link";
-
+import { Badge } from "@/components/ui/badge";
 /**
  * Returns a card with the details of a movie or tv show that was searched
  * @param movie or tv show
@@ -51,17 +51,24 @@ export default function SearchResultCards({
       </div>
       <div className="flex h-fit w-full flex-col md:h-[278px] md:w-2/3">
         <CardHeader className="text-center md:text-left">
-          <CardTitle>
+          <CardTitle className="text-2xl font-extrabold">
             {"title" in cinema ? (
-              <Link href={`/movie/${cinema.id}`}>{cinema?.title}</Link>
+              <Link
+                href={`/movie/${cinema.id}`}
+              >{`${cinema.title} ${cinema.release_date ? `(${cinema.release_date.slice(0, 4)})` : ""}`}</Link>
             ) : (
-              <Link href={`/tv/${cinema.id}`}>{cinema?.name}</Link>
+              <Link
+                href={`/tv/${cinema.id}`}
+              >{`${cinema.name} ${cinema.first_air_date ? `(${cinema.first_air_date.slice(0, 4)})` : ""}`}</Link>
             )}
           </CardTitle>
-          <CardDescription>
-            {"release_date" in cinema
-              ? cinema?.release_date || "No Release Date"
-              : cinema?.first_air_date || "No First Air Date"}
+          <CardDescription className="flex flex-wrap justify-center gap-2 md:justify-start">
+            {cinema.vote_average ? (
+              <Badge className="hover:bg-primary">{`⭐ ${cinema.vote_average.toFixed(1)}/10`}</Badge>
+            ) : null}
+            {cinema.vote_count ? (
+              <Badge className="hover:bg-primary">{`${cinema.vote_count.toLocaleString()} votes`}</Badge>
+            ) : null}
           </CardDescription>
         </CardHeader>
         <CardContent className="text-center md:text-left">
