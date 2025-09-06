@@ -1,32 +1,30 @@
 import Search from "@/components/client/Search";
+import FeaturedContent from "@/components/FeaturedContent";
+import { Suspense } from "react";
 
 export default function HomePage() {
   return (
     <main className="flex min-h-screen flex-col items-center text-white">
-      <div className="mt-4 flex flex-col items-center gap-6">
-        <h1 className="text-center text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-          <span className="text-[hsl(280,100%,70%)]">Welcome</span> to The Flix
-          Search
-        </h1>
-        <p className="text-2xl">Find your next favorite movie or show</p>
-      </div>
+      <div className="my-4 flex w-10/12 flex-col items-center gap-2">
+        <h1 className="text-center text-4xl font-extrabold">The Flix Search</h1>
+        <h2 className="w-full text-center text-xl font-semibold">
+          Movie and TV Show Searching made Easy
+        </h2>
+        <p className="w-full text-center">
+          The Flix Search helps you find which streaming services have your
+          favorite movies and TV shows with a simple search.
+        </p>
+        {/* search bar component for movies and show searching*/}
+        <Search />
 
-      {/* search bar component for movies and show searching*/}
-      <Search />
-
-      <div className="my-6 flex w-10/12 flex-col items-center gap-4">
         <img
           src="/streamingProviders.jpg"
-          className="h-auto w-full"
+          className="h-auto w-full rounded-lg md:w-10/12 lg:w-3/4 xl:w-2/3"
           alt="Image of some streaming providers"
         />
-        <h2 className="text-center text-2xl font-semibold">
-          Movie and Show Searching made Easy
-        </h2>
-        <p className="text-center text-xl">
-          The Flix Search helps you find which streaming services have your
-          favorite movies and shows with a simple search.
-        </p>
+        <Suspense fallback={<div>Loading...</div>}>
+          <FeaturedContent />
+        </Suspense>
       </div>
     </main>
   );
