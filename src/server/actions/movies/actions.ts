@@ -74,3 +74,69 @@ export async function getGenreMovies() {
 
   return results;
 }
+
+/**
+ * Returns a list of movies that are currently playing in theaters.
+ */
+export async function getNowPlayingMovies() {
+  const results = await getData<movieSearchResult>(
+    `/movie/now_playing?language=en-US&page=1`,
+  );
+
+  return results;
+}
+
+/**
+ * Returns a list of movies that are coming soon to theaters.
+ */
+export async function getComingSoonMovies() {
+  const results = await getData<movieSearchResult>(
+    `/movie/upcoming?language=en-US&page=1`,
+  );
+
+  return results;
+}
+
+/**
+ * Returns a list of movies that are popular.
+ */
+export async function getPopularMovies() {
+  const results = await getData<movieSearchResult>(
+    `/movie/popular?language=en-US&page=1`,
+  );
+
+  return results;
+}
+
+/**
+ * Returns a list of movies that are top rated.
+ */
+export async function getTopRatedMovies() {
+  const results = await getData<movieSearchResult>(
+    `/movie/top_rated?language=en-US&page=1`,
+  );
+
+  return results;
+}
+
+/**
+ * Returns a list of movies that are trending on TMDB this week.
+ */
+export async function getTrendingMoviesWeek() {
+  const results = await getData<movieSearchResult>(
+    `/trending/movie/week?language=en-US`,
+  );
+
+  return results;
+}
+
+/**
+ * Returns a list of movies that are trending on TMDB this day.
+ */
+export async function getTrendingMoviesToday() {
+  const results = await getData<movieSearchResult>(
+    `/trending/movie/day?language=en-US`,
+  );
+
+  return results;
+}

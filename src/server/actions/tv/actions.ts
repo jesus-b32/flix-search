@@ -71,3 +71,69 @@ export async function getGenreTvShows() {
 
   return results;
 }
+
+/**
+ * Returns a list of tv shows that are currently airing today.
+ */
+export async function getCurrentlyAiringTvShows() {
+  const results = await getData<tvSearchResult>(
+    `/tv/airing_today?language=en-US&page=1`,
+  );
+
+  return results;
+}
+
+/**
+ * Returns a list of tv shows that are coming soon, in the next 7 days.
+ */
+export async function getComingSoonTvShows() {
+  const results = await getData<tvSearchResult>(
+    `/tv/on_the_air?language=en-US&page=1`,
+  );
+
+  return results;
+}
+
+/**
+ * Returns a list of tv shows that are popular.
+ */
+export async function getPopularTvShows() {
+  const results = await getData<tvSearchResult>(
+    `/tv/popular?language=en-US&page=1`,
+  );
+
+  return results;
+}
+
+/**
+ * Returns a list of tv shows that are top rated.
+ */
+export async function getTopRatedTvShows() {
+  const results = await getData<tvSearchResult>(
+    `/tv/top_rated?language=en-US&page=1`,
+  );
+
+  return results;
+}
+
+/**
+ * Returns a list of tv shows that are trending on TMDB this week.
+ */
+export async function getTrendingTvShowsWeek() {
+  const results = await getData<tvSearchResult>(
+    `/trending/tv/week?language=en-US`,
+  );
+
+  return results;
+}
+
+/**
+ * Returns a list of tv shows that are trending on TMDB this day.
+ */
+export async function getTrendingTvShowsToday() {
+  const results = await getData<tvSearchResult>(
+    `/trending/tv/day?language=en-US`,
+  );
+
+  return results;
+}
