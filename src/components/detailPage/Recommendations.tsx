@@ -1,6 +1,5 @@
 import { ImageOff } from "lucide-react";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import type { MovieRecommendations } from "@/server/actions/movies/types";
 import type { TvRecommendations } from "@/server/actions/tv/types";
 import Link from "next/link";
@@ -24,7 +23,17 @@ export default function Recommendations({
         <h2 className="mb-3 w-[90%] text-center text-xl font-semibold md:w-full md:text-left">
           Recommendations:
         </h2>
-        <ScrollArea className="w-[90%] rounded-lg bg-slate-700 md:w-full">
+        {/* Scrollable div */}
+        <div
+          className="w-[90%] rounded-lg bg-slate-700 md:w-full"
+          style={{
+            overflowX: "auto",
+            overflowY: "hidden",
+            scrollbarWidth: "thin",
+            scrollbarColor: "#64748b transparent",
+          }}
+        >
+          {/* Scrollable content */}
           <div className="flex w-max space-x-4 p-4">
             {recommendations.results.map((recommendation) => (
               <Link
@@ -71,8 +80,7 @@ export default function Recommendations({
               </Link>
             ))}
           </div>
-          <ScrollBar orientation="horizontal" />
-        </ScrollArea>
+        </div>
       </div>
     )
   );
