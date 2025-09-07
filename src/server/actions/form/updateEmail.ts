@@ -28,6 +28,11 @@ export const updateEmail = async (
   try {
     const user = await getUserById(userId);
 
+    // Handle error cases from getUserById
+    if (user instanceof Error) {
+      return { error: user.message };
+    }
+
     if (!user?.password || !user) {
       return { error: "Failed to retrieve user info!" };
     }
@@ -39,11 +44,21 @@ export const updateEmail = async (
 
       const existingUser = await getUserByEmail(email);
 
+      // Handle error cases from getUserByEmail
+      if (existingUser instanceof Error) {
+        return { error: existingUser.message };
+      }
+
       if (existingUser) {
         return { error: "Email already being used!" };
       }
 
       const isEmailUpdated = await updateUserEmail(userId, email);
+
+      // Handle error cases from updateUserEmail
+      if (isEmailUpdated instanceof Error) {
+        return { error: isEmailUpdated.message };
+      }
 
       if (isEmailUpdated) {
         const verificationToken = await generateVerificationToken(email);

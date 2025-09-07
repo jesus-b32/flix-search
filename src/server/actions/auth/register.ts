@@ -23,6 +23,11 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
   const { name, email, password } = validatedFields.data;
   const existingUser = await getUserByEmail(email);
 
+  // Handle error cases from getUserByEmail
+  if (existingUser instanceof Error) {
+    return { error: existingUser.message };
+  }
+
   if (existingUser) {
     return {
       error: "Email already in use!",
@@ -31,8 +36,16 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
 
   const hashPassword = await bcrypt.hash(password, 10);
   const newUser = await createNewUser(name, email, hashPassword);
-  if (!newUser) return { error: "Error creating user!" };
-  if (!newUser[0]?.id) return { error: "Error creating user!" };
+
+  // Handle error cases from createNewUser
+  if (newUser instanceof Error) {
+    return { error: newUser.message };
+  }
+
+  if (!newUser?.[0]?.id) {
+    return { error: "Error creating user!" };
+  }
+
   const userId = newUser[0].id;
 
   await createVideoList(userId, "watchlist");

@@ -24,11 +24,25 @@ export const emailVerification = async (token: string) => {
   }
 
   const existingUser = await getUserByEmail(existingToken.email);
+
+  // Handle error cases from getUserByEmail
+  if (existingUser instanceof Error) {
+    return { error: existingUser.message };
+  }
+
   if (!existingUser) {
     return { error: "Email does not exist!" };
   }
 
-  await updateUserEmailVerified(existingUser.id, existingToken.email);
+  const updateResult = await updateUserEmailVerified(
+    existingUser.id,
+    existingToken.email,
+  );
+
+  // Handle error cases from updateUserEmailVerified
+  if (updateResult instanceof Error) {
+    return { error: updateResult.message };
+  }
   await deleteVerificationToken(existingToken.id);
 
   return { success: "Email verified!" };
