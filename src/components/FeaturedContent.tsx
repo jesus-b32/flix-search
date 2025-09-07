@@ -7,7 +7,7 @@ import {
   getTopRatedMovies,
 } from "@/server/actions/movies/actions";
 import {
-  getCurrentlyAiringTvShows,
+  getAiringTodayTvShows,
   getComingSoonTvShows,
   getPopularTvShows,
   getTopRatedTvShows,
@@ -55,17 +55,17 @@ async function MovieSections() {
 
   return (
     <>
-      {nowPlayingMovies && !(nowPlayingMovies instanceof Error) && (
-        <MediaList data={nowPlayingMovies} title="Now Playing in Theaters" />
-      )}
-      {comingSoonMovies && !(comingSoonMovies instanceof Error) && (
-        <MediaList data={comingSoonMovies} title="Coming Soon to Theaters" />
-      )}
       {popularMovies && !(popularMovies instanceof Error) && (
         <MediaList data={popularMovies} title="Popular Movies" />
       )}
       {topRatedMovies && !(topRatedMovies instanceof Error) && (
         <MediaList data={topRatedMovies} title="Top Rated Movies" />
+      )}
+      {nowPlayingMovies && !(nowPlayingMovies instanceof Error) && (
+        <MediaList data={nowPlayingMovies} title="Now Playing in Theaters" />
+      )}
+      {comingSoonMovies && !(comingSoonMovies instanceof Error) && (
+        <MediaList data={comingSoonMovies} title="Coming Soon to Theaters" />
       )}
     </>
   );
@@ -76,12 +76,12 @@ async function MovieSections() {
  */
 async function TvSections() {
   const [
-    currentlyAiringTvShows,
+    airingTodayTvShows,
     comingSoonTvShows,
     popularTvShows,
     topRatedTvShows,
   ] = await Promise.all([
-    getCurrentlyAiringTvShows(),
+    getAiringTodayTvShows(),
     getComingSoonTvShows(),
     getPopularTvShows(),
     getTopRatedTvShows(),
@@ -89,20 +89,17 @@ async function TvSections() {
 
   return (
     <>
-      {currentlyAiringTvShows && !(currentlyAiringTvShows instanceof Error) && (
-        <MediaList
-          data={currentlyAiringTvShows}
-          title="Currently Airing TV Shows"
-        />
-      )}
-      {comingSoonTvShows && !(comingSoonTvShows instanceof Error) && (
-        <MediaList data={comingSoonTvShows} title="Coming Soon TV Shows" />
-      )}
       {popularTvShows && !(popularTvShows instanceof Error) && (
         <MediaList data={popularTvShows} title="Popular TV Shows" />
       )}
       {topRatedTvShows && !(topRatedTvShows instanceof Error) && (
         <MediaList data={topRatedTvShows} title="Top Rated TV Shows" />
+      )}
+      {airingTodayTvShows && !(airingTodayTvShows instanceof Error) && (
+        <MediaList data={airingTodayTvShows} title="Airing Today TV Shows" />
+      )}
+      {comingSoonTvShows && !(comingSoonTvShows instanceof Error) && (
+        <MediaList data={comingSoonTvShows} title="Airing Soon TV Shows" />
       )}
     </>
   );

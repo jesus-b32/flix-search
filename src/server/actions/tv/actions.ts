@@ -75,7 +75,7 @@ export async function getGenreTvShows() {
 /**
  * Returns a list of tv shows that are currently airing today.
  */
-export async function getCurrentlyAiringTvShows() {
+export async function getAiringTodayTvShows() {
   const results = await getData<tvSearchResult>(
     `/tv/airing_today?language=en-US&page=1`,
   );
