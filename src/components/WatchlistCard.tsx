@@ -1,7 +1,6 @@
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
   CardFooter,
@@ -70,19 +69,20 @@ export default async function WatchlistCard({
       </div>
       <div className="flex h-fit w-full flex-col md:h-[278px] md:w-2/3">
         <CardHeader className="text-center md:text-left">
-          <CardTitle>
+          <CardTitle className="text-2xl font-extrabold">
             {cinema.mediaType === "movie" ? (
-              <Link href={`/movie/${cinema.tmdbId}`}>{cinema?.title}</Link>
+              <Link href={`/movie/${cinema.tmdbId}`}>
+                {`${cinema.title} ${cinema.releaseDate ? `(${cinema.releaseDate.slice(0, 4)})` : ""}`}
+              </Link>
             ) : (
-              <Link href={`/tv/${cinema.tmdbId}`}>{cinema?.title}</Link>
+              <Link href={`/tv/${cinema.tmdbId}`}>
+                {`${cinema.title} ${cinema.releaseDate ? `(${cinema.releaseDate.slice(0, 4)})` : ""}`}
+              </Link>
             )}
           </CardTitle>
-          <CardDescription>
-            {cinema?.releaseDate || "No Release Date"}
-          </CardDescription>
         </CardHeader>
         <CardContent className="text-center md:text-left">
-          <p className="line-clamp-4">{cinema?.overview || "No Overview"}</p>
+          <p className="line-clamp-6">{cinema?.overview || "No Overview"}</p>
         </CardContent>
         <CardFooter className="flex w-full justify-center md:justify-start">
           <WatchlistButton
