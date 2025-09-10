@@ -21,7 +21,16 @@ export async function updateWatchlist(
   try {
     if (watchlist) {
       if (isVideoInWatchlist) {
-        await removeVideoFromList(videoId, watchlist.id);
+        const removeResult = await removeVideoFromList(videoId, watchlist.id);
+
+        // Handle error cases from removeVideoFromList
+        if (removeResult instanceof Error) {
+          console.error(
+            "Error removing video from watchlist:",
+            removeResult.message,
+          );
+          return;
+        }
       } else {
         const insertedVideoId =
           videoId === ""
@@ -34,12 +43,42 @@ export async function updateWatchlist(
                 posterPath,
               )
             : 0;
+
+        // Handle error cases from insertVideotoDb
+        if (insertedVideoId instanceof Error) {
+          console.error(
+            "Error inserting video to database:",
+            insertedVideoId.message,
+          );
+          return;
+        }
+
         if (insertedVideoId) {
-          await addVideoToList(insertedVideoId, watchlist.id);
+          const addResult = await addVideoToList(insertedVideoId, watchlist.id);
+
+          // Handle error cases from addVideoToList
+          if (addResult instanceof Error) {
+            console.error(
+              "Error adding video to watchlist:",
+              addResult.message,
+            );
+            return;
+          }
         } else {
-          await addVideoToList(videoId, watchlist.id);
+          const addResult = await addVideoToList(videoId, watchlist.id);
+
+          // Handle error cases from addVideoToList
+          if (addResult instanceof Error) {
+            console.error(
+              "Error adding video to watchlist:",
+              addResult.message,
+            );
+            return;
+          }
         }
       }
     }
-  } catch {}
+  } catch (error) {
+    console.error("Unexpected error in updateWatchlist:", error);
+  }
 }

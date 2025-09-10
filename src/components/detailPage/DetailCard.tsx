@@ -35,7 +35,13 @@ export default async function DetailCard({
 
   // return video object from db or is undefined if it doesn't exist
   const video = await getVideo(details.id, mediaType);
-  const videoId = video?.id ?? "";
+
+  // Handle error cases from getVideo
+  if (video instanceof Error) {
+    console.error("Error fetching video:", video.message);
+  }
+
+  const videoId = video instanceof Error ? "" : (video?.id ?? "");
 
   /**
    * get watchlist from db if user is logged in;
@@ -45,13 +51,23 @@ export default async function DetailCard({
     ? false
     : await getVideoList(user?.id ?? "", "watchlist");
 
+  // Handle error cases from getVideoList
+  if (watchlist instanceof Error) {
+    console.error("Error fetching watchlist:", watchlist.message);
+  }
+
   /**
    * check if video is in watchlist
    * if so return true; if not found return false
    */
-  const isVideoInWatchlist = watchlist
-    ? await isVideoInList(videoId, watchlist.id)
-    : false;
+  const isVideoInWatchlist =
+    watchlist && !(watchlist instanceof Error)
+      ? await isVideoInList(videoId, watchlist.id)
+      : false;
+
+  // Handle error cases from isVideoInList
+  const isVideoInWatchlistResult =
+    isVideoInWatchlist instanceof Error ? false : isVideoInWatchlist;
 
   return (
     <Card className="mt-6 flex h-fit w-[90%] flex-col items-center border-none md:w-10/12 md:flex-row md:items-start">
@@ -159,8 +175,8 @@ export default async function DetailCard({
               posterPath={details?.poster_path ?? ""}
               userId={user?.id ?? ""}
               videoId={videoId}
-              watchlist={watchlist}
-              isVideoInWatchlist={isVideoInWatchlist}
+              watchlist={watchlist instanceof Error ? false : watchlist}
+              isVideoInWatchlist={isVideoInWatchlistResult}
             />
           ) : (
             <Button asChild size={"sm"}>
