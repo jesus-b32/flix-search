@@ -29,6 +29,12 @@ export const updatePassword = async (
 
   try {
     const user = await getUserById(userId);
+
+    // Handle error cases from getUserById
+    if (user instanceof Error) {
+      return { error: user.message };
+    }
+
     if (!user?.password || !user)
       return { error: "Failed to retrieve user data!" };
     const passwordsMatch = await bcrypt.compare(currentPassword, user.password);
@@ -36,6 +42,12 @@ export const updatePassword = async (
     if (passwordsMatch && newPassword === confirmNewPassword) {
       const hashedPassword = await bcrypt.hash(newPassword, 10);
       const passwordUpdated = await updateUserPassword(userId, hashedPassword);
+
+      // Handle error cases from updateUserPassword
+      if (passwordUpdated instanceof Error) {
+        return { error: passwordUpdated.message };
+      }
+
       if (passwordUpdated) {
         return {
           success: "Password updated successfully!",

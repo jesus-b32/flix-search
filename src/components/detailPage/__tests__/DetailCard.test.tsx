@@ -17,14 +17,13 @@ vi.mock("@/data/videoList", () => ({
   getVideo: vi.fn().mockResolvedValue(undefined),
 }));
 
-const session: Session = {
-  user: {
-    id: "1234",
-    name: "John Doe",
-    email: "a@a.com",
-    image: "https://example.com/image.jpg",
-  },
-  expires: "2023-01-01",
+const user = {
+  id: "1234",
+  name: "John Doe",
+  email: "a@a.com",
+  image: "https://example.com/image.jpg",
+  isTwoFactorEnabled: false,
+  isOAuth: false,
 };
 
 describe("DetailCard", () => {
@@ -35,7 +34,7 @@ describe("DetailCard", () => {
      */
     const Result = await DetailCard({
       details: mockMovieDetails,
-      session: null,
+      user: undefined,
     });
     render(Result);
     // screen.debug();
@@ -58,7 +57,7 @@ describe("DetailCard", () => {
   it("should render the detail card with movie details and user logged in", async () => {
     const Result = await DetailCard({
       details: mockMovieDetails,
-      session: session,
+      user: user,
     });
     render(Result);
     // screen.debug();
@@ -81,7 +80,7 @@ describe("DetailCard", () => {
   it("should render the detail card with tv details and user logged in", async () => {
     const Result = await DetailCard({
       details: mockTvDetails,
-      session: session,
+      user: user,
     });
     render(Result);
     // screen.debug();

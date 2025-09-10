@@ -32,6 +32,12 @@ export const deleteAccount = async (
     //if not Oauth account check if password matches database password
     if (!isOauth) {
       const user = await getUserById(userId);
+
+      // Handle error cases from getUserById
+      if (user instanceof Error) {
+        return { error: user.message };
+      }
+
       if (!user?.password || !user) return null;
       const passwordsMatch = await bcrypt.compare(
         password ?? "",
@@ -39,6 +45,12 @@ export const deleteAccount = async (
       );
       if (passwordsMatch) {
         const deleted = await deleteUserById(userId);
+
+        // Handle error cases from deleteUserById
+        if (deleted instanceof Error) {
+          return { error: deleted.message };
+        }
+
         if (deleted) {
           await signOut({ redirect: false });
           return {
@@ -56,6 +68,12 @@ export const deleteAccount = async (
       }
     } else {
       const deleted = await deleteUserById(userId);
+
+      // Handle error cases from deleteUserById
+      if (deleted instanceof Error) {
+        return { error: deleted.message };
+      }
+
       if (deleted) {
         await signOut({ redirect: false });
         return {

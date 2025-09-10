@@ -41,12 +41,26 @@ export const forgotPassword = async (
   }
 
   const existingUser = await getUserByEmail(existingToken.email);
+
+  // Handle error cases from getUserByEmail
+  if (existingUser instanceof Error) {
+    return { error: existingUser.message };
+  }
+
   if (!existingUser) {
     return { error: "Email does not exist!" };
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  await updateUserPassword(existingUser.id, hashedPassword);
+  const updateResult = await updateUserPassword(
+    existingUser.id,
+    hashedPassword,
+  );
+
+  // Handle error cases from updateUserPassword
+  if (updateResult instanceof Error) {
+    return { error: updateResult.message };
+  }
   await deletePasswordRestToken(existingToken.id);
 
   return { success: "Password updated!" };

@@ -102,6 +102,11 @@ const authConfig: NextAuthConfig = {
           const { email, password } = validatedFields.data;
           const user = await getUserByEmail(email);
 
+          // Handle error cases from getUserByEmail
+          if (user instanceof Error) {
+            return null;
+          }
+
           //if user does not exist or user does not have a password, do not authorize
           //user can not have password if they logged in using google or github
           if (!user?.password || !user) return null;
@@ -158,6 +163,12 @@ const authConfig: NextAuthConfig = {
 
       const existingUser = await getUserById(user.id);
 
+      // Handle error cases from getUserById
+      if (existingUser instanceof Error) {
+        return false;
+      }
+
+      // At this point, existingUser is guaranteed to be a user object or null
       if (!existingUser?.emailVerified) return false;
       if (existingUser.isTwoFactorEnabled) {
         const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(

@@ -46,6 +46,12 @@ export const login = async (
   const { email, password, code } = validatedFields.data;
 
   const existingUser = await getUserByEmail(email);
+
+  // Handle error cases from getUserByEmail
+  if (existingUser instanceof Error) {
+    return { error: existingUser.message };
+  }
+
   if (!existingUser?.email || !existingUser.password) {
     return { error: "Email does not exist!" };
   }
