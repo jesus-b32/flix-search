@@ -62,14 +62,19 @@ export const updateEmail = async (
 
       if (isEmailUpdated) {
         const verificationToken = await generateVerificationToken(email);
-        if (!verificationToken)
-          return { error: "Error generating verification token!" };
-        if (!verificationToken[0]?.token || !verificationToken[0]?.email) {
+
+        // Handle error case from generateVerificationToken
+        if (verificationToken instanceof Error) {
+          return { error: verificationToken.message };
+        }
+
+        if (!verificationToken?.[0]?.token || !verificationToken?.[0]?.email) {
           return { error: "Error generating verification token!" };
         }
+
         await sendVerificationEmail(
-          verificationToken[0]?.email,
-          verificationToken[0]?.token,
+          verificationToken[0].email,
+          verificationToken[0].token,
         );
         return {
           success: "Email updated! Verification email sent.",
