@@ -51,9 +51,13 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
   await createVideoList(userId, "watchlist");
 
   const verificationToken = await generateVerificationToken(email);
-  if (!verificationToken)
-    return { error: "Error generating verification token!" };
-  if (!verificationToken[0]?.token || !verificationToken[0]?.email) {
+
+  // Handle error case from generateVerificationToken
+  if (verificationToken instanceof Error) {
+    return { error: verificationToken.message };
+  }
+
+  if (!verificationToken?.[0]?.token || !verificationToken?.[0]?.email) {
     return { error: "Error generating verification token!" };
   }
 

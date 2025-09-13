@@ -20,16 +20,26 @@ export const resetPassword = async (
   const { email } = validatedFields.data;
   const existingUser = await getUserByEmail(email);
 
+  // Handle error case from getUserByEmail
+  if (existingUser instanceof Error) {
+    return { error: existingUser.message };
+  }
+
   if (!existingUser) {
     return { error: "Email not found!" };
   }
 
   const passwordResetToken = await generatePasswordResetToken(email);
-  if (!passwordResetToken)
-    return { error: "Error generating password reset token!" };
-  if (!passwordResetToken[0]?.token || !passwordResetToken[0]?.email) {
+
+  // Handle error case from generatePasswordResetToken
+  if (passwordResetToken instanceof Error) {
+    return { error: passwordResetToken.message };
+  }
+
+  if (!passwordResetToken?.[0]?.token || !passwordResetToken?.[0]?.email) {
     return { error: "Error generating password reset token!" };
   }
+
   await sendPasswordResetEmail(
     passwordResetToken[0].email,
     passwordResetToken[0].token,

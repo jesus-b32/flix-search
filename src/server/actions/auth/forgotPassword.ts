@@ -26,6 +26,11 @@ export const forgotPassword = async (
   const { password } = validatedFields.data;
   const existingToken = await getPasswordRestTokenByToken(token);
 
+  // Handle error case from getPasswordRestTokenByToken
+  if (existingToken instanceof Error) {
+    return { error: existingToken.message };
+  }
+
   if (!existingToken) {
     return { error: "Invalid token!" };
   }
@@ -61,7 +66,12 @@ export const forgotPassword = async (
   if (updateResult instanceof Error) {
     return { error: updateResult.message };
   }
-  await deletePasswordRestToken(existingToken.id);
+
+  const deleteResult = await deletePasswordRestToken(existingToken.id);
+  // Handle error case from deletePasswordRestToken
+  if (deleteResult instanceof Error) {
+    return { error: deleteResult.message };
+  }
 
   return { success: "Password updated!" };
 };

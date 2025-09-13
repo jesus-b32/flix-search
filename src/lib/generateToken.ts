@@ -23,8 +23,17 @@ export const generateVerificationToken = async (email: string) => {
 
   const existingToken = await getVerificationTokenByEmail(email);
 
+  // Handle error case from getVerificationTokenByEmail
+  if (existingToken instanceof Error) {
+    return existingToken;
+  }
+
   if (existingToken) {
-    await deleteVerificationToken(existingToken.id);
+    const deleteResult = await deleteVerificationToken(existingToken.id);
+    // Handle error case from deleteVerificationToken
+    if (deleteResult instanceof Error) {
+      return deleteResult;
+    }
   }
 
   const verificationToken = await createVerificationToken(
@@ -42,8 +51,17 @@ export const generatePasswordResetToken = async (email: string) => {
 
   const existingToken = await getPasswordRestTokenByEmail(email);
 
+  // Handle error case from getPasswordRestTokenByEmail
+  if (existingToken instanceof Error) {
+    return existingToken;
+  }
+
   if (existingToken) {
-    await deletePasswordRestToken(existingToken.id);
+    const deleteResult = await deletePasswordRestToken(existingToken.id);
+    // Handle error case from deletePasswordRestToken
+    if (deleteResult instanceof Error) {
+      return deleteResult;
+    }
   }
 
   const passwordResetToken = await createPasswordResetToken(
@@ -61,8 +79,17 @@ export const generateTwoFactorToken = async (email: string) => {
 
   const existingToken = await getTwoFactorTokenByEmail(email);
 
+  // Handle error case from getTwoFactorTokenByEmail
+  if (existingToken instanceof Error) {
+    return existingToken;
+  }
+
   if (existingToken) {
-    await deleteTwoFactorToken(existingToken.id);
+    const deleteResult = await deleteTwoFactorToken(existingToken.id);
+    // Handle error case from deleteTwoFactorToken
+    if (deleteResult instanceof Error) {
+      return deleteResult;
+    }
   }
 
   const twoFactorToken = await createTwoFactorToken(email, token, expires);
