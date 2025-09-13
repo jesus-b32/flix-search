@@ -9,6 +9,11 @@ import {
 export const emailVerification = async (token: string) => {
   const existingToken = await getVerificationTokenByToken(token);
 
+  // Handle error case from getVerificationTokenByToken
+  if (existingToken instanceof Error) {
+    return { error: existingToken.message };
+  }
+
   if (!existingToken) {
     return { error: "Token does not exist!" };
   }
@@ -43,7 +48,12 @@ export const emailVerification = async (token: string) => {
   if (updateResult instanceof Error) {
     return { error: updateResult.message };
   }
-  await deleteVerificationToken(existingToken.id);
+
+  const deleteResult = await deleteVerificationToken(existingToken.id);
+  // Handle error case from deleteVerificationToken
+  if (deleteResult instanceof Error) {
+    return { error: deleteResult.message };
+  }
 
   return { success: "Email verified!" };
 };

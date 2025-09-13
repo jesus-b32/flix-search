@@ -61,11 +61,16 @@ export const login = async (
     const verificationToken = await generateVerificationToken(
       existingUser.email,
     );
-    if (!verificationToken)
-      return { error: "Error generating verification token!" };
-    if (!verificationToken[0]?.token || !verificationToken[0]?.email) {
+
+    // Handle error case from generateVerificationToken
+    if (verificationToken instanceof Error) {
+      return { error: verificationToken.message };
+    }
+
+    if (!verificationToken?.[0]?.token || !verificationToken?.[0]?.email) {
       return { error: "Error generating verification token!" };
     }
+
     await sendVerificationEmail(
       verificationToken[0].email,
       verificationToken[0].token,
@@ -79,6 +84,11 @@ export const login = async (
   if (existingUser.isTwoFactorEnabled && existingUser.email) {
     if (code) {
       const twoFactorToken = await getTwoFactorTokenByEmail(existingUser.email);
+
+      // Handle error case from getTwoFactorTokenByEmail
+      if (twoFactorToken instanceof Error) {
+        return { error: twoFactorToken.message };
+      }
 
       if (!twoFactorToken) {
         return { error: "Invalid code!" };
@@ -94,23 +104,50 @@ export const login = async (
         return { error: "Code expired!" };
       }
 
-      await deleteTwoFactorToken(twoFactorToken.id);
+      const deleteResult = await deleteTwoFactorToken(twoFactorToken.id);
+      // Handle error case from deleteTwoFactorToken
+      if (deleteResult instanceof Error) {
+        return { error: deleteResult.message };
+      }
 
       const existingConfirmation = await getTwoFactorConfirmationByUserId(
         existingUser.id,
       );
-      if (existingConfirmation) {
-        await deleteTwoFactorConfirmation(existingConfirmation.id);
+
+      // Handle error case from getTwoFactorConfirmationByUserId
+      if (existingConfirmation instanceof Error) {
+        return { error: existingConfirmation.message };
       }
 
-      await createTwoFactorConfirmation(existingUser.id);
+      if (existingConfirmation) {
+        const deleteConfirmationResult = await deleteTwoFactorConfirmation(
+          existingConfirmation.id,
+        );
+        // Handle error case from deleteTwoFactorConfirmation
+        if (deleteConfirmationResult instanceof Error) {
+          return { error: deleteConfirmationResult.message };
+        }
+      }
+
+      const createConfirmationResult = await createTwoFactorConfirmation(
+        existingUser.id,
+      );
+      // Handle error case from createTwoFactorConfirmation
+      if (createConfirmationResult instanceof Error) {
+        return { error: createConfirmationResult.message };
+      }
     } else {
       const twoFactorToken = await generateTwoFactorToken(existingUser.email);
 
-      if (!twoFactorToken) return { error: "Error generating 2FA token!" };
-      if (!twoFactorToken[0]?.token || !twoFactorToken[0]?.email) {
+      // Handle error case from generateTwoFactorToken
+      if (twoFactorToken instanceof Error) {
+        return { error: twoFactorToken.message };
+      }
+
+      if (!twoFactorToken?.[0]?.token || !twoFactorToken?.[0]?.email) {
         return { error: "Error generating 2FA token!" };
       }
+
       await sendTwoFactorEmail(
         twoFactorToken[0].email,
         twoFactorToken[0].token,

@@ -175,10 +175,21 @@ const authConfig: NextAuthConfig = {
           existingUser.id,
         );
 
+        // Handle error case from getTwoFactorConfirmationByUserId
+        if (twoFactorConfirmation instanceof Error) {
+          return false;
+        }
+
         if (!twoFactorConfirmation) return false;
 
         // Delete two factor confirmation for next sign in
-        await deleteTwoFactorConfirmation(twoFactorConfirmation.id);
+        const deleteResult = await deleteTwoFactorConfirmation(
+          twoFactorConfirmation.id,
+        );
+        // Handle error case from deleteTwoFactorConfirmation
+        if (deleteResult instanceof Error) {
+          return false;
+        }
       }
 
       return true;
@@ -199,6 +210,21 @@ const authConfig: NextAuthConfig = {
      */
     async session({ session, user }) {
       const account = await getAccountByUserId(user.id);
+
+      // Handle error case from getAccountByUserId
+      if (account instanceof Error) {
+        return {
+          ...session,
+          user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            image: user.image,
+            isTwoFactorEnabled: user.isTwoFactorEnabled,
+            isOAuth: false,
+          },
+        };
+      }
 
       return {
         ...session,
