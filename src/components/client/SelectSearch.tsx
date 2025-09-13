@@ -1,9 +1,13 @@
 "use client";
 
+// React
 import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 
+// Utils
 import { cn } from "@/lib/utils";
+
+// UI Components
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -18,20 +22,27 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+
+// type definitions
 import type {
   countryList,
   streamingProviderList,
 } from "@/server/actions/types";
 
+// Next.js Router
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
 /**
- * A component that renders a searchable and selectable popover list for either
- * streaming providers or countries. It allows users to filter and select
+ * A component that displays a searchable and selectable popover list for either
+ * streaming providers or countries.\
+ * It allows users to filter and select
  * options from the provided data, updating the URL search parameters based on
  * the selection.
- * @param data - An array of either country objects or streaming provider objects.
- * @returns A React component for selecting and searching through the given data.
+ * Used in the filter sort component.
+ *
+ * @param data - an array of either country objects or streaming provider objects
+ * @param className - the class name of the list: streaming providers or countries
+ * @returns a searchable and selectable popover list for either streaming providers or countries
  */
 export default function SelectSearch({
   data,

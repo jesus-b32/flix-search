@@ -8,9 +8,12 @@ import { signOut } from "@/auth";
 import bcrypt from "bcryptjs";
 
 /**
- * Validates the form values and returns a success message or an error message
+ * Validates the delete account form values and returns a success message or an error message.
+ * Used for deleting user account.
  *
- * @param values - the form values of a new image
+ * @param values - the form values of a delete account
+ * @param isOauth - whether the user is an Oauth account
+ * @param userId - the user id
  * @returns an object with a success message or an error message
  */
 export const deleteAccount = async (

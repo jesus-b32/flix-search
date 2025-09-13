@@ -18,6 +18,15 @@ interface DateSelectorProps {
   setIsChanged?: (value: boolean) => void;
 }
 
+/**
+ * A component that selects a date.
+ * Used for selecting a date.
+ *
+ * @param date - the date to select
+ * @param setDate - the function to set the date
+ * @param setIsChanged - the function to set if the date has changed
+ * @returns a date selector component
+ */
 export default function DateSelector({
   date,
   setDate,

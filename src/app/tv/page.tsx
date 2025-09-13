@@ -1,3 +1,4 @@
+// Next.js
 import { type Metadata } from "next";
 
 // client and server Components
@@ -16,10 +17,18 @@ import {
   getWatchProviderRegions,
 } from "@/server/actions/actions";
 
+/**
+ * The metadata for the discover tv show page.
+ */
 export const metadata: Metadata = {
   title: "Discover TV Shows",
 };
 
+/**
+ * The discover tv show page.
+ *
+ * @returns the discover tv show page
+ */
 export default async function DiscoverTvShowPage({
   searchParams,
 }: {

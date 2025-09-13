@@ -1,14 +1,26 @@
+// Next.js
 import { type Metadata } from "next";
 
+// Server Actions
 import { getVideoList } from "@/data/videoList";
-import WatchlistCard from "@/components/WatchlistCard";
 import { getVideosFromList } from "@/data/videoList";
 import { currentUser } from "@/lib/currentUser";
 
+// Custom Components
+import WatchlistCard from "@/components/WatchlistCard";
+
+/**
+ * The metadata for the watchlist page.
+ */
 export const metadata: Metadata = {
   title: "My Watchlist",
 };
 
+/**
+ * The watchlist page.
+ *
+ * @returns the watchlist page
+ */
 export default async function WatchlistPage() {
   const user = await currentUser();
   const watchlist = await getVideoList(user?.id ?? "", "watchlist");

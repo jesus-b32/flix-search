@@ -47,6 +47,32 @@ interface FilterContentProps {
   setIsChanged: (value: boolean) => void;
 }
 
+/**
+ * A component that displays all the filter and sort options in filter sort component.
+ * Used in filter sort component.
+ *
+ * @param mediaType - the type of media: movie or tv
+ * @param sortOptions - the sort options: popularity, rating, release date, title, name
+ * @param sortBy - the sort by: popularity, rating, release date, title, name
+ * @param handleSortChange - Used to update the sort by. When the sort by is changed, the isChanged state is set to true.
+ * @param genreList - the genre list of media
+ * @param selectedGenres - list of selected genres
+ * @param handleGenreChange - Used to update the selected genres. When the selected genres are changed, the isChanged state is set to true.
+ * @param originalLanguage - the original language of media
+ * @param setOriginalLanguage - Used to update the original language. When the original language is changed, the isChanged state is set to true.
+ * @param releaseDateGte - the release date from
+ * @param setReleaseDateGte - Used to update the release date from. When the release date from is changed, the isChanged state is set to true.
+ * @param releaseDateLte - the release date to
+ * @param setReleaseDateLte - Used to update the release date to. When the release date to is changed, the isChanged state is set to true.
+ * @param runtime - the runtime of media
+ * @param setRuntime - Used to update the runtime. When the runtime is changed, the isChanged state is set to true.
+ * @param watchProviderRegionList - the watch provider region list
+ * @param watchProviders - list of watch providers of media
+ * @param setWatchProviders - Used to update the watch providers. When the watch providers are changed, the isChanged state is set to true.
+ * @param watchProviderList - the watch provider list
+ * @param languageList - the language list of media
+ * @param setIsChanged - Used to update the isChanged state. When the isChanged state is changed, the isChanged state is set to true.
+ */
 export default function FilterContent({
   mediaType,
   sortOptions,

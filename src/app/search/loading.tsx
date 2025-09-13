@@ -1,5 +1,11 @@
+// Next.js
 import { CgSpinnerTwo } from "react-icons/cg";
 
+/**
+ * The loading page displayed when the search pages are loading.
+ *
+ * @returns the loading page
+ */
 export default function Loading() {
   // Or a custom loading skeleton component
   return (

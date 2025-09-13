@@ -1,3 +1,4 @@
+// UI Components
 import {
   Card,
   CardContent,
@@ -6,14 +7,22 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
+// Icons
 import { ImageOff } from "lucide-react";
 
+// type definitions
 import type { movieSearchResult } from "@/server/actions/movies/types";
 import type { tvSearchResult } from "@/server/actions/tv/types";
+
+// Next.js Router
 import Link from "next/link";
+
+// UI Components
 import { Badge } from "@/components/ui/badge";
 /**
  * Returns a card with the details of a movie or tv show that was searched
+ * Used in the search page.
+ *
  * @param movie or tv show
  * @returns - A list card with title, poster image, and overview for movies or TV shows related to the search
  */

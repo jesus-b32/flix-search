@@ -6,6 +6,12 @@ import type * as z from "zod";
 import { sendPasswordResetEmail } from "@/lib/sendEmail";
 import { generatePasswordResetToken } from "@/lib/generateToken";
 
+/**
+ * Validates the form values from a password reset request.
+ * Used for password reset.
+ * Generates a password reset token and sends a password reset email to the user.
+ * Returns a success or error message.
+ */
 export const resetPassword = async (
   values: z.infer<typeof ResetPasswordSchema>,
 ) => {

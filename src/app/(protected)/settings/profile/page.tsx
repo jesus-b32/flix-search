@@ -1,22 +1,33 @@
+// Next.js
 import { type Metadata } from "next";
 import { currentUser } from "@/lib/currentUser";
 
+// UI Components
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+// Custom Components
 import ProfileEditWrapper from "@/components/ProfileEditWrapper";
 
-//forms
+// Forms
 import { UpdateImageForm } from "@/components/form/UpdateImageForm";
 import { UpdateNameForm } from "@/components/form/UpdateNameForm";
 import { UpdateEmailForm } from "@/components/form/UpdateEmailForm";
 import { UpdatePasswordForm } from "@/components/form/UpdatePasswordForm";
 import { UpdateTwoFactorForm } from "@/components/form/UpdateTwoFactorForm";
 
+/**
+ * The metadata for the profile page.
+ */
 export const metadata: Metadata = {
   title: "My Profile",
 };
 
+/**
+ * The profile page for editing user profile.
+ *
+ * @returns the profile page
+ */
 export default async function SettingProfilePage() {
   const user = await currentUser();
 

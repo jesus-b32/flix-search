@@ -8,6 +8,14 @@ interface LoginButtonProps {
   asChild?: boolean;
 }
 
+/**
+ * A button component that is used to navigate to the login page.
+ * Used for navigating to the login page.
+ *
+ * @param children - the children to wrap
+ * @param mode - the mode to use
+ * @param asChild - whether to use the asChild prop
+ */
 export const LoginButton = ({
   children,
   mode = "redirect",

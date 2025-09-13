@@ -198,7 +198,7 @@ export const getVideosFromList = async (videoListId: string) => {
   }
 
   try {
-    const videosfromList = await db
+    const videosFromList = await db
       .select({
         videoId: videos.id,
         tmdbId: videos.tmdbId,
@@ -212,7 +212,7 @@ export const getVideosFromList = async (videoListId: string) => {
       .innerJoin(videos, eq(videosToVideoLists.videoId, videos.id))
       .where(eq(videosToVideoLists.videoListId, videoListId.trim()));
 
-    return videosfromList;
+    return videosFromList;
   } catch (error) {
     // Log database errors for debugging
     console.error("Database error in getVideosFromList:", {
@@ -338,7 +338,7 @@ export const removeVideoFromList = async (
  * @param posterPath - The poster path of the video
  * @returns - The video ID if successful, 0 if failed, or an Error if the request fails
  */
-export const insertVideotoDb = async (
+export const insertVideoToDb = async (
   tmdbId: number,
   mediaType: "movie" | "tv",
   title: string,
@@ -414,7 +414,7 @@ export const insertVideotoDb = async (
     return videoId;
   } catch (error) {
     // Log database errors for debugging
-    console.error("Database error in insertVideotoDb:", {
+    console.error("Database error in insertVideoToDb:", {
       tmdbId,
       mediaType,
       title: title.trim(),

@@ -17,6 +17,13 @@ import {
 import { v4 as uuid } from "uuid";
 import crypto from "crypto";
 
+/**
+ * Generate a verification token.
+ * If a token already exists for the email, it will be deleted and a new one will be created.
+ * Used for email verification.
+ * @param email - The email address associated with the token
+ * @returns - The generated verification token object if successful, null if creation fails, or an Error if the request fails
+ */
 export const generateVerificationToken = async (email: string) => {
   const token = uuid();
   const expires = new Date(new Date().getTime() + 3600 * 1000); //expires in 1 hour
@@ -45,6 +52,13 @@ export const generateVerificationToken = async (email: string) => {
   return verificationToken;
 };
 
+/**
+ * Generate a password reset token.
+ * If a token already exists for the email, it will be deleted and a new one will be created.
+ * Used for password reset.
+ * @param email - The email address associated with the token
+ * @returns - The generated password reset token object if successful, null if creation fails, or an Error if the request fails
+ */
 export const generatePasswordResetToken = async (email: string) => {
   const token = uuid();
   const expires = new Date(new Date().getTime() + 3600 * 1000); //expires in 1 hour
@@ -73,6 +87,13 @@ export const generatePasswordResetToken = async (email: string) => {
   return passwordResetToken;
 };
 
+/**
+ * Generate a two-factor token.
+ * If a token already exists for the email, it will be deleted and a new one will be created.
+ * Used for two-factor authentication.
+ * @param email - The email address associated with the token
+ * @returns - The generated two-factor token object if successful, null if creation fails, or an Error if the request fails
+ */
 export const generateTwoFactorToken = async (email: string) => {
   const token = crypto.randomInt(100_000, 1_000_000).toString();
   const expires = new Date(new Date().getTime() + 300 * 1000); //expires in 5min

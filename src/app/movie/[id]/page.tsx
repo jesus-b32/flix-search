@@ -1,18 +1,30 @@
+// Next.js
 import { type Metadata } from "next";
 
+// Custom Components
 import { getMovieDetails } from "@/server/actions/movies/actions";
 import DetailCard from "@/components/detailPage/DetailCard";
 import { getCountries } from "@/server/actions/actions";
 import AvailabilityByProvider from "@/components/detailPage/AvailabilityByProvider";
 import AvailabilityByCountry from "@/components/detailPage/AvailabilityByCountry";
 import Recommendations from "@/components/detailPage/Recommendations";
+
+// Next.js Router
 import { currentUser } from "@/lib/currentUser";
+
+// Custom Components
 import AvailabilityToggle from "@/components/client/AvailabilityToggle";
 
+/**
+ * The props for the movie details page.
+ */
 type Props = {
   params: { id: string };
 };
 
+/**
+ * The metadata for the movie details page.
+ */
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // read route params
   const id = Number(params.id);
@@ -28,6 +40,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+/**
+ * The movie details page.
+ *
+ * @returns the movie details page
+ */
 export default async function MovieDetails({
   params,
   searchParams,

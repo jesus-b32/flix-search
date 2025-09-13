@@ -1,10 +1,16 @@
 import "@/styles/globals.css";
 
+// UI Components
 import { GeistSans } from "geist/font/sans";
+
+// Next.js
 import { type Metadata } from "next";
 import TopNav from "@/components/TopNav";
 import { Footer } from "@/components/Footer";
 
+/**
+ * The metadata for the root layout.
+ */
 export const metadata: Metadata = {
   title: {
     template: "%s | The Flix Search",
@@ -14,6 +20,11 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
+/**
+ * The root layout.
+ *
+ * @returns the root layout
+ */
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {

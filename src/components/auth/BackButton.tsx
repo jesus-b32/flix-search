@@ -10,9 +10,10 @@ interface BackButtonProps {
 
 /**
  * A button component that is used to navigate back to a previous page.
+ * Used for navigating back to a previous page.
  *
- * The `href` prop is used to determine the URL to navigate to.
- * The `label` prop is used to set the text content of the button.
+ * @param href - the URL to navigate to
+ * @param label - the text content of the button
  */
 export const BackButton = ({ href, label }: BackButtonProps) => {
   return (

@@ -18,7 +18,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-// This form schema ensures that the search term is not empty and media type fields is either movies or tv-shows
+/**
+ * This form schema ensures that the search term is not empty and media type fields is either movies or tv-shows
+ *
+ * @returns a form schema that ensures that the search term is not empty and media type fields is either movies or tv-shows
+ */
 const formSchema = z.object({
   searchTerm: z.string().min(1, {
     message: "Search term is required",
@@ -34,6 +38,7 @@ interface SearchProps {
 
 /**
  * A form to search for movies and TV shows.
+ * Used in the home page.
  *
  * The form is validated using the `formSchema` defined above. The search term
  * must not be empty, and the media type must be either "movie" or "tv-show".
@@ -41,6 +46,9 @@ interface SearchProps {
  * When the form is submitted, the current URL is replaced with a new URL that
  * includes the search term in the query string. The path of the
  * new URL is determined by the media type.
+ *
+ * @param onSearch - the function to call when the search is submitted
+ * @returns a search component that displays the search form
  */
 export default function Search({ onSearch }: SearchProps) {
   const router = useRouter();
@@ -55,6 +63,13 @@ export default function Search({ onSearch }: SearchProps) {
     },
   });
 
+  /**
+   * Used to submit the Search form.
+   * Used to create a url friendly search params and redirect to the search results page.
+   * Used to call the onSearch callback if provided.
+   *
+   * @param values - the values of the Search form
+   */
   function onSubmit(values: z.infer<typeof formSchema>) {
     const searchTerm = values.searchTerm;
     const mediaType = values.mediaType;

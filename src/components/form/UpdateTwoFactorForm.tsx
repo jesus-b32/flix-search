@@ -1,5 +1,6 @@
 "use client";
 
+// UI Components
 import {
   Form,
   FormControl,
@@ -12,22 +13,31 @@ import {
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 
-// form validation imports
+// form validation
 import type * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-// custom components
+// custom
 import { FormError } from "@/components/auth/FormError";
 import { FormSuccess } from "@/components/auth/FormSuccess";
 
-//other imports
+//other
 import { TwoFactorSchema } from "@/schemas/schema";
 import { useTransition, useState } from "react";
 import { updateTwoFactor } from "@/server/actions/form/updateTwoFactor";
 
+// Next.js Router
 import { useRouter } from "next/navigation";
 
+/**
+ * A form for updating a user's two factor authentication.
+ * Used in the user account page.
+ *
+ * @param userId - the user id
+ * @param isTwoFactorEnabled - whether the user has two factor authentication enabled
+ * @returns a update two factor authentication form
+ */
 export const UpdateTwoFactorForm = ({
   userId,
   isTwoFactorEnabled,

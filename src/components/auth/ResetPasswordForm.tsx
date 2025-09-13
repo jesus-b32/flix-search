@@ -28,8 +28,10 @@ import { ResetPasswordSchema } from "@/schemas/schema";
 import { resetPassword } from "@/server/actions/auth/resetPassword";
 
 /**
- * This is a form containing an email field.
- * When a valid email is submitted, an email is sent to user to help reset their password.
+ * A form containing an email field.
+ * Used for resetting a user's password.
+ *
+ * @returns a reset password form with an email field
  */
 export const ResetPasswordForm = () => {
   /**
@@ -51,8 +53,9 @@ export const ResetPasswordForm = () => {
 
   /**
    * onSubmit is a function that is called when the form is submitted. It calls the
-   * login action with the form data and sets the error and success states
+   * reset password action with the form data and sets the error and success states
    * based on the response.
+   *
    * @param {z.infer<typeof ResetPasswordSchema>} values - The form data.
    */
   const onSubmit = (values: z.infer<typeof ResetPasswordSchema>) => {

@@ -6,6 +6,13 @@ import {
   deleteVerificationToken,
 } from "@/data/verificationToken";
 
+/**
+ * Verify an email address using a verification token.
+ * Verification token is retrieved from the database.
+ * Used for email verification.
+ * @param token - The verification token
+ * @returns - A success or error message
+ */
 export const emailVerification = async (token: string) => {
   const existingToken = await getVerificationTokenByToken(token);
 

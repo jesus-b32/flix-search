@@ -1,7 +1,15 @@
+// Next.js
 import Link from "next/link";
+
+// UI Components
 import { Button } from "@/components/ui/button";
 import { Frown } from "lucide-react";
 
+/**
+ * The not found page.
+ *
+ * @returns the not found page
+ */
 export default function NotFound() {
   return (
     <div className="flex h-screen flex-col items-center justify-center gap-y-4">

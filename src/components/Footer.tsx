@@ -1,6 +1,15 @@
+// Next.js Router
 import Link from "next/link";
+
+// Icons
 import { Clapperboard } from "lucide-react";
 
+/**
+ * A footer component that displays the footer of the website.
+ * Used in the layout component.
+ *
+ * @returns - a footer component that displays the footer of the website
+ */
 export const Footer = () => {
   return (
     <footer className="relative bg-slate-600 text-foreground transition-colors duration-300">

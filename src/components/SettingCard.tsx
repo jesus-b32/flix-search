@@ -1,3 +1,4 @@
+// UI Components
 import {
   Sheet,
   SheetContent,
@@ -8,9 +9,17 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
+// Icons
 import { SlidersHorizontal } from "lucide-react";
 import Link from "next/link";
 
+/**
+ * A component that displays the settings card.
+ * Contains links to the profile and delete account pages.
+ * Used in the settings page.
+ *
+ * @returns a settings card component
+ */
 export default function SettingCard() {
   const FilterContent = () => (
     <div className="flex w-full flex-col space-y-4 py-4">

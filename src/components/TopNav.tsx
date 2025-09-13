@@ -1,3 +1,4 @@
+// UI Components
 import {
   Sheet,
   SheetClose,
@@ -7,10 +8,15 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet";
 
+// Icons
 import { Clapperboard, Menu } from "lucide-react";
+
+// Next.js Router
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import SearchPopover from "@/components/client/SearchPopover";
+
+// Utils
 import { currentUser } from "@/lib/currentUser";
 import { UserButton } from "@/components/auth/UserButton";
 
@@ -19,6 +25,7 @@ import { UserButton } from "@/components/auth/UserButton";
  * links to discover movies and TV shows, login/signup buttons,
  * and a search bar. For logged-in users, it also displays a dropdown
  * menu with links to their account settings and support and hides the login/signup buttons.
+ * Used in the layout component.
  *
  * The component is responsive and will render a hamburger menu
  * on smaller screens.

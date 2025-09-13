@@ -12,6 +12,8 @@ import { useSearchParams } from "next/navigation";
  * with the same style as the primary button.
  *
  * This component is intended to be used in the {@link CardWrapper} component.
+ *
+ * @returns a row of social sign-in buttons (Google and GitHub)
  */
 export const SocialButtons = () => {
   const searchParams = useSearchParams();

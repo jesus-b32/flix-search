@@ -1,5 +1,6 @@
 "use client";
 
+// UI Components
 import {
   Form,
   FormControl,
@@ -11,22 +12,29 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-// form validation imports
+// form validation
 import type * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-// custom components
+// custom
 import { FormError } from "@/components/auth/FormError";
 import { FormSuccess } from "@/components/auth/FormSuccess";
 
-//other imports
+//other
 import { NewNameSchema } from "@/schemas/schema";
 import { useTransition, useState } from "react";
 import { updateName } from "@/server/actions/form/updateName";
 
 import { useRouter } from "next/navigation";
 
+/**
+ * A form for updating a user's name.
+ * Used in the user account page.
+ *
+ * @param userId - the user id
+ * @returns a update name form
+ */
 export const UpdateNameForm = ({ userId }: { userId: string }) => {
   /**
    * useTransition is a React Hook that lets you update the state without blocking the UI.

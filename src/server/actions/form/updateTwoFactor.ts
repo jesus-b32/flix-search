@@ -5,7 +5,11 @@ import { TwoFactorSchema } from "@/schemas/schema";
 import { updateUserTwoFactorEnabled } from "@/data/user";
 
 /**
- * Validates the form values and returns a success message or an error message
+ * Validates the update two factor form values and returns a success message or an error message.
+ * Used for updating user two factor.
+ *
+ * @param values - the form values of a update two factor
+ * @param userId - the user id
  * @returns an object with a success message or an error message
  */
 export const updateTwoFactor = async (

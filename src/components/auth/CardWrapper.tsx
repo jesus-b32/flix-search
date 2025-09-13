@@ -23,6 +23,12 @@ interface CardWrapperProps {
  * and footer. The header shows the given label and the footer shows a back
  * button to the given href and label. If showSocial is true, the footer will
  * also render a Social component.
+ *
+ * @param children - the children to wrap
+ * @param headerLabels - the labels to display in the header
+ * @param backButtonLabel - the label to display in the back button
+ * @param backButtonHref - the URL to navigate to when the back button is clicked
+ * @param showSocial - whether to display the social buttons
  */
 export const CardWrapper = ({
   children,

@@ -1,3 +1,4 @@
+// UI Components
 import {
   Card,
   CardContent,
@@ -8,10 +9,17 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
+// Icons
 import { ImageOff } from "lucide-react";
+
+// type definitions
 import type { movieDetails } from "@/server/actions/movies/types";
 import type { tvDetails } from "@/server/actions/tv/types";
+
+// data
 import { getVideoList, isVideoInList, getVideo } from "@/data/videoList";
+
+// custom components
 import WatchlistButton from "@/components/WatchlistButton";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -20,7 +28,10 @@ import { timeConvert } from "@/lib/timeConvert";
 
 /**
  * Creates a server component that displays a movie or TV show's details
+ * Used in the movie and tv detail pages.
+ *
  * @param  details - movie or TV show details object
+ * @param user - user object
  * @returns - server component that displays the details in a card
  */
 export default async function DetailCard({

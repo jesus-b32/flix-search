@@ -26,12 +26,23 @@ import type {
 
 // icons
 import { SlidersHorizontal } from "lucide-react";
-
 import { format } from "date-fns";
 import { UTCDate } from "@date-fns/utc";
 
+// custom components
 import FilterContent from "@/components/client/FilterContent";
 
+/**
+ * A component that displays the filter and sort options in discover pages.
+ * Used in discover pages.
+ *
+ * @param genreList - the genre list of media
+ * @param languageList - the language list of media
+ * @param watchProviderRegionList - the watch provider region list
+ * @param watchProviderList - the watch provider list
+ * @param mediaType - the type of media: movie or tv
+ * @returns a filter and sort component that displays the filter and sort options
+ */
 export default function FilterSort({
   genreList,
   languageList,
@@ -145,6 +156,7 @@ export default function FilterSort({
    * Updates the selected genres by toggling the given genre in the list of
    * selected genres. If the genre is already in the list, it is removed; if it is
    * not in the list, it is added.
+   *
    * @param {string} genre - The genre to be toggled.
    */
   const handleGenreChange = (genre: string) => {
@@ -157,6 +169,7 @@ export default function FilterSort({
   /**
    * Updates the sortBy state with the provided value and sets the isChanged
    * state to true, indicating that a change has been made to the sorting options.
+   *
    * @param {string} value - The new sorting option to be applied.
    */
   const handleSortChange = (value: string) => {

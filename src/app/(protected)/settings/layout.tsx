@@ -1,5 +1,12 @@
+// Custom Components
 import SettingCard from "@/components/SettingCard";
 
+/**
+ * The layout for the settings page.
+ *
+ * @param children - the children to wrap
+ * @returns the settings layout
+ */
 const SettingsLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="flex min-h-[calc(100vh-10rem)] flex-col items-center">

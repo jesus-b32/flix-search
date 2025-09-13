@@ -1,8 +1,14 @@
-"use client"; // Error components must be Client Components
+"use client";
 
+// Next.js
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
+/**
+ * The error page for the watchlist page.
+ *
+ * @returns the error page
+ */
 export default function Error({
   error,
   reset,
