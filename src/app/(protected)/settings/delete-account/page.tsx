@@ -1,12 +1,23 @@
+// Next.js
 import { type Metadata } from "next";
 import { currentUser } from "@/lib/currentUser";
+
+// Custom Components
 import { DeleteAccountForm } from "@/components/form/DeleteAccountForm";
 import ProfileEditWrapper from "@/components/ProfileEditWrapper";
 
+/**
+ * The metadata for the delete account page.
+ */
 export const metadata: Metadata = {
   title: "Delete My Account",
 };
 
+/**
+ * The delete account page for deleting user account.
+ *
+ * @returns the delete account page
+ */
 export default async function DeleteAccountPage() {
   const user = await currentUser();
 

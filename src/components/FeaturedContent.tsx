@@ -1,5 +1,10 @@
+// React
 import { Suspense } from "react";
+
+// Custom Components
 import MediaList from "@/components/MediaList";
+
+// Server Actions
 import {
   getNowPlayingMovies,
   getComingSoonMovies,
@@ -16,6 +21,8 @@ import {
 /**
  * Displays featured movie and TV show content on the homepage.
  * Shows multiple sections including now playing, coming soon, popular, and top rated content.
+ *
+ * @returns - a featured content component that displays the featured movie and TV show content
  */
 export default function FeaturedContent() {
   return (
@@ -43,6 +50,9 @@ export default function FeaturedContent() {
 
 /**
  * Renders all movie sections
+ * Used in the home page.
+ *
+ * @returns - a movie sections component that displays the featured movie content
  */
 async function MovieSections() {
   const [nowPlayingMovies, comingSoonMovies, popularMovies, topRatedMovies] =
@@ -73,6 +83,9 @@ async function MovieSections() {
 
 /**
  * Renders all TV show sections
+ * Used in the home page.
+ *
+ * @returns - a TV show sections component that displays the featured TV show content
  */
 async function TvSections() {
   const [

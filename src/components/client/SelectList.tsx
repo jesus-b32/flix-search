@@ -34,6 +34,18 @@ interface SelectListProps {
   onValueChange?: () => void;
 }
 
+/**
+ * A component that displays a list of languages or watch provider regions.
+ * Used in the filter sort component.
+ *
+ * @param list - the list of languages or watch provider regions
+ * @param currentValue - the current value of the list: language or watch provider region
+ * @param setCurrentValue - the function to set the current value of the list
+ * @param className - the class name of the list
+ * @param onValueChange - the function to call when the value is changed
+ * Used to update the current value of the list.
+ * @returns a list of languages or watch provider regions
+ */
 export default function SelectList({
   list,
   currentValue,

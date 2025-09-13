@@ -22,6 +22,10 @@ interface UserButtonProps {
 /**
  * A dropdown menu button that is rendered for logged in users.
  * Dropdown menu includes links to settings, watchlist, and a logout button.
+ *
+ * @param imageLink - the URL of the user's image
+ * @param name - the name of the user
+ * @returns a dropdown menu button that is rendered for logged in users
  */
 export const UserButton = ({ imageLink, name }: UserButtonProps) => {
   const [open, setOpen] = React.useState(false);

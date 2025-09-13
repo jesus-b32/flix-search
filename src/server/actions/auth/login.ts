@@ -56,7 +56,7 @@ export const login = async (
     return { error: "Email does not exist!" };
   }
 
-  // prevent user from logging in if email not verified and email verification
+  //if user is not verified, send verification email
   if (!existingUser.emailVerified) {
     const verificationToken = await generateVerificationToken(
       existingUser.email,
@@ -81,6 +81,7 @@ export const login = async (
   const passwordsMatch = await bcrypt.compare(password, existingUser.password);
   if (!passwordsMatch) return { error: "Invalid password!" };
 
+  //if user has 2FA enabled, check if code is valid
   if (existingUser.isTwoFactorEnabled && existingUser.email) {
     if (code) {
       const twoFactorToken = await getTwoFactorTokenByEmail(existingUser.email);

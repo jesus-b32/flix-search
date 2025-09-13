@@ -1,7 +1,15 @@
+// Custom Components
 import Search from "@/components/client/Search";
 import FeaturedContent from "@/components/FeaturedContent";
+
+// React
 import { Suspense } from "react";
 
+/**
+ * The home page.
+ *
+ * @returns the home page
+ */
 export default function HomePage() {
   return (
     <main className="flex min-h-screen flex-col items-center text-white">

@@ -14,9 +14,11 @@ import { usePathname, useSearchParams } from "next/navigation";
 
 /**
  * This client component is used to display pagination links for the search results.
+ * Used in the search results page and the discover pages.
+ *
  * @param totalPages - The total number of pages in the search results
  * @param className - Optional className for the pagination component
- * @returns The pagination link component
+ * @returns The pagination link component that displays the pagination links for the search results
  */
 export default function PaginationComponent({
   totalPages,
@@ -34,6 +36,7 @@ export default function PaginationComponent({
 
   /**
    * Creates the URL for a specific page number.
+   * Used to create the URL for a specific page number.
    * @param pageNumber - The page number to create the URL for
    * @returns The URL for the specified page number
    */

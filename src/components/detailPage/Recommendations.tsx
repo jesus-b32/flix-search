@@ -1,11 +1,19 @@
+// Icons
 import { ImageOff } from "lucide-react";
+
+// UI Components
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+
+// type definitions
 import type { MovieRecommendations } from "@/server/actions/movies/types";
 import type { TvRecommendations } from "@/server/actions/tv/types";
+
+// custom components
 import Link from "next/link";
 
 /**
  * Displays recommendations based on the provided list of movie or TV show recommendations.
+ * Used in the movie and tv detail pages.
  *
  * @param recommendations - List of movie or TV show recommendations
  */

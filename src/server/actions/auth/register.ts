@@ -9,7 +9,11 @@ import { generateVerificationToken } from "@/lib/generateToken";
 import { sendVerificationEmail } from "@/lib/sendEmail";
 
 /**
- * Validates the form values from a new registered user. Returns a success or error message.
+ * Validates the form values from a new registered user.
+ * Used for user registration.
+ * Creates a new user, video list, and verification token.
+ * Sends a verification email to the user.
+ * Returns a success or error message.
  */
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
   const validatedFields = RegisterSchema.safeParse(values);

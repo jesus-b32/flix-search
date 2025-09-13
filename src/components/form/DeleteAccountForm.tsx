@@ -1,5 +1,6 @@
 "use client";
 
+// UI Components
 import {
   Form,
   FormControl,
@@ -12,22 +13,30 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-// form validation imports
+// form validation
 import type * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-// custom components
+// custom
 import { FormError } from "@/components/auth/FormError";
 import { FormSuccess } from "@/components/auth/FormSuccess";
 
-//other imports
+//other
 import { DeleteAccountSchema } from "@/schemas/schema";
 import { useTransition, useState } from "react";
 import { deleteAccount } from "@/server/actions/form/deleteAccount";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 
+/**
+ * A form for deleting a user account.
+ * Used in the user account page.
+ *
+ * @param isOauth - whether the user is an Oauth account
+ * @param userId - the user id
+ * @returns a delete account form
+ */
 export const DeleteAccountForm = ({
   isOauth,
   userId,

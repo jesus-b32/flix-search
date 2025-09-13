@@ -5,9 +5,11 @@ import { NewImageSchema } from "@/schemas/schema";
 import { updateUserImage } from "@/data/user";
 
 /**
- * Validates the form values and returns a success message or an error message
+ * Validates the update image form values and returns a success message or an error message.
+ * Used for updating user image.
  *
- * @param values - the form values of a new image
+ * @param values - the form values of a update image
+ * @param userId - the user id
  * @returns an object with a success message or an error message
  */
 export const updateImage = async (

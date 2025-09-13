@@ -1,9 +1,18 @@
+// Next.js
 import { type Metadata } from "next";
 
+/**
+ * The metadata for the about page.
+ */
 export const metadata: Metadata = {
   title: "About",
 };
 
+/**
+ * The about page.
+ *
+ * @returns the about page
+ */
 export default function About() {
   return (
     <div className="my-6 flex min-h-screen flex-col items-center gap-y-6">

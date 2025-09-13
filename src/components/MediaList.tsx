@@ -1,12 +1,19 @@
+// Icons
 import { ImageOff } from "lucide-react";
+
+// UI Components
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import type { movieSearchResult } from "@/server/actions/movies/types";
 import type { tvSearchResult } from "@/server/actions/tv/types";
+
+// Next.js Router
 import Link from "next/link";
 
 /**
  * Displays a list of movies or TV shows in a horizontal scrollable layout.
  * Similar to Recommendations component but for general movie/TV show lists.
+ *
+ * Used in the home page.
  *
  * @param data - List of movies or TV shows
  * @param title - Title to display above the list

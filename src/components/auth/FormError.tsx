@@ -8,6 +8,9 @@ interface FormErrorProps {
  * FormError displays an error message below a form field or form in a red
  * rounded rectangle with a triangle alert icon. If the message is empty, it
  * returns null.
+ *
+ * @param message - the error message to display
+ * @returns a form error component with a message
  */
 export function FormError({ message }: FormErrorProps) {
   if (!message) {

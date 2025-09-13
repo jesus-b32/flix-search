@@ -11,7 +11,8 @@ const options = {
 };
 
 /**
- * Makes a GET request to the TMDB API
+ * Makes a GET request to the TMDB API.
+ * Used for fetching data from the TMDB API.
  * @param path The path to query from base url, must be a valid TMDB API endpoint
  * @returns The JSON response from the API, or an Error if the request fails
  */

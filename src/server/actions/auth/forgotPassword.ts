@@ -9,6 +9,14 @@ import {
 } from "@/data/passwordResetToken";
 import { getUserByEmail, updateUserPassword } from "@/data/user";
 
+/**
+ * Validates the form values from a password reset request.
+ * Password reset token is retrieved from the database.
+ * Used for password reset.
+ * @param values - The form values
+ * @param token - The token to reset the password
+ * @returns - A success or error message
+ */
 export const forgotPassword = async (
   values: z.infer<typeof NewPasswordFromEmailSchema>,
   token?: string | null,

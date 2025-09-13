@@ -1,4 +1,4 @@
-//shadcn ui components
+// UI Components
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -8,11 +8,20 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+// type definitions
 interface ProfileFormProps {
   buttonName: string;
   children: React.ReactNode;
 }
 
+/**
+ * A wrapper component that displays a profile edit form.
+ * Used in the user account page.
+ *
+ * @param buttonName - the name of the button
+ * @param children - the children of the component
+ * @returns a profile edit wrapper component
+ */
 export default function ProfileEditWrapper({
   buttonName,
   children,

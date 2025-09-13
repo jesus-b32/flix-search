@@ -7,6 +7,15 @@ type AvailabilityToggleProps = {
   countryView: React.ReactNode;
 };
 
+/**
+ * A component that toggles between displaying the provider view and the country view.
+ * Used for toggling between displaying the provider view and the country view.
+ * Used in the movie and tv detail pages.
+ *
+ * @param providerView - the provider view
+ * @param countryView - the country view
+ * @returns a toggle component that displays the provider view and the country view
+ */
 export default function AvailabilityToggle({
   providerView,
   countryView,

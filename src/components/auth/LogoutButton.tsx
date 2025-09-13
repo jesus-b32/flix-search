@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 
 /**
  * Reusable logout button that will call on logout server action when clicked on.
+ *
+ * @returns a logout button that will call on logout server action when clicked on
  */
 export const LogoutButton = () => {
   const onClick = () => {

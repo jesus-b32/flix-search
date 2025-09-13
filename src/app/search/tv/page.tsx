@@ -1,11 +1,18 @@
+// Next.js
 import { type Metadata } from "next";
 
+// Server Actions
 import { searchTvShows } from "@/server/actions/tv/actions";
+
+// Custom Components
 import SearchResultCards from "@/components/SearchResultCards";
 import PaginationComponent from "@/components/client/Pagination";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
+/**
+ * The props for the tv search page.
+ */
 type Props = {
   searchParams: {
     search?: string;
@@ -13,6 +20,9 @@ type Props = {
   };
 };
 
+/**
+ * The metadata for the tv search page.
+ */
 export const generateMetadata = async ({
   searchParams,
 }: Props): Promise<Metadata> => {
@@ -24,6 +34,11 @@ export const generateMetadata = async ({
   };
 };
 
+/**
+ * The tv search page.
+ *
+ * @returns the tv search page
+ */
 export default async function SearchPage({
   searchParams,
 }: {

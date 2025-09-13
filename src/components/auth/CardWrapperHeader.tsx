@@ -1,10 +1,4 @@
-// import { Poppins } from "next/font/google";
 import { cn } from "@/lib/utils";
-
-// const font = Poppins({
-//   weight: "600",
-//   subsets: ["latin"],
-// });
 
 interface HeaderProps {
   label: string;
@@ -14,6 +8,9 @@ interface HeaderProps {
  * Header component that displays a title and a label for CardWrapper component.
  * The title has a dynamic classname that includes a Poppins font style.
  * The label is displayed below the title with muted styling.
+ *
+ * @param label - the label to display in the header
+ * @returns a header component with a title and a label
  */
 export const CardWrapperHeader = ({ label }: HeaderProps) => {
   return (

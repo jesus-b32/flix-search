@@ -30,12 +30,12 @@ import { useSearchParams } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 
 /**
- * LoginForm is a component that renders a login form with an email and
- * password field. It uses the react-hook-form library to handle form state
- * and validation. The form is submitted to the login action, which is
- * a server-side action that validates the form data and logs in a user.
- * The form displays any errors that occur during login, and also displays
- * a success message when the login is successful.
+ * ForgotPasswordForm is a component that renders a forgot password form with a password and
+ * confirm password field. It uses the react-hook-form library to handle form state
+ * and validation. The form is submitted to the forgot password action, which is
+ * a server-side action that validates the form data and sends a reset password email.
+ * The form displays any errors that occur during forgot password, and also displays
+ * a success message when the forgot password is successful.
  */
 export const ForgotPasswordForm = () => {
   const searchParams = useSearchParams();
@@ -61,7 +61,7 @@ export const ForgotPasswordForm = () => {
 
   /**
    * onSubmit is a function that is called when the form is submitted. It calls the
-   * login action with the form data and sets the error and success states
+   * forgot password action with the form data and sets the error and success states
    * based on the response.
    * @param {z.infer<typeof ResetSchema>} values - The form data.
    */

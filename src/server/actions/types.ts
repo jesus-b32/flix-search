@@ -341,6 +341,10 @@ export type watchProviderRegions = {
   }[];
 };
 
+/**
+ * type for watchlist
+ * @see https://developer.themoviedb.org/reference/list-add-movie
+ */
 export type watchlist =
   | false
   | {

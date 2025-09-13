@@ -1,5 +1,10 @@
 import { CgSpinnerTwo } from "react-icons/cg";
 
+/**
+ * The loading page displayed when the movie details page is loading.
+ *
+ * @returns the loading page
+ */
 export default function Loading() {
   // Or a custom loading skeleton component
   return (

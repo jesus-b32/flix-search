@@ -1,6 +1,10 @@
+// Next.js
 import { type Metadata } from "next";
 
+// Server Actions
 import { getTvShowDetails } from "@/server/actions/tv/actions";
+
+// Custom Components
 import DetailCard from "@/components/detailPage/DetailCard";
 import { getCountries } from "@/server/actions/actions";
 import AvailabilityToggle from "@/components/client/AvailabilityToggle";
@@ -9,10 +13,20 @@ import AvailabilityByCountry from "@/components/detailPage/AvailabilityByCountry
 import Recommendations from "@/components/detailPage/Recommendations";
 import { currentUser } from "@/lib/currentUser";
 
+/**
+ * The props for the tv details page.
+ * @see https://developer.themoviedb.org/reference/tv-series-details
+ * @returns the props for the tv details page
+ */
 type Props = {
   params: { id: string };
 };
 
+/**
+ * The metadata for the tv details page.
+ * @see https://developer.themoviedb.org/reference/tv-series-details
+ * @returns the metadata for the tv details page
+ */
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // read route params
   const id = Number(params.id);
@@ -28,6 +42,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+/**
+ * The tv details page.
+ * @see https://developer.themoviedb.org/reference/tv-series-details
+ * @returns the tv details page
+ */
 export default async function TvDetails({
   params,
   searchParams,

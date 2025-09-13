@@ -1,3 +1,4 @@
+// UI Components
 import {
   Card,
   CardContent,
@@ -6,17 +7,30 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 
+// Icons
 import { ImageOff } from "lucide-react";
+
+// Icons
 import Link from "next/link";
 
+// Custom Components
 import WatchlistButton from "@/components/WatchlistButton";
+
+// Next.js Router
 import { currentUser } from "@/lib/currentUser";
+
+// Utils
 import { type watchlist as watchlistType } from "@/server/actions/types";
 
 /**
- * Returns a card with the details of a movie or tv show that was searched
- * @param movie or tv show
- * @returns - A list card with title, poster image, and overview for movies or TV shows related to the search
+ * Returns a card with the details of a movie or tv show in user's watchlist.
+ * Used in the watchlist page.
+ *
+ * @param cinema - the movie or tv show in user's watchlist
+ * @param watchlist - the watchlist of the user
+ * @param isVideoInWatchlist - whether the movie or TV show is in the watchlist
+ *
+ * @returns - A list card with title, poster image, and overview for movies or TV shows in user's watchlist
  */
 export default async function WatchlistCard({
   cinema,

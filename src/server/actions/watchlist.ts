@@ -3,10 +3,24 @@
 import {
   addVideoToList,
   removeVideoFromList,
-  insertVideotoDb,
+  insertVideoToDb,
 } from "@/data/videoList";
 import { type watchlist as watchlistType } from "@/server/actions/types";
 
+/**
+ * Update the watchlist.
+ * Used for updating the watchlist.
+ *
+ * @param tmdbId - the tmdb id
+ * @param mediaType - the media type
+ * @param title - the title
+ * @param overview - the overview
+ * @param releaseDate - the release date
+ * @param posterPath - the poster path
+ * @param videoId - the video id
+ * @param watchlist - the watchlist
+ * @param isVideoInWatchlist - whether the video is in the watchlist
+ */
 export async function updateWatchlist(
   tmdbId: number,
   mediaType: "movie" | "tv",
@@ -34,7 +48,7 @@ export async function updateWatchlist(
       } else {
         const insertedVideoId =
           videoId === ""
-            ? await insertVideotoDb(
+            ? await insertVideoToDb(
                 tmdbId,
                 mediaType,
                 title,
@@ -44,7 +58,7 @@ export async function updateWatchlist(
               )
             : 0;
 
-        // Handle error cases from insertVideotoDb
+        // Handle error cases from insertVideoToDb
         if (insertedVideoId instanceof Error) {
           console.error(
             "Error inserting video to database:",

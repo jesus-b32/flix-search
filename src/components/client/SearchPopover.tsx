@@ -13,6 +13,7 @@ import React from "react";
 /**
  * A popover that contains a search bar. The popover is
  * triggered by a button with a search icon.
+ * Used in the home page.
  *
  * @example
  * <SearchPopover />

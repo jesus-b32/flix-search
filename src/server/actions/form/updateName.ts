@@ -5,7 +5,11 @@ import { NewNameSchema } from "@/schemas/schema";
 import { updateUserName } from "@/data/user";
 
 /**
- * Validates the form values and returns a success message or an error message
+ * Validates the update name form values and returns a success message or an error message.
+ * Used for updating user name.
+ *
+ * @param values - the form values of a update name
+ * @param userId - the user id
  * @returns an object with a success message or an error message
  */
 export const updateName = async (

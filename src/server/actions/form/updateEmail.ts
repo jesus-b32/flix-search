@@ -8,7 +8,11 @@ import { generateVerificationToken } from "@/lib/generateToken";
 import { sendVerificationEmail } from "@/lib/sendEmail";
 
 /**
- * Validates the form values and returns a success message or an error message
+ * Validates the update email form values and returns a success message or an error message.
+ * Used for updating user email.
+ *
+ * @param values - the form values of a update email
+ * @param userId - the user id
  * @returns an object with a success message or an error message
  */
 export const updateEmail = async (
