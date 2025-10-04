@@ -26,6 +26,9 @@ import { Button } from "@/components/ui/button";
 import type { ExtendedUser } from "next-auth";
 import { timeConvert } from "@/lib/timeConvert";
 
+// Next.js Image
+import Image from "next/image";
+
 /**
  * Creates a server component that displays a movie or TV show's details
  * Used in the movie and tv detail pages.
@@ -85,13 +88,15 @@ export default async function DetailCard({
       <div className="flex h-auto max-h-[513px] w-auto max-w-[342px] justify-center object-contain md:justify-start">
         {/* image is 342x513 */}
         {details?.poster_path ? (
-          <img
+          <Image
             src={`https://image.tmdb.org/t/p/w342${details.poster_path}`}
             alt={
               "title" in details
                 ? `${details.title} poster image`
                 : `${details.name} poster image`
             }
+            width={342}
+            height={513}
             className="h-full w-full rounded-lg"
           />
         ) : (
