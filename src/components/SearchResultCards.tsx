@@ -17,6 +17,9 @@ import type { tvSearchResult } from "@/server/actions/tv/types";
 // Next.js Router
 import Link from "next/link";
 
+// Next.js Image
+import Image from "next/image";
+
 // UI Components
 import { Badge } from "@/components/ui/badge";
 /**
@@ -48,10 +51,12 @@ export default function SearchResultCards({
           href={"title" in cinema ? `/movie/${cinema.id}` : `/tv/${cinema.id}`}
         >
           {cinema?.poster_path ? (
-            <img
+            <Image
               src={`https://image.tmdb.org/t/p/w185${cinema.poster_path}`}
               alt="Movie or show image"
               className="h-full w-full rounded-none object-contain md:rounded-l-lg"
+              width={185}
+              height={278}
             />
           ) : (
             <ImageOff className="h-[188px] w-[125px] rounded-none md:h-[278px] md:w-[185px] md:rounded-l-lg" />

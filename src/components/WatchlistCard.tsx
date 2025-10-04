@@ -22,6 +22,9 @@ import { currentUser } from "@/lib/currentUser";
 // Utils
 import { type watchlist as watchlistType } from "@/server/actions/types";
 
+// Next.js Image
+import Image from "next/image";
+
 /**
  * Returns a card with the details of a movie or tv show in user's watchlist.
  * Used in the watchlist page.
@@ -71,10 +74,12 @@ export default async function WatchlistCard({
           }
         >
           {cinema?.posterPath ? (
-            <img
+            <Image
               src={`https://image.tmdb.org/t/p/w185${cinema.posterPath}`}
               alt="Movie or show image"
               className="h-full w-full rounded-none object-contain md:rounded-l-lg"
+              width={185}
+              height={278}
             />
           ) : (
             <ImageOff className="h-[188px] w-[125px] rounded-none md:h-[278px] md:w-[185px] md:rounded-l-lg" />
