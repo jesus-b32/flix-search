@@ -30,8 +30,8 @@ export const LoginButton = ({
     return <span>TODO: Implement modal</span>;
   }
   return (
-    <span onClick={onCLick} className="cursor-pointer">
+    <button onClick={onCLick} className="cursor-pointer">
       {children}
-    </span>
+    </button>
   );
 };

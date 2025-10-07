@@ -101,6 +101,7 @@ export default function FilterSort({
   const [watchProviders, setWatchProviders] = useState<Option[]>([]);
   const [watchRegion, setWatchRegion] = useState("US");
   const [isChanged, setIsChanged] = useState(false); //tracks if filter/sorting options has changed
+  const [announcement, setAnnouncement] = useState(""); //for screen reader announcements
 
   // Whenever search params in URL changes, get the new sorting and filter options from the URL search params and update the state of those values if the search parameter exists
   useEffect(() => {
@@ -278,10 +279,21 @@ export default function FilterSort({
 
     router.push(`${pathname}?${params.toString()}`);
     setIsChanged(false);
+    setAnnouncement(
+      `Filters and sort options applied. Showing ${mediaType === "movie" ? "movies" : "shows"} with current selections.`,
+    );
   };
 
   return (
     <>
+      <div
+        aria-live="polite"
+        aria-atomic="true"
+        className="sr-only"
+        role="status"
+      >
+        {announcement}
+      </div>
       <Card className="w-[95%] border-none md:w-10/12 lg:w-full">
         <CardHeader>
           <CardTitle className="text-center font-bold">
@@ -289,36 +301,47 @@ export default function FilterSort({
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="hidden lg:block">
-            <FilterContent
-              mediaType={mediaType}
-              sortOptions={sortOptions}
-              sortBy={sortBy}
-              handleSortChange={handleSortChange}
-              genreList={genreList}
-              selectedGenres={selectedGenres}
-              handleGenreChange={handleGenreChange}
-              originalLanguage={originalLanguage}
-              setOriginalLanguage={setOriginalLanguage}
-              releaseDateGte={releaseDateGte}
-              setReleaseDateGte={setReleaseDateGte}
-              releaseDateLte={releaseDateLte}
-              setReleaseDateLte={setReleaseDateLte}
-              runtime={runtime}
-              setRuntime={setRuntime}
-              watchProviderRegionList={watchProviderRegionList}
-              watchProviders={watchProviders}
-              setWatchProviders={setWatchProviders}
-              watchProviderList={watchProviderList}
-              languageList={languageList}
-              setIsChanged={setIsChanged}
-            />
-          </div>
+          <form
+            role="search"
+            aria-label={`Filter and sort ${mediaType === "movie" ? "movies" : "shows"}`}
+          >
+            <div className="hidden lg:block">
+              <FilterContent
+                mediaType={mediaType}
+                sortOptions={sortOptions}
+                sortBy={sortBy}
+                handleSortChange={handleSortChange}
+                genreList={genreList}
+                selectedGenres={selectedGenres}
+                handleGenreChange={handleGenreChange}
+                originalLanguage={originalLanguage}
+                setOriginalLanguage={setOriginalLanguage}
+                releaseDateGte={releaseDateGte}
+                setReleaseDateGte={setReleaseDateGte}
+                releaseDateLte={releaseDateLte}
+                setReleaseDateLte={setReleaseDateLte}
+                runtime={runtime}
+                setRuntime={setRuntime}
+                watchProviderRegionList={watchProviderRegionList}
+                watchProviders={watchProviders}
+                setWatchProviders={setWatchProviders}
+                watchProviderList={watchProviderList}
+                languageList={languageList}
+                setIsChanged={setIsChanged}
+              />
+            </div>
+          </form>
           <div className="lg:hidden">
             <Sheet>
               <SheetTrigger asChild>
-                <Button className="w-full rounded-t-none">
-                  <SlidersHorizontal className="mr-2 h-4 w-4" />
+                <Button
+                  className="w-full rounded-t-none"
+                  aria-label="Open filters and sort options"
+                >
+                  <SlidersHorizontal
+                    className="mr-2 h-4 w-4"
+                    aria-hidden="true"
+                  />
                   Filters & Sort
                 </Button>
               </SheetTrigger>
@@ -333,29 +356,34 @@ export default function FilterSort({
                   </SheetDescription>
                 </SheetHeader>
                 <div className="mt-4 flex h-[calc(100vh-8rem)] flex-col overflow-y-auto">
-                  <FilterContent
-                    mediaType={mediaType}
-                    sortOptions={sortOptions}
-                    sortBy={sortBy}
-                    handleSortChange={handleSortChange}
-                    genreList={genreList}
-                    selectedGenres={selectedGenres}
-                    handleGenreChange={handleGenreChange}
-                    originalLanguage={originalLanguage}
-                    setOriginalLanguage={setOriginalLanguage}
-                    releaseDateGte={releaseDateGte}
-                    setReleaseDateGte={setReleaseDateGte}
-                    releaseDateLte={releaseDateLte}
-                    setReleaseDateLte={setReleaseDateLte}
-                    runtime={runtime}
-                    setRuntime={setRuntime}
-                    watchProviderRegionList={watchProviderRegionList}
-                    watchProviders={watchProviders}
-                    setWatchProviders={setWatchProviders}
-                    watchProviderList={watchProviderList}
-                    languageList={languageList}
-                    setIsChanged={setIsChanged}
-                  />
+                  <form
+                    role="search"
+                    aria-label={`Filter and sort ${mediaType === "movie" ? "movies" : "shows"}`}
+                  >
+                    <FilterContent
+                      mediaType={mediaType}
+                      sortOptions={sortOptions}
+                      sortBy={sortBy}
+                      handleSortChange={handleSortChange}
+                      genreList={genreList}
+                      selectedGenres={selectedGenres}
+                      handleGenreChange={handleGenreChange}
+                      originalLanguage={originalLanguage}
+                      setOriginalLanguage={setOriginalLanguage}
+                      releaseDateGte={releaseDateGte}
+                      setReleaseDateGte={setReleaseDateGte}
+                      releaseDateLte={releaseDateLte}
+                      setReleaseDateLte={setReleaseDateLte}
+                      runtime={runtime}
+                      setRuntime={setRuntime}
+                      watchProviderRegionList={watchProviderRegionList}
+                      watchProviders={watchProviders}
+                      setWatchProviders={setWatchProviders}
+                      watchProviderList={watchProviderList}
+                      languageList={languageList}
+                      setIsChanged={setIsChanged}
+                    />
+                  </form>
                 </div>
               </SheetContent>
             </Sheet>
@@ -363,10 +391,21 @@ export default function FilterSort({
         </CardContent>
       </Card>
       {isChanged && (
-        <div className="fixed bottom-0 left-0 right-0 border-t bg-background p-4">
-          <Button onClick={handleSearch} className="w-full">
+        <div
+          className="fixed bottom-0 left-0 right-0 border-t bg-background p-4"
+          role="region"
+          aria-label="Filter actions"
+        >
+          <Button
+            onClick={handleSearch}
+            className="w-full"
+            aria-describedby="filter-changes-description"
+          >
             Apply Filters & Sort
           </Button>
+          <div id="filter-changes-description" className="sr-only">
+            Apply the current filter and sort selections to update the results
+          </div>
         </div>
       )}
     </>
