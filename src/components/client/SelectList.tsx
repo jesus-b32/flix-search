@@ -63,6 +63,9 @@ export default function SelectList({
             variant="secondary"
             role="combobox"
             aria-expanded={open}
+            aria-label={`Select ${
+              "results" in list ? "watch provider country" : "language"
+            }`}
             className="w-full justify-between"
           >
             {"results" in list
@@ -76,9 +79,15 @@ export default function SelectList({
         </PopoverTrigger>
         <PopoverContent className="w-full p-0" align="start" side="bottom">
           <Command>
-            <CommandInput placeholder={"Select language..."} />
+            <CommandInput
+              placeholder={`Select ${
+                "results" in list ? "watch provider country" : "language"
+              }...`}
+            />
             <CommandList>
-              <CommandEmpty>{"No languages found"}</CommandEmpty>
+              <CommandEmpty>{`No ${
+                "results" in list ? "watch provider countries" : "languages"
+              } found`}</CommandEmpty>
               <CommandGroup>
                 {"results" in list
                   ? list.results.map((region) => (

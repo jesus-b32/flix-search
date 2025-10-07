@@ -51,7 +51,10 @@ export default function SettingCard() {
           <div className="lg:hidden">
             <Sheet>
               <SheetTrigger asChild>
-                <Button className="w-full border-none">
+                <Button
+                  className="w-full border-none"
+                  aria-label="Open settings menu"
+                >
                   <SlidersHorizontal className="mr-2 h-4 w-4" />
                 </Button>
               </SheetTrigger>

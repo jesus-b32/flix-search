@@ -32,13 +32,15 @@ export const UserButton = ({ imageLink, name }: UserButtonProps) => {
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
-      <DropdownMenuTrigger>
-        <Avatar>
-          <AvatarImage src={imageLink} className="h-10 w-10 rounded-full" />
-          <AvatarFallback>
-            <CircleUserRound className="h-10 w-10" strokeWidth={1} />
-          </AvatarFallback>
-        </Avatar>
+      <DropdownMenuTrigger asChild>
+        <button aria-label={`User menu for ${name}`}>
+          <Avatar>
+            <AvatarImage src={imageLink} className="h-10 w-10 rounded-full" />
+            <AvatarFallback>
+              <CircleUserRound className="h-10 w-10" strokeWidth={1} />
+            </AvatarFallback>
+          </Avatar>
+        </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>

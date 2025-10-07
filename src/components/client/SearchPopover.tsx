@@ -24,7 +24,7 @@ export default function SearchPopover() {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button>
+        <Button aria-label="Open search">
           <SearchIcon size={20} />
         </Button>
       </PopoverTrigger>

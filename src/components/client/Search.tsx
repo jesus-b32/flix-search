@@ -100,19 +100,19 @@ export default function Search({ onSearch }: SearchProps) {
             name="searchTerm"
             render={({ field }) => (
               <FormItem className="flex-grow">
-                <FormControl>
+                <FormControl aria-label="Search term">
                   <Input
                     placeholder="Search movies & shows"
                     {...field}
                     className="text-black"
-                    aria-label="search term"
+                    aria-label="Search term"
                   />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button type="submit">
+          <Button type="submit" aria-label="Search">
             <SearchIcon size={20} />
           </Button>
         </div>
@@ -121,26 +121,29 @@ export default function Search({ onSearch }: SearchProps) {
           name="mediaType"
           render={({ field }) => (
             <FormItem className="space-y-3">
-              <FormControl>
+              <FormControl aria-label="Select media type">
                 <RadioGroup
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                   className="flex justify-center space-x-4"
+                  aria-label="Select media type"
                 >
                   <FormItem className="flex items-center space-x-2">
-                    <FormControl>
+                    <FormControl aria-label="Select movie">
                       <RadioGroupItem
                         value="movie"
                         className="border-white text-white"
+                        aria-label="Movie"
                       />
                     </FormControl>
                     <span>Movie</span>
                   </FormItem>
                   <FormItem className="flex items-center space-x-2">
-                    <FormControl>
+                    <FormControl aria-label="Select TV show">
                       <RadioGroupItem
                         value="tv-show"
                         className="border-white text-white"
+                        aria-label="TV show"
                       />
                     </FormControl>
                     <span>Show</span>

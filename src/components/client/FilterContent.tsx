@@ -99,9 +99,14 @@ export default function FilterContent({
   return (
     <div className="mb-96 w-full space-y-6 divide-y-2">
       <div className="w-full">
-        <h3 className="my-4 ml-4 font-semibold">Sort By</h3>
+        <h2 className="my-4 ml-4 font-semibold" id="sort-by-label">
+          Sort By
+        </h2>
         <Select value={sortBy} onValueChange={handleSortChange}>
-          <SelectTrigger className="ml-4 w-10/12">
+          <SelectTrigger
+            className="ml-4 w-10/12"
+            aria-labelledby="sort-by-label"
+          >
             <SelectValue placeholder="Select a sorting option" />
           </SelectTrigger>
           <SelectContent>
@@ -114,8 +119,14 @@ export default function FilterContent({
         </Select>
       </div>
       <div className="w-full">
-        <h3 className="my-4 ml-4 font-semibold">Genres</h3>
-        <div className="ml-4 space-y-2">
+        <h2 className="my-4 ml-4 font-semibold" id="genres-label">
+          Genres
+        </h2>
+        <div
+          className="ml-4 space-y-2"
+          role="group"
+          aria-labelledby="genres-label"
+        >
           {genreList.genres.map((genre) => (
             <div key={genre.id} className="flex items-center space-x-2">
               <Checkbox
@@ -129,23 +140,29 @@ export default function FilterContent({
         </div>
       </div>
       <div className="w-full">
-        <h3 className="my-4 ml-4 font-semibold">Language</h3>
+        <h2 className="my-4 ml-4 font-semibold">Language</h2>
         <SelectList
           list={languageList}
           currentValue={originalLanguage}
           setCurrentValue={setOriginalLanguage}
           className="ml-4 w-10/12"
           onValueChange={() => setIsChanged(true)}
+          aria-label="Language Selector"
         />
       </div>
       <div className="w-full space-y-4">
-        <h3 className="my-4 ml-4 font-semibold">
+        <h2 className="my-4 ml-4 font-semibold" id="release-date-label">
           {mediaType === "movie" ? "Release Date" : "First Air Date"}
-        </h3>
+        </h2>
         <Label htmlFor="gte" className="ml-4">
           From:
         </Label>
-        <div id="gte" className="ml-4 w-10/12 pb-4">
+        <div
+          id="gte"
+          className="ml-4 w-10/12 pb-4"
+          role="group"
+          aria-labelledby="release-date-label"
+        >
           <DateSelector
             date={releaseDateGte}
             setDate={setReleaseDateGte}
@@ -164,9 +181,9 @@ export default function FilterContent({
         </div>
       </div>
       <div className="flex flex-col items-center">
-        <h3 className="mb-8 ml-4 mt-4 w-full font-semibold">
+        <h2 className="mb-8 ml-4 mt-4 w-full font-semibold" id="runtime-label">
           Runtime(minutes)
-        </h3>
+        </h2>
         <DualRangeSlider
           label={(value) => <span>{value}</span>}
           value={runtime}
@@ -179,13 +196,15 @@ export default function FilterContent({
           step={5}
           minStepsBetweenThumbs={10}
           className="w-10/12"
+          aria-labelledby="runtime-label"
         />
       </div>
       <div className="w-full space-y-4 pt-6">
-        <h3 className="ml-4 font-semibold">Where to Watch</h3>
+        <h2 className="ml-4 font-semibold">Where to Watch</h2>
         <SelectSearch
           data={watchProviderRegionList.results}
           className="ml-4 w-10/12"
+          aria-label="Country Selector"
         />
         <MultipleSelector
           value={watchProviders}
@@ -205,6 +224,7 @@ export default function FilterContent({
             </p>
           }
           className="ml-4 w-10/12"
+          aria-label="Streaming Provider Selector"
         />
       </div>
     </div>

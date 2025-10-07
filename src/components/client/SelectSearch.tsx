@@ -73,6 +73,9 @@ export default function SelectSearch({
             variant="secondary"
             role="combobox"
             aria-expanded={open}
+            aria-label={`Select ${
+              "results" in data ? "streaming provider" : "country"
+            }`}
             className="w-full justify-between"
           >
             {"results" in data
