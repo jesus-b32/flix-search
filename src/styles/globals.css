@@ -73,6 +73,7 @@ body,
   }
 }
 
+/* make all elements transition smoothly between light and dark mode */
 * {
   transition:
     background-color 0.2s ease-in-out,
