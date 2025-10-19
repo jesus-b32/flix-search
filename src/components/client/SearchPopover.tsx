@@ -28,7 +28,7 @@ export default function SearchPopover() {
           <SearchIcon size={20} />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-screen rounded-none border-none bg-slate-600">
+      <PopoverContent className="w-screen rounded-none border-none bg-background">
         <Search onSearch={() => setOpen(false)} />
       </PopoverContent>
     </Popover>

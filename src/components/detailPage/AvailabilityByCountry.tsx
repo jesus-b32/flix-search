@@ -88,7 +88,7 @@ export default function AvailabilityByCountry({
                                 src={`https://image.tmdb.org/t/p/w92${
                                   provider.logo_path
                                 }`}
-                                className="h-auto w-36 rounded-t-lg border-b border-slate-300 object-cover"
+                                className="h-auto w-36 rounded-t-lg border-b border-border object-cover"
                               />
                             </div>
                             <div className="flex flex-col flex-wrap">

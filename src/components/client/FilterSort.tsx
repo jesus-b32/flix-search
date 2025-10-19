@@ -345,7 +345,7 @@ export default function FilterSort({
                   Filters & Sort
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="text-black">
+              <SheetContent side="left">
                 <SheetHeader>
                   <SheetTitle>
                     {mediaType === "movie" ? "Filter Movies" : "Filter Shows"}

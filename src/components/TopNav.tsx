@@ -19,6 +19,7 @@ import SearchPopover from "@/components/client/SearchPopover";
 // Utils
 import { currentUser } from "@/lib/currentUser";
 import { UserButton } from "@/components/auth/UserButton";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 /**
  * The navigation bar component. It displays the Flix Search logo,
@@ -35,7 +36,7 @@ import { UserButton } from "@/components/auth/UserButton";
 export default async function TopNav() {
   const user = await currentUser();
   return (
-    <header className="fixed top-0 z-50 flex h-16 w-full items-center gap-4 bg-slate-600 px-6 text-black">
+    <header className="fixed top-0 z-50 flex h-16 w-full items-center gap-4 border-b bg-background/95 px-6 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
         <Link
           href="/"
@@ -62,10 +63,7 @@ export default async function TopNav() {
             <span className="sr-only">Toggle navigation menu</span>
           </Button>
         </SheetTrigger>
-        <SheetContent
-          side="left"
-          className="border-none bg-slate-600 text-black"
-        >
+        <SheetContent side="left" className="border-none bg-background">
           {/* added title and description for screen readers accessibility */}
           <SheetTitle className="sr-only">Navigation menu</SheetTitle>
           <SheetDescription className="sr-only">
@@ -121,6 +119,7 @@ export default async function TopNav() {
         <div className="ml-auto flex-initial">
           <SearchPopover />
         </div>
+        <ThemeToggle />
         {!user ? null : (
           <UserButton imageLink={user?.image ?? ""} name={user?.name ?? ""} />
         )}

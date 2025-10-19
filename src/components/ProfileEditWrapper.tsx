@@ -31,7 +31,7 @@ export default function ProfileEditWrapper({
       <DialogTrigger asChild>
         <Button size={"sm"}>{buttonName}</Button>
       </DialogTrigger>
-      <DialogContent className="border-none bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white sm:max-w-[425px]">
+      <DialogContent className="border-none bg-background text-foreground sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{buttonName}</DialogTitle>
         </DialogHeader>

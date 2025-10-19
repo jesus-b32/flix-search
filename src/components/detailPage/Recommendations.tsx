@@ -33,12 +33,12 @@ export default function Recommendations({
         </h2>
         {/* Scrollable div */}
         <div
-          className="w-[90%] rounded-lg bg-slate-700 md:w-full"
+          className="w-[90%] rounded-lg bg-muted md:w-full"
           style={{
             overflowX: "auto",
             overflowY: "hidden",
             scrollbarWidth: "thin",
-            scrollbarColor: "#64748b transparent",
+            scrollbarColor: "hsl(var(--muted-foreground)) transparent",
           }}
         >
           {/* Scrollable content */}

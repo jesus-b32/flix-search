@@ -12,7 +12,7 @@ import { Suspense } from "react";
  */
 export default function HomePage() {
   return (
-    <main className="flex min-h-screen flex-col items-center text-white">
+    <main className="flex min-h-screen flex-col items-center">
       <div className="my-4 flex w-10/12 flex-col items-center gap-2">
         <h1 className="text-center text-4xl font-extrabold">The Flix Search</h1>
         <h2 className="w-full text-center text-xl font-semibold">

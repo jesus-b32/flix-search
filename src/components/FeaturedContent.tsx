@@ -30,7 +30,7 @@ export default function FeaturedContent() {
       {/* Movies Section */}
       <div className="w-full">
         <Suspense
-          fallback={<div className="text-white">Loading movies...</div>}
+          fallback={<div className="text-foreground">Loading movies...</div>}
         >
           <MovieSections />
         </Suspense>
@@ -39,7 +39,7 @@ export default function FeaturedContent() {
       {/* TV Shows Section */}
       <div className="w-full">
         <Suspense
-          fallback={<div className="text-white">Loading TV shows...</div>}
+          fallback={<div className="text-foreground">Loading TV shows...</div>}
         >
           <TvSections />
         </Suspense>

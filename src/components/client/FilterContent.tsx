@@ -219,8 +219,8 @@ export default function FilterContent({
           }))}
           placeholder="Watch Providers"
           emptyIndicator={
-            <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
-              no results found.
+            <p className="text-center text-lg leading-10 text-muted-foreground">
+              No Results Found.
             </p>
           }
           className="ml-4 w-10/12"

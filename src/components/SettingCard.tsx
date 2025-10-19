@@ -25,13 +25,13 @@ export default function SettingCard() {
     <div className="flex w-full flex-col space-y-4 py-4">
       <Link
         href="/settings/profile"
-        className="w-full text-center hover:bg-slate-300"
+        className="w-full text-center hover:bg-muted"
       >
         Profile
       </Link>
       <Link
         href="/settings/delete-account"
-        className="mb-4 w-full text-center hover:bg-slate-300"
+        className="mb-4 w-full text-center hover:bg-muted"
       >
         Delete Account
       </Link>
@@ -58,7 +58,7 @@ export default function SettingCard() {
                   <SlidersHorizontal className="mr-2 h-4 w-4" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="text-black">
+              <SheetContent side="left" className="text-foreground">
                 <SheetHeader>
                   <SheetTitle>Settings</SheetTitle>
                 </SheetHeader>

@@ -72,3 +72,11 @@ body,
     @apply bg-background text-foreground;
   }
 }
+
+/* make all elements transition smoothly between light and dark mode */
+* {
+  transition:
+    background-color 0.2s ease-in-out,
+    border-color 0.2s ease-in-out,
+    color 0.2s ease-in-out;
+}

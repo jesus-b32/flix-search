@@ -76,7 +76,7 @@ export default function PaginationComponent({
                 <PaginationLink
                   href={createPageURL(page)}
                   isActive
-                  className="text-black"
+                  className="text-foreground"
                   size="sm"
                 >
                   {page}

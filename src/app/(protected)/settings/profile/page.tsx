@@ -40,7 +40,7 @@ export default async function SettingProfilePage() {
         </Label>
         <Input
           id="name"
-          className="w-full text-black"
+          className="w-full text-foreground"
           defaultValue={user?.name ?? ""}
           disabled
         />
@@ -52,7 +52,7 @@ export default async function SettingProfilePage() {
         </Label>
         <Input
           id="image"
-          className="w-full text-black"
+          className="w-full text-foreground"
           defaultValue={user?.image ?? ""}
           disabled
         />
@@ -66,7 +66,7 @@ export default async function SettingProfilePage() {
             </Label>
             <Input
               id="email"
-              className="w-full text-black"
+              className="w-full text-foreground"
               defaultValue={user?.email ?? ""}
               disabled
             />
