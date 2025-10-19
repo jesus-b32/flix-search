@@ -104,7 +104,7 @@ export default function Search({ onSearch }: SearchProps) {
                   <Input
                     placeholder="Search movies & shows"
                     {...field}
-                    className="text-black"
+                    className="text-foreground"
                     aria-label="Search term"
                   />
                 </FormControl>
@@ -132,7 +132,7 @@ export default function Search({ onSearch }: SearchProps) {
                     <FormControl aria-label="Select movie">
                       <RadioGroupItem
                         value="movie"
-                        className="border-white text-white"
+                        className="border-foreground text-foreground"
                         aria-label="Movie"
                       />
                     </FormControl>
@@ -142,7 +142,7 @@ export default function Search({ onSearch }: SearchProps) {
                     <FormControl aria-label="Select TV show">
                       <RadioGroupItem
                         value="tv-show"
-                        className="border-white text-white"
+                        className="border-foreground text-foreground"
                         aria-label="TV show"
                       />
                     </FormControl>

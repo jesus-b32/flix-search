@@ -95,7 +95,7 @@ export const UpdateEmailForm = ({ userId }: { userId: string }) => {
                   placeholder="john.doe@example.com"
                   type="email"
                   disabled={isPending}
-                  className="text-black"
+                  className="text-foreground"
                 />
               </FormControl>
               <FormMessage />
@@ -115,7 +115,7 @@ export const UpdateEmailForm = ({ userId }: { userId: string }) => {
                     placeholder="******"
                     type={showPassword ? "text" : "password"}
                     disabled={isPending}
-                    className="text-black"
+                    className="text-foreground"
                   />
                   <Button
                     type="button"
@@ -126,9 +126,9 @@ export const UpdateEmailForm = ({ userId }: { userId: string }) => {
                     disabled={isPending}
                   >
                     {showPassword ? (
-                      <EyeOff className="h-4 w-4 text-black" />
+                      <EyeOff className="h-4 w-4 text-foreground" />
                     ) : (
-                      <Eye className="h-4 w-4 text-black" />
+                      <Eye className="h-4 w-4 text-foreground" />
                     )}
                     <span className="sr-only">
                       {showPassword ? "Hide password" : "Show password"}

@@ -91,7 +91,7 @@ export const UpdateNameForm = ({ userId }: { userId: string }) => {
                   placeholder="John Doe"
                   type="text"
                   disabled={isPending}
-                  className="text-black"
+                  className="text-foreground"
                 />
               </FormControl>
               <FormMessage />

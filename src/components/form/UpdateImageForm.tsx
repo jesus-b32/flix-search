@@ -91,7 +91,7 @@ export const UpdateImageForm = ({ userId }: { userId: string }) => {
                   placeholder="image url"
                   type="url"
                   disabled={isPending}
-                  className="text-black"
+                  className="text-foreground"
                 />
               </FormControl>
               <FormMessage />

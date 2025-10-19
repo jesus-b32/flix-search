@@ -99,7 +99,7 @@ export const UpdatePasswordForm = ({ userId }: { userId: string }) => {
                     placeholder="******"
                     type={showCurrentPassword ? "text" : "password"}
                     disabled={isPending}
-                    className="text-black"
+                    className="text-foreground"
                   />
                   <Button
                     type="button"
@@ -110,9 +110,9 @@ export const UpdatePasswordForm = ({ userId }: { userId: string }) => {
                     disabled={isPending}
                   >
                     {showCurrentPassword ? (
-                      <EyeOff className="h-4 w-4 text-black" />
+                      <EyeOff className="h-4 w-4 text-foreground" />
                     ) : (
-                      <Eye className="h-4 w-4 text-black" />
+                      <Eye className="h-4 w-4 text-foreground" />
                     )}
                     <span className="sr-only">
                       {showCurrentPassword ? "Hide password" : "Show password"}
@@ -137,7 +137,7 @@ export const UpdatePasswordForm = ({ userId }: { userId: string }) => {
                     placeholder="******"
                     type={showNewPassword ? "text" : "password"}
                     disabled={isPending}
-                    className="text-black"
+                    className="text-foreground"
                   />
                   <Button
                     type="button"
@@ -148,9 +148,9 @@ export const UpdatePasswordForm = ({ userId }: { userId: string }) => {
                     disabled={isPending}
                   >
                     {showNewPassword ? (
-                      <EyeOff className="h-4 w-4 text-black" />
+                      <EyeOff className="h-4 w-4 text-foreground" />
                     ) : (
-                      <Eye className="h-4 w-4 text-black" />
+                      <Eye className="h-4 w-4 text-foreground" />
                     )}
                     <span className="sr-only">
                       {showNewPassword ? "Hide password" : "Show password"}
@@ -175,7 +175,7 @@ export const UpdatePasswordForm = ({ userId }: { userId: string }) => {
                     placeholder="******"
                     type={showConfirmPassword ? "text" : "password"}
                     disabled={isPending}
-                    className="text-black"
+                    className="text-foreground"
                   />
                   <Button
                     type="button"
@@ -186,9 +186,9 @@ export const UpdatePasswordForm = ({ userId }: { userId: string }) => {
                     disabled={isPending}
                   >
                     {showConfirmPassword ? (
-                      <EyeOff className="h-4 w-4 text-black" />
+                      <EyeOff className="h-4 w-4 text-foreground" />
                     ) : (
-                      <Eye className="h-4 w-4 text-black" />
+                      <Eye className="h-4 w-4 text-foreground" />
                     )}
                     <span className="sr-only">
                       {showConfirmPassword ? "Hide password" : "Show password"}
