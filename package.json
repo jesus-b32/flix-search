@@ -9,6 +9,7 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
+    "db:copy-prod-to-dev": "tsx scripts/copy-prod-to-dev.ts",
     "dev": "next dev",
     "lint": "next lint",
     "start": "next start",
@@ -78,6 +79,7 @@
     "prettier": "^3.3.2",
     "prettier-plugin-tailwindcss": "^0.6.5",
     "tailwindcss": "^3.4.3",
+    "tsx": "^4.19.2",
     "typescript": "^5.5.3",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^2.1.8"

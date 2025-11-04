@@ -14,6 +14,7 @@ export const env = createEnv({
    */
   server: {
     POSTGRES_URL: z.string().url(),
+    POSTGRES_URL_DEV: z.string().url(),
     ENV_TYPE: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -53,6 +54,7 @@ export const env = createEnv({
    */
   runtimeEnv: {
     POSTGRES_URL: process.env.POSTGRES_URL,
+    POSTGRES_URL_DEV: process.env.POSTGRES_URL_DEV,
     ENV_TYPE: process.env.ENV_TYPE,
     AUTH_SECRET: process.env.AUTH_SECRET,
     AUTH_TRUST_HOST: process.env.AUTH_TRUST_HOST,
