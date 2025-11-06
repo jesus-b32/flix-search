@@ -59,13 +59,13 @@ export const env = createEnv({
     AUTH_SECRET: process.env.AUTH_SECRET,
     AUTH_TRUST_HOST: process.env.AUTH_TRUST_HOST,
     GITHUB_CLIENT_ID:
-      process.env.VERCEL_ENV === "production"
-        ? process.env.GITHUB_CLIENT_ID_PROD
-        : process.env.GITHUB_CLIENT_ID_DEV,
+      process.env.VERCEL_ENV === "development"
+        ? process.env.GITHUB_CLIENT_ID_DEV
+        : process.env.GITHUB_CLIENT_ID_PROD,
     GITHUB_CLIENT_SECRET:
-      process.env.VERCEL_ENV === "production"
-        ? process.env.GITHUB_CLIENT_SECRET_PROD
-        : process.env.GITHUB_CLIENT_SECRET_DEV,
+      process.env.VERCEL_ENV === "development"
+        ? process.env.GITHUB_CLIENT_SECRET_DEV
+        : process.env.GITHUB_CLIENT_SECRET_PROD,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
