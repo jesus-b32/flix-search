@@ -2,10 +2,10 @@
 import { ResetPasswordForm } from "@/components/auth/ResetPasswordForm";
 
 /**
- * The reset page for resetting user password.
+ * The reset password page.
  *
- * @returns the reset page
+ * @returns the reset password page
  */
-export default function ResetPage() {
+export default function ResetPasswordPage() {
   return <ResetPasswordForm />;
 }

@@ -1,284 +1,142 @@
-//Next-auth imports
-import NextAuth from "next-auth";
-import type { NextAuthConfig, DefaultSession } from "next-auth";
-import GitHub from "next-auth/providers/github";
-import Google from "next-auth/providers/google";
-import Credentials from "next-auth/providers/credentials";
-import { encode as defaultEncode } from "next-auth/jwt";
+// Better Auth imports
+import { betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { twoFactor } from "better-auth/plugins";
+import { emailOTP } from "better-auth/plugins";
+import { createAuthMiddleware } from "better-auth/api";
 
-//database imports
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
+// Database imports
 import { db } from "@/server/db";
 import { users, accounts, sessions } from "@/server/db/schema";
-import { LoginSchema } from "@/schemas/schema";
-import { getUserById } from "@/data/user";
-import { getUserByEmail } from "@/data/user";
+
+// Data functions
 import { updateUserEmailVerified } from "@/data/user";
 import { createVideoList } from "@/data/videoList";
 import {
-  getTwoFactorConfirmationByUserId,
-  deleteTwoFactorConfirmation,
-} from "@/data/twoFactorConfirmation";
+  sendVerificationEmail,
+  sendPasswordResetEmail,
+  sendTwoFactorEmail,
+} from "@/lib/sendEmail";
 
-//other imports
+// Other imports
 import { env } from "@/env";
-import { v4 as uuid } from "uuid";
-import bcrypt from "bcryptjs";
-import type { Adapter } from "@auth/core/adapters";
-import { getAccountByUserId } from "@/data/account";
 
-const adapter = DrizzleAdapter(db, {
-  usersTable: users,
-  accountsTable: accounts,
-  sessionsTable: sessions,
-}) as Adapter;
-
-declare module "next-auth" {
-  /**
-   * Returned by `auth`, `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
-   */
-  interface Session {
-    user: ExtendedUser;
-  }
-
-  // default User session has property of: id, name, email, image
-  // added isTwoFactorEnabled
-  // https://next-auth.js.org/getting-started/typescript
-  type ExtendedUser = {
-    isTwoFactorEnabled: boolean;
-    isOAuth: boolean;
-  } & DefaultSession["user"];
-
-  // Keep this to ensure the User interface includes our custom properties
-  interface User {
-    isTwoFactorEnabled: boolean;
-  }
-}
-
-declare module "next-auth/jwt" {
-  /** Returned by the `jwt` callback and `auth`, when using JWT sessions */
-  interface JWT {
-    credentials: boolean;
-  }
-}
-
-const authConfig: NextAuthConfig = {
-  adapter,
-  /**
-   * Whether to trust the host header from the request.
-   * needed for localhost build
-   * https://authjs.dev/reference/core#trusthost
-   */
-  trustHost: env.AUTH_TRUST_HOST === "true" ? true : false,
-  providers: [
-    // Can see callback url using http://localhost:3000/api/auth/providers or [domain]/api/auth/providers
-    GitHub({
+export const auth = betterAuth({
+  database: drizzleAdapter(db, {
+    provider: "pg",
+    usePlural: true, // Our tables use plural form (users, accounts, sessions)
+    schema: {
+      user: users,
+      account: accounts,
+      session: sessions,
+    },
+  }),
+  baseURL: env.BETTER_AUTH_URL,
+  secret: env.BETTER_AUTH_SECRET,
+  emailAndPassword: {
+    enabled: true,
+    requireEmailVerification: true,
+    sendResetPassword: async ({ user, url, token }, request) => {
+      await sendPasswordResetEmail({ user, url, token });
+    },
+  },
+  emailVerification: {
+    sendVerificationEmail: async ({ user, url, token }, request) => {
+      await sendVerificationEmail({ user, url, token });
+    },
+    sendOnSignUp: true,
+    autoSignInAfterVerification: true,
+  },
+  socialProviders: {
+    github: {
       clientId: env.GITHUB_CLIENT_ID,
       clientSecret: env.GITHUB_CLIENT_SECRET,
-    }),
-    Google({
+    },
+    google: {
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
-    }),
-    Credentials({
-      credentials: {
-        email: {},
-        password: {},
+    },
+  },
+  session: {
+    expiresIn: 60 * 60 * 24 * 30, // 30 days
+    updateAge: 60 * 60 * 24, // 1 day
+    // Map your existing fields to Better Auth's fields (according to migration guide)
+    fields: {
+      expiresAt: "expires",
+      token: "sessionToken",
+    },
+  },
+  account: {
+    // Map your existing fields to Better Auth's fields (according to migration guide)
+    fields: {
+      providerId: "provider",
+      accountId: "providerAccountId",
+      refreshToken: "refresh_token",
+      accessToken: "access_token",
+      accessTokenExpiresAt: "expires_at",
+      idToken: "id_token",
+    },
+  },
+  plugins: [
+    twoFactor({
+      otpOptions: {
+        async sendOTP({ user, otp }) {
+          if (user.email) {
+            await sendTwoFactorEmail(user.email, otp);
+          }
+        },
       },
-      /**
-       * Checks if the user is authorized to log in.
-       * If the user's credentials are valid, it will return the user object.
-       * If the credentials are invalid, it will return null.
-       * The user object must have a password or it will not be authorized.
-       * @param credentials - The credentials of the user (email and password).
-       * @returns The user object if the credentials are valid, null if not.
-       */
-      authorize: async (credentials) => {
-        //validate credentials from login page
-        const validatedFields = LoginSchema.safeParse(credentials);
-
-        //if credentials are valid
-        if (validatedFields.success) {
-          const { email, password } = validatedFields.data;
-          const user = await getUserByEmail(email);
-
-          // Handle error cases from getUserByEmail
-          if (user instanceof Error) {
-            return null;
-          }
-
-          //if user does not exist or user does not have a password, do not authorize
-          //user can not have password if they logged in using google or github
-          if (!user?.password || !user) return null;
-          const passwordsMatch = await bcrypt.compare(password, user.password);
-          if (passwordsMatch) {
-            return user;
-          }
+    }),
+    emailOTP({
+      async sendVerificationOTP({ email, otp, type }) {
+        if (type === "email-verification") {
+          // For email verification, we'll use the existing token-based system
+          // Better Auth will handle the OTP flow, but we can also integrate with existing system
+        } else if (type === "forget-password") {
+          // Password reset with OTP
+          // The OTP will be sent via this function
         }
-        return null;
+        // For sign-in OTP, it's handled by 2FA plugin
       },
     }),
   ],
-  pages: {
-    signIn: "/auth/login",
-    error: "/auth/error",
-  },
-  /**
-   * Events are asynchronous functions that do not return a response, they are useful for audit logs / reporting or handling any other side-effects.
-   * https://next-auth.js.org/configuration/events
-   */
-  events: {
-    /**
-     * Event handler that is triggered when an account is linked to a user.
-     * This function updates the user's email verification status in the database.
-     * Used to update the user's email verification status when new user logs in with a social media provider.
-     * Also creates a watchlist for new users
-     *
-     * @param user - The user object containing the user's details.
-     */
-    async linkAccount({ user }) {
-      if (!user.id || !user.email) return;
-      await updateUserEmailVerified(user.id, user.email);
-      await createVideoList(user.id, "watchlist");
-    },
-  },
-  /**
-   * Callbacks are asynchronous functions you can use to control what happens when an action is performed.
-   * Callbacks are extremely powerful, especially in scenarios involving JSON Web Tokens as they allow you to implement access controls without a database and to integrate with external databases or APIs.
-   * https://next-auth.js.org/configuration/callbacks
-   */
-  callbacks: {
-    /**
-     * Called whenever a user signs in.
-     * Verifies that the user exists in the database and has a verified email.
-     * If the user does not exist or email is not verified, returns false to prevent signin.
-     * @param user - The user object containing the user's details.
-     * @returns boolean indicating whether signin was successful.
-     */
-    async signIn({ user, account }) {
-      // Allow Oauth without Email verification
-      if (account?.provider !== "credentials") return true;
-
-      if (!user.id) return false;
-
-      const existingUser = await getUserById(user.id);
-
-      // Handle error cases from getUserById
-      if (existingUser instanceof Error) {
-        return false;
-      }
-
-      // At this point, existingUser is guaranteed to be a user object or null
-      if (!existingUser?.emailVerified) return false;
-      if (existingUser.isTwoFactorEnabled) {
-        const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(
-          existingUser.id,
-        );
-
-        // Handle error case from getTwoFactorConfirmationByUserId
-        if (twoFactorConfirmation instanceof Error) {
-          return false;
-        }
-
-        if (!twoFactorConfirmation) return false;
-
-        // Delete two factor confirmation for next sign in
-        const deleteResult = await deleteTwoFactorConfirmation(
-          twoFactorConfirmation.id,
-        );
-        // Handle error case from deleteTwoFactorConfirmation
-        if (deleteResult instanceof Error) {
-          return false;
+  hooks: {
+    after: createAuthMiddleware(async (ctx) => {
+      // Handle post-sign-in actions (equivalent to NextAuth events.linkAccount)
+      if (
+        ctx.path === "/sign-in/social" ||
+        ctx.path === "/sign-up/social" ||
+        ctx.path === "/callback/github" ||
+        ctx.path === "/callback/google"
+      ) {
+        try {
+          const newSession = ctx.context.newSession;
+          if (newSession?.user?.id && newSession?.user?.email) {
+            await updateUserEmailVerified(
+              newSession.user.id,
+              newSession.user.email,
+            );
+            await createVideoList(newSession.user.id, "watchlist");
+          }
+        } catch (error) {
+          // Handle error silently or log it
+          console.error("Error in after hook:", error);
         }
       }
-
-      return true;
-    },
-
-    /**
-     * This is a `jwt` callback that adds a `credentials` key to the `token` object when the user logs in with the credentials provider. Will be used in custom encode function below for creating session tokens for credential users.
-     */
-    async jwt({ token, account }) {
-      if (account?.provider === "credentials") {
-        token.credentials = true;
-      }
-      return token;
-    },
-
-    /**
-     * This `session` callback adds the desired user's data to the session.
-     */
-    async session({ session, user }) {
-      const account = await getAccountByUserId(user.id);
-
-      // Handle error case from getAccountByUserId
-      if (account instanceof Error) {
-        return {
-          ...session,
-          user: {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            image: user.image,
-            isTwoFactorEnabled: user.isTwoFactorEnabled,
-            isOAuth: false,
-          },
-        };
-      }
-
-      return {
-        ...session,
-        user: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          image: user.image,
-          isTwoFactorEnabled: user.isTwoFactorEnabled,
-          isOAuth: !!account,
-        },
-      };
-    },
+    }),
   },
+});
 
-  /**
-   * JSON Web Tokens can be used for session tokens if enabled with session: { strategy: "jwt" } option.
-   * JSON Web Tokens are enabled by default if you have not specified an adapter.
-   * JSON Web Tokens are encrypted (JWE) by default. We recommend you keep this behavior.
-   * https://next-auth.js.org/configuration/options#jwt
-   */
-  jwt: {
-    /**
-     * This is a custom `encode` function that replaces the default `encode`
-     * function from NextAuth.js.
-     * If the `token` object has a `credentials` key, it will create a new session
-     * in the database and return the session token. If the `token` object doesn't
-     * have a `credentials` key, it will call the default `encode` function.
-     * @param params - The parameters passed to the `encode` function
-     * @returns The JWT token
-     */
-    encode: async function (params) {
-      if (params.token?.credentials) {
-        const sessionToken = uuid();
+// Export types for use in other files
+export type Session = Awaited<ReturnType<typeof auth.api.getSession>>;
 
-        if (!params.token.sub) {
-          throw new Error("No user ID found in token");
-        }
-
-        const createdSession = await adapter?.createSession?.({
-          sessionToken: sessionToken,
-          userId: params.token.sub,
-          expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
-        });
-
-        if (!createdSession) {
-          throw new Error("Failed to create session");
-        }
-
-        return sessionToken;
-      }
-      return defaultEncode(params);
-    },
-  },
+// Extended user type for Better Auth (matches your existing ExtendedUser interface)
+export type ExtendedUser = {
+  id: string;
+  name: string | null;
+  email: string | null;
+  image: string | null;
+  isTwoFactorEnabled: boolean;
+  isOAuth: boolean;
+  emailVerified: Date | null;
 };
-
-export const { auth, handlers, signIn, signOut } = NextAuth(authConfig);

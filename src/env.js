@@ -22,6 +22,8 @@ export const env = createEnv({
       process.env.VERCEL_ENV === "production"
         ? z.string()
         : z.string().optional(),
+    BETTER_AUTH_SECRET: z.string(),
+    BETTER_AUTH_URL: z.string().url(),
     AUTH_TRUST_HOST: z.enum(["true", "false"]),
     GITHUB_CLIENT_ID: z.string(),
     GITHUB_CLIENT_SECRET: z.string(),
@@ -57,6 +59,11 @@ export const env = createEnv({
     DEV_DATABASE_URL: process.env.DEV_DATABASE_URL,
     VERCEL_ENV: process.env.VERCEL_ENV,
     AUTH_SECRET: process.env.AUTH_SECRET,
+    BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
+    BETTER_AUTH_URL:
+      process.env.VERCEL_ENV === "preview"
+        ? `https://${process.env.VERCEL_URL}`
+        : process.env.BETTER_AUTH_URL,
     AUTH_TRUST_HOST: process.env.AUTH_TRUST_HOST,
     GITHUB_CLIENT_ID:
       process.env.VERCEL_ENV === "development"

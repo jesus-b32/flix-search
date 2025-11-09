@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import { headers } from "next/headers";
 
 /**
  * Get the current user from the session
@@ -6,7 +7,9 @@ import { auth } from "@/auth";
  * or null if the user is not logged in
  */
 export const currentUser = async () => {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: headers(),
+  });
 
-  return session?.user;
+  return session?.user || null;
 };

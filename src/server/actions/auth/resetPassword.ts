@@ -1,55 +1,59 @@
 "use server";
 
-import { ResetPasswordSchema } from "@/schemas/schema";
-import { getUserByEmail } from "@/data/user";
 import type * as z from "zod";
-import { sendPasswordResetEmail } from "@/lib/sendEmail";
-import { generatePasswordResetToken } from "@/lib/generateToken";
+import { NewPasswordFromEmailSchema } from "@/schemas/schema";
+import { auth } from "@/auth";
 
 /**
- * Validates the form values from a password reset request.
- * Used for password reset.
- * Generates a password reset token and sends a password reset email to the user.
- * Returns a success or error message.
+ * Validates the form values and resets the password using Better Auth's resetPassword API.
+ * Better Auth handles token validation, expiration checking, and password hashing.
+ * @param values - The form values containing the new password
+ * @param token - The password reset token from the URL
+ * @returns - A success or error message
  */
 export const resetPassword = async (
-  values: z.infer<typeof ResetPasswordSchema>,
+  values: z.infer<typeof NewPasswordFromEmailSchema>,
+  token?: string | null,
 ) => {
-  const validatedFields = ResetPasswordSchema.safeParse(values);
+  if (!token) {
+    return { error: "Missing token!" };
+  }
+
+  const validatedFields = NewPasswordFromEmailSchema.safeParse(values);
 
   if (!validatedFields.success) {
-    return {
-      error: "Invalid email!",
-    };
+    return { error: "Invalid fields!" };
   }
 
-  const { email } = validatedFields.data;
-  const existingUser = await getUserByEmail(email);
+  const { password } = validatedFields.data;
 
-  // Handle error case from getUserByEmail
-  if (existingUser instanceof Error) {
-    return { error: existingUser.message };
+  try {
+    // Use Better Auth's resetPassword API
+    // Better Auth handles token validation, expiration, and password hashing
+    await auth.api.resetPassword({
+      body: {
+        newPassword: password,
+        token,
+      },
+    });
+
+    return { success: "Password updated!" };
+  } catch (error) {
+    // Better Auth will throw an error if the token is invalid or expired
+    if (error instanceof Error) {
+      // Check for common error messages
+      if (
+        error.message.includes("token") ||
+        error.message.includes("invalid") ||
+        error.message.includes("expired")
+      ) {
+        return {
+          error:
+            "Invalid or expired token. Please request a new password reset.",
+        };
+      }
+      return { error: error.message };
+    }
+    return { error: "Failed to reset password. Please try again." };
   }
-
-  if (!existingUser) {
-    return { error: "Email not found!" };
-  }
-
-  const passwordResetToken = await generatePasswordResetToken(email);
-
-  // Handle error case from generatePasswordResetToken
-  if (passwordResetToken instanceof Error) {
-    return { error: passwordResetToken.message };
-  }
-
-  if (!passwordResetToken?.[0]?.token || !passwordResetToken?.[0]?.email) {
-    return { error: "Error generating password reset token!" };
-  }
-
-  await sendPasswordResetEmail(
-    passwordResetToken[0].email,
-    passwordResetToken[0].token,
-  );
-
-  return { success: "Reset email sent!" };
 };

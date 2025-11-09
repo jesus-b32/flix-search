@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import DetailCard from "@/components/detailPage/DetailCard";
 import { mockMovieDetails, mockTvDetails } from "@/mockedTestData";
-import type { Session } from "next-auth";
+import type { Session } from "@/auth";
 
 vi.mock("@/components/WatchlistButton", () => {
   return {

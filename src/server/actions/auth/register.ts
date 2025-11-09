@@ -7,6 +7,7 @@ import { getUserByEmail, createNewUser } from "@/data/user";
 import { createVideoList } from "@/data/videoList";
 import { generateVerificationToken } from "@/lib/generateToken";
 import { sendVerificationEmail } from "@/lib/sendEmail";
+import { env } from "@/env";
 
 /**
  * Validates the form values from a new registered user.
@@ -65,10 +66,14 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     return { error: "Error generating verification token!" };
   }
 
-  await sendVerificationEmail(
-    verificationToken[0].email,
-    verificationToken[0].token,
-  );
+  // Legacy code path: construct URL from token for backward compatibility
+  // TODO: Migrate to Better Auth's signUp API which handles email verification automatically
+  const verificationUrl = `${env.APP_DOMAIN || env.BETTER_AUTH_URL}/auth/new-verification?token=${verificationToken[0].token}`;
+  await sendVerificationEmail({
+    user: { email: verificationToken[0].email },
+    url: verificationUrl,
+    token: verificationToken[0].token,
+  });
 
   return {
     success: "Confirmation email sent!",

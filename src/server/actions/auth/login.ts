@@ -2,15 +2,10 @@
 
 import type * as z from "zod";
 import { LoginSchema } from "@/schemas/schema";
-import { signIn } from "@/auth";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
-import { AuthError } from "next-auth";
-import {
-  generateVerificationToken,
-  generateTwoFactorToken,
-} from "@/lib/generateToken";
+import { generateTwoFactorToken } from "@/lib/generateToken";
 import { getUserByEmail } from "@/data/user";
-import { sendVerificationEmail, sendTwoFactorEmail } from "@/lib/sendEmail";
+import { sendTwoFactorEmail } from "@/lib/sendEmail";
 import {
   getTwoFactorTokenByEmail,
   deleteTwoFactorToken,
@@ -20,7 +15,8 @@ import {
   deleteTwoFactorConfirmation,
   createTwoFactorConfirmation,
 } from "@/data/twoFactorConfirmation";
-import bcrypt from "bcryptjs";
+import { auth } from "@/auth";
+import { headers } from "next/headers";
 
 /**
  * Authentication server action for credential user login with email, password, and optional 2FA code. Returns a success/error messages or a 2FA flag. Will redirect to callback URL after successful login.
@@ -52,38 +48,68 @@ export const login = async (
     return { error: existingUser.message };
   }
 
-  if (!existingUser?.email || !existingUser.password) {
+  if (!existingUser?.email) {
     return { error: "Email does not exist!" };
   }
 
-  //if user is not verified, send verification email
-  if (!existingUser.emailVerified) {
-    const verificationToken = await generateVerificationToken(
-      existingUser.email,
-    );
-
-    // Handle error case from generateVerificationToken
-    if (verificationToken instanceof Error) {
-      return { error: verificationToken.message };
-    }
-
-    if (!verificationToken?.[0]?.token || !verificationToken?.[0]?.email) {
-      return { error: "Error generating verification token!" };
-    }
-
-    await sendVerificationEmail(
-      verificationToken[0].email,
-      verificationToken[0].token,
-    );
-    return { success: "Confirmation email sent!" };
-  }
-
-  const passwordsMatch = await bcrypt.compare(password, existingUser.password);
-  if (!passwordsMatch) return { error: "Invalid password!" };
-
-  //if user has 2FA enabled, check if code is valid
+  // Handle custom 2FA flow if enabled
+  // Check 2FA BEFORE verifying password to avoid signing in prematurely
   if (existingUser.isTwoFactorEnabled && existingUser.email) {
-    if (code) {
+    if (!code) {
+      // 2FA enabled but no code provided, send 2FA code
+      // But first, we should verify password is correct before sending 2FA code
+      // However, Better Auth's signInEmail will sign the user in if password is correct
+      // So we'll verify password first, and if correct, send 2FA code
+      // If password is wrong, Better Auth will throw an error
+      try {
+        // Try to sign in to verify password
+        // If password is wrong, this will throw an error
+        await auth.api.signInEmail({
+          body: {
+            email,
+            password,
+            callbackURL: callbackUrl || DEFAULT_LOGIN_REDIRECT,
+          },
+          headers: headers(),
+        });
+
+        // Password is valid, but user needs 2FA
+        // Sign out the user since we haven't verified 2FA yet
+        await auth.api.signOut({ headers: headers() });
+
+        // Generate and send 2FA token
+        const twoFactorToken = await generateTwoFactorToken(existingUser.email);
+
+        // Handle error case from generateTwoFactorToken
+        if (twoFactorToken instanceof Error) {
+          return { error: twoFactorToken.message };
+        }
+
+        if (!twoFactorToken?.[0]?.token || !twoFactorToken?.[0]?.email) {
+          return { error: "Error generating 2FA token!" };
+        }
+
+        await sendTwoFactorEmail(
+          twoFactorToken[0].email,
+          twoFactorToken[0].token,
+        );
+
+        return { twoFactor: true };
+      } catch (error) {
+        // Password is invalid
+        if (error instanceof Error) {
+          if (
+            error.message.includes("email") &&
+            error.message.includes("verify")
+          ) {
+            return { error: "Please verify your email before signing in." };
+          }
+          return { error: "Invalid credentials!" };
+        }
+        return { error: "Something went wrong!" };
+      }
+    } else {
+      // 2FA code provided, verify it first
       const twoFactorToken = await getTwoFactorTokenByEmail(existingUser.email);
 
       // Handle error case from getTwoFactorTokenByEmail
@@ -137,47 +163,64 @@ export const login = async (
       if (createConfirmationResult instanceof Error) {
         return { error: createConfirmationResult.message };
       }
-    } else {
-      const twoFactorToken = await generateTwoFactorToken(existingUser.email);
 
-      // Handle error case from generateTwoFactorToken
-      if (twoFactorToken instanceof Error) {
-        return { error: twoFactorToken.message };
+      // 2FA verified, now sign in with Better Auth
+      // Better Auth will verify password from account table
+      try {
+        await auth.api.signInEmail({
+          body: {
+            email,
+            password,
+            callbackURL: callbackUrl || DEFAULT_LOGIN_REDIRECT,
+          },
+          headers: headers(),
+        });
+
+        return {
+          success: true,
+          redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
+        };
+      } catch (error) {
+        // Password might be invalid (shouldn't happen if flow is correct)
+        if (error instanceof Error) {
+          return { error: "Invalid credentials!" };
+        }
+        return { error: "Failed to sign in after 2FA verification." };
       }
-
-      if (!twoFactorToken?.[0]?.token || !twoFactorToken?.[0]?.email) {
-        return { error: "Error generating 2FA token!" };
-      }
-
-      await sendTwoFactorEmail(
-        twoFactorToken[0].email,
-        twoFactorToken[0].token,
-      );
-
-      return { twoFactor: true };
     }
   }
 
+  // No 2FA enabled, sign in directly with Better Auth
+  // Better Auth will verify password from account table automatically
   try {
-    await signIn("credentials", {
-      email,
-      password,
-      redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
+    const result = await auth.api.signInEmail({
+      body: {
+        email,
+        password,
+        callbackURL: callbackUrl || DEFAULT_LOGIN_REDIRECT,
+      },
+      headers: headers(),
     });
-  } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case "CredentialsSignin":
-          return {
-            error: "Invalid credentials!",
-          };
-        default:
-          return {
-            error: "Something went wrong!",
-          };
-      }
+
+    // Check if Better Auth's 2FA plugin requires 2FA
+    if ("twoFactorRedirect" in result && result.twoFactorRedirect) {
+      return { twoFactor: true };
     }
-    //need to throw the error in order to redirect
-    throw error;
+
+    // Sign-in successful
+    return {
+      success: true,
+      redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
+    };
+  } catch (error) {
+    // Better Auth will throw an error if password is invalid
+    if (error instanceof Error) {
+      // Check for email verification error (shouldn't happen since we checked above)
+      if (error.message.includes("email") && error.message.includes("verify")) {
+        return { error: "Please verify your email before signing in." };
+      }
+      return { error: "Invalid credentials!" };
+    }
+    return { error: "Something went wrong!" };
   }
 };

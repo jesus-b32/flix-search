@@ -5,15 +5,23 @@ import {
   apiAuthPrefix,
   DEFAULT_LOGIN_REDIRECT,
 } from "@/routes";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
 /**
  * Middleware checks if a user is logged in or not.
  * If the user is not logged in and tries to access protectedRoutes, it will redirect the user to the login page.
  * If the user is logged in and tries to access authRoutes, it will redirect the user to the home page.
  */
-export default auth((req) => {
+export async function middleware(req: NextRequest) {
   const { nextUrl } = req;
-  const isLoggedIn = !!req.auth; //"!!" turn req.auth to a boolean
+
+  // Get session using Better Auth
+  const session = await auth.api.getSession({
+    headers: req.headers,
+  });
+
+  const isLoggedIn = !!session?.session;
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
   const isProtectedRoute =
@@ -23,13 +31,13 @@ export default auth((req) => {
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
   //must be in this order when checking routes
-  if (isApiAuthRoute) return;
+  if (isApiAuthRoute) return NextResponse.next();
 
   if (isAuthRoute) {
     if (isLoggedIn) {
-      return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+      return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
     }
-    return;
+    return NextResponse.next();
   }
 
   if (!isLoggedIn && isProtectedRoute) {
@@ -46,13 +54,13 @@ export default auth((req) => {
 
     // Redirect the unauthenticated user to the login page
     // Include the encoded callback URL as a query parameter so the user can be redirected back to their originally requested page after successful login
-    return Response.redirect(
+    return NextResponse.redirect(
       new URL(`/auth/login?callbackUrl=${encodedCallbackUrl}`, nextUrl),
     );
   }
 
-  return;
-});
+  return NextResponse.next();
+}
 
 // Don't invoke Middleware on the paths that match the regex pattern below
 export const config = {

@@ -10,7 +10,7 @@ import {
   uniqueIndex,
   boolean,
 } from "drizzle-orm/pg-core";
-import type { AdapterAccountType } from "next-auth/adapters";
+// Removed NextAuth adapter type - using Better Auth now
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -26,12 +26,12 @@ export const users = createTable(
     id: text("id")
       .primaryKey()
       .$defaultFn(() => crypto.randomUUID()),
-    name: text("name"),
-    email: text("email"),
-    password: text("password"),
-    emailVerified: timestamp("email_verified", { mode: "date" }),
+    name: text("name").notNull(),
+    email: text("email").notNull().unique(),
+    // Password moved to account table (Better Auth stores passwords there)
+    emailVerified: boolean("email_verified").default(false).notNull(),
     image: text("image"),
-    isTwoFactorEnabled: boolean("isTwoFactorEnabled").default(false).notNull(),
+    isTwoFactorEnabled: boolean("isTwoFactorEnabled").default(false),
   },
   (t) => {
     return {
@@ -42,7 +42,9 @@ export const users = createTable(
 );
 
 /**
- * Accounts table for NextAuth authentication
+ * Accounts table - keeping NextAuth structure for migration
+ * Better Auth will map fields via adapter configuration
+ * According to migration guide: map provider -> providerId, providerAccountId -> accountId, etc.
  */
 export const accounts = createTable(
   "account",
@@ -50,16 +52,18 @@ export const accounts = createTable(
     userId: text("user_id")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    type: text("type").$type<AdapterAccountType>().notNull(),
     provider: text("provider").notNull(),
     providerAccountId: text("provider_account_id").notNull(),
     refresh_token: text("refresh_token"),
     access_token: text("access_token"),
-    expires_at: integer("expires_at"),
-    token_type: text("token_type"),
+    expires_at: timestamp("expires_at"),
     scope: text("scope"),
     id_token: text("id_token"),
-    session_state: text("session_state"),
+    password: text("password"), // Better Auth stores passwords here with providerId = 'credential'
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
   },
   (account) => ({
     compoundKey: primaryKey({
@@ -69,7 +73,9 @@ export const accounts = createTable(
 );
 
 /**
- * Sessions table for NextAuth authentication
+ * Sessions table - keeping NextAuth structure for migration
+ * Better Auth will map: sessionToken -> token, expires -> expiresAt
+ * According to migration guide: only add createdAt and updatedAt
  */
 export const sessions = createTable("session", {
   sessionToken: text("session_token").primaryKey(),
@@ -77,6 +83,10 @@ export const sessions = createTable("session", {
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   expires: timestamp("expires", { mode: "date" }).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
 });
 
 /**

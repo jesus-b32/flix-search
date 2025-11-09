@@ -6,6 +6,7 @@ import { getUserById, getUserByEmail, updateUserEmail } from "@/data/user";
 import bcrypt from "bcryptjs";
 import { generateVerificationToken } from "@/lib/generateToken";
 import { sendVerificationEmail } from "@/lib/sendEmail";
+import { env } from "@/env";
 
 /**
  * Validates the update email form values and returns a success message or an error message.
@@ -76,10 +77,14 @@ export const updateEmail = async (
           return { error: "Error generating verification token!" };
         }
 
-        await sendVerificationEmail(
-          verificationToken[0].email,
-          verificationToken[0].token,
-        );
+        // Legacy code path: construct URL from token for backward compatibility
+        // TODO: Migrate to Better Auth's sendVerificationEmail API
+        const verificationUrl = `${env.APP_DOMAIN || env.BETTER_AUTH_URL}/auth/new-verification?token=${verificationToken[0].token}`;
+        await sendVerificationEmail({
+          user: { email: verificationToken[0].email },
+          url: verificationUrl,
+          token: verificationToken[0].token,
+        });
         return {
           success: "Email updated! Verification email sent.",
         };

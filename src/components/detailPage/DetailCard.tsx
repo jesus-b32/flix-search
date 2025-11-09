@@ -23,7 +23,7 @@ import { getVideoList, isVideoInList, getVideo } from "@/data/videoList";
 import WatchlistButton from "@/components/WatchlistButton";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import type { ExtendedUser } from "next-auth";
+import type { ExtendedUser } from "@/auth";
 import { timeConvert } from "@/lib/timeConvert";
 
 // Next.js Image
