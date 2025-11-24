@@ -86,7 +86,7 @@ export const LoginForm = () => {
 
         if (data?.success) {
           form.reset();
-          setSuccess(data.success);
+          setSuccess("Login successful! Redirecting...");
         }
 
         if (data?.twoFactor) {

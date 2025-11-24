@@ -16,7 +16,6 @@ import {
 import { eq, and, sql } from "drizzle-orm";
 
 // Data functions
-import { updateUserEmailVerified } from "@/data/user";
 import { createVideoList } from "@/data/videoList";
 import {
   sendVerificationEmail,
@@ -93,7 +92,6 @@ export const auth = betterAuth({
   secret: env.BETTER_AUTH_SECRET,
   emailAndPassword: {
     enabled: true,
-    requireEmailVerification: true,
     sendResetPassword: async ({ user, url, token }, request) => {
       await sendPasswordResetEmail({ user, url, token });
     },
@@ -221,19 +219,17 @@ export const auth = betterAuth({
       // Handle post-sign-in actions for social providers
       const newSession = ctx.context.newSession;
 
-      if (newSession?.user?.id && newSession?.user?.email) {
+      if (newSession?.user?.id) {
         try {
-          // Handle social sign-up/sign-in - update email verified and create watchlist
+          // Handle social sign-up/sign-in - create watchlist
+          // Note: Better Auth automatically handles email verification status for OAuth providers
+          // It reads the verification status from the SSO provider (GitHub, Google, etc.)
           if (
             ctx.path === "/sign-in/social" ||
             ctx.path === "/sign-up/social" ||
             ctx.path === "/callback/github" ||
             ctx.path === "/callback/google"
           ) {
-            await updateUserEmailVerified(
-              newSession.user.id,
-              newSession.user.email,
-            );
             await createVideoList(newSession.user.id, "watchlist");
           }
         } catch (error) {
