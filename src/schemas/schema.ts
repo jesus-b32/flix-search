@@ -115,6 +115,7 @@ export const NewPasswordSchema = z
  */
 export const TwoFactorSchema = z.object({
   twoFactor: z.boolean(),
+  password: z.string().min(1, "Password is required to enable or disable 2FA"),
 });
 
 /**

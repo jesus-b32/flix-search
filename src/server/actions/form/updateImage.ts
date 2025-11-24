@@ -2,14 +2,15 @@
 
 import type * as z from "zod";
 import { NewImageSchema } from "@/schemas/schema";
-import { updateUserImage } from "@/data/user";
+import { auth } from "@/auth";
+import { headers } from "next/headers";
 
 /**
- * Validates the update image form values and returns a success message or an error message.
- * Used for updating user image.
+ * Validates the update image form values and updates the user's profile image using Better Auth's updateUser API.
+ * Better Auth handles updating the user information in the database automatically.
  *
- * @param values - the form values of a update image
- * @param userId - the user id
+ * @param values - the form values of an update image form
+ * @param userId - the user id (not used by Better Auth, but kept for backward compatibility)
  * @returns an object with a success message or an error message
  */
 export const updateImage = async (
@@ -27,19 +28,30 @@ export const updateImage = async (
   const { image } = validatedFields.data;
 
   try {
-    const updated = await updateUserImage(userId, image);
-    if (updated) {
-      return {
-        success: "Profile image updated successfully!",
-      };
-    } else {
-      return {
-        error: "Failed to update profile image!",
-      };
-    }
-  } catch {
+    // Use Better Auth's updateUser API
+    // Better Auth handles updating the user information in the database
+    await auth.api.updateUser({
+      body: {
+        image,
+      },
+      headers: headers(),
+    });
+
     return {
-      error: "Something went wrong!",
+      success: "Profile image updated successfully!",
     };
+  } catch (error) {
+    // Better Auth will throw an error if validation fails or user is not authenticated
+    if (error instanceof Error) {
+      // Check for common error messages
+      if (
+        error.message.includes("unauthorized") ||
+        error.message.includes("session")
+      ) {
+        return { error: "Unauthorized! Please sign in again." };
+      }
+      return { error: error.message };
+    }
+    return { error: "Failed to update profile image. Please try again." };
   }
 };

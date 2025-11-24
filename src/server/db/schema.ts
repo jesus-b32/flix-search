@@ -20,57 +20,48 @@ import {
  */
 export const createTable = pgTableCreator((name) => `flix_search_${name}`);
 
-export const users = createTable(
-  "users",
-  {
-    id: text("id")
-      .primaryKey()
-      .$defaultFn(() => crypto.randomUUID()),
-    name: text("name").notNull(),
-    email: text("email").notNull().unique(),
-    // Password moved to account table (Better Auth stores passwords there)
-    emailVerified: boolean("email_verified").default(false).notNull(),
-    image: text("image"),
-    isTwoFactorEnabled: boolean("isTwoFactorEnabled").default(false),
-  },
-  (t) => {
-    return {
-      // create an unique index on the email column to make queries faster
-      emailIndex: uniqueIndex("email_index").on(t.email),
-    };
-  },
-);
+export const users = createTable("users", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  name: text("name").notNull(),
+  email: text("email").notNull().unique(),
+  emailVerified: boolean("email_verified").default(false).notNull(),
+  image: text("image"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+  twoFactorEnabled: boolean("twoFactorEnabled").default(false),
+});
 
 /**
  * Accounts table - keeping NextAuth structure for migration
  * Better Auth will map fields via adapter configuration
  * According to migration guide: map provider -> providerId, providerAccountId -> accountId, etc.
  */
-export const accounts = createTable(
-  "account",
-  {
-    userId: text("user_id")
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-    provider: text("provider").notNull(),
-    providerAccountId: text("provider_account_id").notNull(),
-    refresh_token: text("refresh_token"),
-    access_token: text("access_token"),
-    expires_at: timestamp("expires_at"),
-    scope: text("scope"),
-    id_token: text("id_token"),
-    password: text("password"), // Better Auth stores passwords here with providerId = 'credential'
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at")
-      .$onUpdate(() => /* @__PURE__ */ new Date())
-      .notNull(),
-  },
-  (account) => ({
-    compoundKey: primaryKey({
-      columns: [account.provider, account.providerAccountId],
-    }),
-  }),
-);
+export const accounts = createTable("account", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  providerAccountId: text("provider_account_id").notNull(),
+  provider: text("provider").notNull(),
+  access_token: text("access_token"),
+  refresh_token: text("refresh_token"),
+  expires_at: timestamp("expires_at"),
+  refreshTokenExpiresAt: timestamp("refresh_token_expires_at"),
+  scope: text("scope"),
+  id_token: text("id_token"),
+  password: text("password"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+});
 
 /**
  * Sessions table - keeping NextAuth structure for migration
@@ -78,11 +69,16 @@ export const accounts = createTable(
  * According to migration guide: only add createdAt and updatedAt
  */
 export const sessions = createTable("session", {
-  sessionToken: text("session_token").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   userId: text("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
-  expires: timestamp("expires", { mode: "date" }).notNull(),
+  sessionToken: text("session_token"),
+  expires: timestamp("expires").notNull(),
+  ipAddress: text("ip_address"),
+  userAgent: text("user_agent"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .$onUpdate(() => /* @__PURE__ */ new Date())
@@ -147,49 +143,67 @@ export const videoLists = createTable(
   }),
 );
 
-export const verificationTokens = createTable(
-  "verification_tokens",
-  {
-    id: uuid("id").primaryKey().defaultRandom(),
-    email: text("email"),
-    token: text("token").unique(),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
-  },
-  (t) => ({
-    unq: unique().on(t.email, t.token),
-  }),
-);
+/**
+ * Verification table - Better Auth structure
+ * Maps from NextAuth verificationTokens:
+ * - email -> identifier
+ * - token -> value
+ * - expires -> expiresAt
+ * - Added createdAt field (required by Better Auth)
+ */
+export const verificationTokens = createTable("verification_tokens", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  identifier: text("identifier").notNull(), //email?
+  token: text("token").notNull().unique(),
+  expires: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+});
 
-export const passwordResetTokens = createTable(
-  "password_reset_tokens",
-  {
-    id: uuid("id").primaryKey().defaultRandom(),
-    email: text("email"),
-    token: text("token").unique(),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
-  },
-  (t) => ({
-    unq: unique().on(t.email, t.token),
-  }),
-);
+// export const passwordResetTokens = createTable(
+//   "password_reset_tokens",
+//   {
+//     id: uuid("id").primaryKey().defaultRandom(),
+//     email: text("email"),
+//     token: text("token").unique(),
+//     expires: timestamp("expires", { mode: "date" }).notNull(),
+//   },
+//   (t) => ({
+//     unq: unique().on(t.email, t.token),
+//   }),
+// );
 
-export const twoFactorTokens = createTable(
-  "two-factor-tokens",
-  {
-    id: uuid("id").primaryKey().defaultRandom(),
-    email: text("email"),
-    token: text("token").unique(),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
-  },
-  (t) => ({
-    unq: unique().on(t.email, t.token),
-  }),
-);
+// export const twoFactorTokens = createTable(
+//   "two-factor-tokens",
+//   {
+//     id: uuid("id").primaryKey().defaultRandom(),
+//     email: text("email"),
+//     token: text("token").unique(),
+//     expires: timestamp("expires", { mode: "date" }).notNull(),
+//   },
+//   (t) => ({
+//     unq: unique().on(t.email, t.token),
+//   }),
+// );
 
-export const twoFactorConfirmations = createTable("two-factor-confirmations", {
+// export const twoFactorConfirmations = createTable("two-factor-confirmations", {
+//   id: uuid("id").primaryKey().defaultRandom(),
+//   userId: text("user_id")
+//     .notNull()
+//     .unique()
+//     .references(() => users.id, { onDelete: "cascade" }),
+// });
+
+export const twoFactor = createTable("two_factor", {
   id: uuid("id").primaryKey().defaultRandom(),
+  secret: text("secret").notNull(),
+  backupCodes: text("backup_codes").notNull(),
   userId: text("user_id")
     .notNull()
-    .unique()
     .references(() => users.id, { onDelete: "cascade" }),
 });

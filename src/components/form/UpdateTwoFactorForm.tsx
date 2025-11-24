@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { Input } from "@/components/ui/input";
 
 // form validation
 import type * as z from "zod";
@@ -26,6 +27,7 @@ import { FormSuccess } from "@/components/auth/FormSuccess";
 import { TwoFactorSchema } from "@/schemas/schema";
 import { useTransition, useState } from "react";
 import { updateTwoFactor } from "@/server/actions/form/updateTwoFactor";
+import { Eye, EyeOff } from "lucide-react";
 
 // Next.js Router
 import { useRouter } from "next/navigation";
@@ -35,15 +37,15 @@ import { useRouter } from "next/navigation";
  * Used in the user account page.
  *
  * @param userId - the user id
- * @param isTwoFactorEnabled - whether the user has two factor authentication enabled
+ * @param twoFactorEnabled - whether the user has two factor authentication enabled
  * @returns a update two factor authentication form
  */
 export const UpdateTwoFactorForm = ({
   userId,
-  isTwoFactorEnabled,
+  twoFactorEnabled,
 }: {
   userId: string;
-  isTwoFactorEnabled: boolean;
+  twoFactorEnabled: boolean;
 }) => {
   /**
    * useTransition is a React Hook that lets you update the state without blocking the UI.
@@ -54,13 +56,19 @@ export const UpdateTwoFactorForm = ({
   const router = useRouter();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<z.infer<typeof TwoFactorSchema>>({
     resolver: zodResolver(TwoFactorSchema),
     defaultValues: {
-      twoFactor: isTwoFactorEnabled,
+      twoFactor: twoFactorEnabled,
+      password: "",
     },
   });
+
+  // Watch the twoFactor field to determine if password field should be shown
+  const twoFactorValue = form.watch("twoFactor");
+  const needsPassword = twoFactorValue !== twoFactorEnabled;
 
   /**
    * onSubmit is a function that is called when the form is submitted. It calls the
@@ -100,21 +108,70 @@ export const UpdateTwoFactorForm = ({
                 <Switch
                   checked={field.value}
                   onCheckedChange={field.onChange}
+                  disabled={isPending}
                 />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+        {needsPassword && (
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  {twoFactorValue
+                    ? "Password (Required to enable 2FA)"
+                    : "Password (Required to disable 2FA)"}
+                </FormLabel>
+                <FormDescription>
+                  Enter your password to {twoFactorValue ? "enable" : "disable"}{" "}
+                  two factor authentication.
+                </FormDescription>
+                <FormControl>
+                  <div className="relative">
+                    <Input
+                      {...field}
+                      placeholder="Enter your password"
+                      type={showPassword ? "text" : "password"}
+                      disabled={isPending}
+                      className="text-foreground"
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                      onClick={() => setShowPassword(!showPassword)}
+                      disabled={isPending}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4 text-foreground" />
+                      ) : (
+                        <Eye className="h-4 w-4 text-foreground" />
+                      )}
+                      <span className="sr-only">
+                        {showPassword ? "Hide password" : "Show password"}
+                      </span>
+                    </Button>
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
         <FormError message={error} />
         <FormSuccess message={success} />
         <Button
           type="submit"
           className="w-full"
-          disabled={isPending}
+          disabled={isPending || !needsPassword}
           variant="secondary"
         >
-          Update
+          {twoFactorValue ? "Enable 2FA" : "Disable 2FA"}
         </Button>
       </form>
     </Form>

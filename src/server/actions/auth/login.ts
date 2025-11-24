@@ -54,7 +54,7 @@ export const login = async (
 
   // Handle custom 2FA flow if enabled
   // Check 2FA BEFORE verifying password to avoid signing in prematurely
-  if (existingUser.isTwoFactorEnabled && existingUser.email) {
+  if (existingUser.twoFactorEnabled && existingUser.email) {
     if (!code) {
       // 2FA enabled but no code provided, send 2FA code
       // But first, we should verify password is correct before sending 2FA code

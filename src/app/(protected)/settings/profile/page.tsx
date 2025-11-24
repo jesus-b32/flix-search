@@ -1,6 +1,9 @@
 // Next.js
 import { type Metadata } from "next";
 import { currentUser } from "@/lib/currentUser";
+import { db } from "@/server/db";
+import { accounts } from "@/server/db/schema";
+import { eq, and } from "drizzle-orm";
 
 // UI Components
 import { Input } from "@/components/ui/input";
@@ -31,6 +34,21 @@ export const metadata: Metadata = {
 export default async function SettingProfilePage() {
   const user = await currentUser();
 
+  // Check if user has a credential account (email/password)
+  // OAuth users don't have credential accounts, so 2FA is not available for them
+  // Better Auth only supports 2FA for credential accounts
+  let isOAuth = true;
+  if (user?.id) {
+    const credentialAccount = await db.query.accounts.findFirst({
+      where: and(
+        eq(accounts.userId, user.id),
+        eq(accounts.provider, "credential"),
+      ),
+    });
+    // User is OAuth-only if they don't have a credential account with password
+    isOAuth = !credentialAccount?.password;
+  }
+
   return (
     <div className="w-full">
       <h1 className="my-5 text-4xl font-bold">Edit Profile</h1>
@@ -59,7 +77,7 @@ export default async function SettingProfilePage() {
         <ProfileEditWrapper buttonName="Update Profile Image">
           <UpdateImageForm userId={user?.id ?? ""} />
         </ProfileEditWrapper>
-        {!user?.isOAuth && (
+        {!isOAuth && (
           <>
             <Label htmlFor="email" className="font-semibold">
               Email
@@ -79,11 +97,19 @@ export default async function SettingProfilePage() {
               <UpdatePasswordForm userId={user?.id ?? ""} />
             </ProfileEditWrapper>
 
+            {/* 
+              Two Factor Authentication is only available for credential accounts (email/password).
+              OAuth accounts rely on the provider's 2FA, so this form is hidden for OAuth users.
+              See Better Auth docs: https://www.better-auth.com/docs/plugins/2fa#enabling-2fa
+            */}
             <Label className="font-semibold">Two Factor Authentication</Label>
             <ProfileEditWrapper buttonName="Update Two Factor Authentication">
               <UpdateTwoFactorForm
                 userId={user?.id ?? ""}
-                isTwoFactorEnabled={user?.isTwoFactorEnabled ?? false}
+                twoFactorEnabled={
+                  (user as { twoFactorEnabled?: boolean | null })
+                    ?.twoFactorEnabled ?? false
+                }
               />
             </ProfileEditWrapper>
           </>

@@ -411,33 +411,33 @@ export const updateUserPassword = async (
 /**
  * Update a user's two-factor authentication status
  * @param id - The user ID to update
- * @param isTwoFactorEnabled - Whether two-factor authentication is enabled
+ * @param twoFactorEnabled - Whether two-factor authentication is enabled
  * @returns - true if successful, null if user not found, or an Error if the request fails
  */
 export const updateUserTwoFactorEnabled = async (
   id: string,
-  isTwoFactorEnabled: boolean,
+  twoFactorEnabled: boolean,
 ) => {
   // Input validation
   if (!id || typeof id !== "string" || id.trim().length === 0) {
     return new Error("User ID is required and must be a non-empty string");
   }
 
-  if (typeof isTwoFactorEnabled !== "boolean") {
+  if (typeof twoFactorEnabled !== "boolean") {
     return new Error("Two-factor enabled status must be a boolean value");
   }
 
   try {
     await db
       .update(users)
-      .set({ isTwoFactorEnabled: isTwoFactorEnabled })
+      .set({ twoFactorEnabled: twoFactorEnabled })
       .where(eq(users.id, id.trim()));
     return true;
   } catch (error) {
     // Log database errors for debugging
     console.error("Database error in updateUserTwoFactorEnabled:", {
       id: id.trim(),
-      isTwoFactorEnabled,
+      twoFactorEnabled,
       error: error instanceof Error ? error.message : "Unknown error",
       timestamp: new Date().toISOString(),
     });

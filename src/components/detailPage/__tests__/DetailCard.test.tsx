@@ -22,7 +22,7 @@ const user = {
   name: "John Doe",
   email: "a@a.com",
   image: "https://example.com/image.jpg",
-  isTwoFactorEnabled: false,
+  twoFactorEnabled: false,
   isOAuth: false,
 };
 

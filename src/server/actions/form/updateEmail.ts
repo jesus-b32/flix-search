@@ -2,18 +2,58 @@
 
 import type * as z from "zod";
 import { NewEmailSchema } from "@/schemas/schema";
-import { getUserById, getUserByEmail, updateUserEmail } from "@/data/user";
+import { auth } from "@/auth";
+import { headers } from "next/headers";
+import { currentUser } from "@/lib/currentUser";
+import { db } from "@/server/db";
+import { accounts } from "@/server/db/schema";
+import { eq, and } from "drizzle-orm";
+import { scrypt } from "node:crypto";
+import { promisify } from "node:util";
 import bcrypt from "bcryptjs";
-import { generateVerificationToken } from "@/lib/generateToken";
-import { sendVerificationEmail } from "@/lib/sendEmail";
-import { env } from "@/env";
+
+// Promisify scrypt for async/await usage
+const scryptAsync = promisify(scrypt);
 
 /**
- * Validates the update email form values and returns a success message or an error message.
- * Used for updating user email.
+ * Verify password - supports both scrypt (Better Auth) and bcrypt (legacy NextAuth)
+ * This is a helper function to verify passwords directly from the account table
+ */
+async function verifyPasswordDirectly(
+  password: string,
+  hashedPassword: string,
+): Promise<boolean> {
+  // First, try scrypt (Better Auth format: "hash.salt")
+  if (hashedPassword.includes(".")) {
+    const [hash, salt] = hashedPassword.split(".");
+    if (hash && salt) {
+      try {
+        const buf = (await scryptAsync(password, salt, 64)) as Buffer;
+        return buf.toString("hex") === hash;
+      } catch {
+        // If scrypt fails, continue to bcrypt check
+      }
+    }
+  }
+
+  // If scrypt fails or format doesn't match, try bcrypt (legacy NextAuth)
+  try {
+    return await bcrypt.compare(password, hashedPassword);
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Validates the update email form values and initiates email change using Better Auth's changeEmail API.
+ * Better Auth handles email uniqueness checks and sends verification email to the new email address.
+ * The email is only updated after the user verifies the new email.
  *
- * @param values - the form values of a update email
- * @param userId - the user id
+ * Note: Better Auth's changeEmail doesn't require password verification by default.
+ * We verify the password first to maintain the same security level as the old implementation.
+ *
+ * @param values - the form values of an update email form
+ * @param userId - the user id (not used by Better Auth, but kept for backward compatibility)
  * @returns an object with a success message or an error message
  */
 export const updateEmail = async (
@@ -28,79 +68,76 @@ export const updateEmail = async (
     };
   }
 
-  const { email, password } = validatedFields.data;
+  const { email: newEmail, password } = validatedFields.data;
 
   try {
-    const user = await getUserById(userId);
+    // Get current user from session
+    const user = await currentUser();
 
-    // Handle error cases from getUserById
-    if (user instanceof Error) {
-      return { error: user.message };
+    if (!user) {
+      return { error: "Unauthorized!" };
     }
 
-    if (!user?.password || !user) {
-      return { error: "Failed to retrieve user info!" };
+    // Check if new email is the same as current email
+    if (newEmail === user.email) {
+      return { error: "Email entered is the same as existing email!" };
     }
-    const passwordsMatch = await bcrypt.compare(password, user.password);
-    if (passwordsMatch) {
-      if (email === user.email) {
-        return { error: "Email entered is the same as existing email!" };
-      }
 
-      const existingUser = await getUserByEmail(email);
+    // Verify password before allowing email change
+    // Get the credential account to verify the password
+    const credentialAccount = await db.query.accounts.findFirst({
+      where: and(
+        eq(accounts.userId, user.id),
+        eq(accounts.provider, "credential"),
+      ),
+    });
 
-      // Handle error cases from getUserByEmail
-      if (existingUser instanceof Error) {
-        return { error: existingUser.message };
-      }
+    if (!credentialAccount?.password) {
+      return { error: "No password found for this account!" };
+    }
 
-      if (existingUser) {
+    // Verify password using the same logic as Better Auth (supports both bcrypt and scrypt)
+    const passwordValid = await verifyPasswordDirectly(
+      password,
+      credentialAccount.password,
+    );
+
+    if (!passwordValid) {
+      return { error: "Incorrect password!" };
+    }
+
+    // Use Better Auth's changeEmail API
+    // Better Auth handles:
+    // - Email uniqueness checks
+    // - Sending verification email to the new email address
+    // - Updating email only after verification
+    await auth.api.changeEmail({
+      body: {
+        newEmail,
+        callbackURL: "/", // Redirect URL after email verification
+      },
+      headers: headers(),
+    });
+
+    return {
+      success:
+        "Verification email sent to new email address. Please verify to complete the change.",
+    };
+  } catch (error) {
+    // Better Auth will throw an error if email already exists or other validation fails
+    if (error instanceof Error) {
+      // Check for common error messages
+      if (
+        error.message.includes("email") &&
+        (error.message.includes("already") || error.message.includes("exists"))
+      ) {
         return { error: "Email already being used!" };
       }
-
-      const isEmailUpdated = await updateUserEmail(userId, email);
-
-      // Handle error cases from updateUserEmail
-      if (isEmailUpdated instanceof Error) {
-        return { error: isEmailUpdated.message };
+      if (error.message.includes("email") && error.message.includes("same")) {
+        return { error: "Email entered is the same as existing email!" };
       }
-
-      if (isEmailUpdated) {
-        const verificationToken = await generateVerificationToken(email);
-
-        // Handle error case from generateVerificationToken
-        if (verificationToken instanceof Error) {
-          return { error: verificationToken.message };
-        }
-
-        if (!verificationToken?.[0]?.token || !verificationToken?.[0]?.email) {
-          return { error: "Error generating verification token!" };
-        }
-
-        // Legacy code path: construct URL from token for backward compatibility
-        // TODO: Migrate to Better Auth's sendVerificationEmail API
-        const verificationUrl = `${env.APP_DOMAIN || env.BETTER_AUTH_URL}/auth/new-verification?token=${verificationToken[0].token}`;
-        await sendVerificationEmail({
-          user: { email: verificationToken[0].email },
-          url: verificationUrl,
-          token: verificationToken[0].token,
-        });
-        return {
-          success: "Email updated! Verification email sent.",
-        };
-      } else {
-        return {
-          error: "Failed to update email!",
-        };
-      }
-    } else {
-      return {
-        error: "Incorrect password!",
-      };
+      return { error: error.message };
     }
-  } catch {
-    return {
-      error: "Failed to update email!",
-    };
+    return { error: "Failed to update email. Please try again." };
   }
 };

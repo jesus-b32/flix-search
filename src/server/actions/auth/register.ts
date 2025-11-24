@@ -2,18 +2,14 @@
 
 import type * as z from "zod";
 import { RegisterSchema } from "@/schemas/schema";
-import bcrypt from "bcryptjs";
-import { getUserByEmail, createNewUser } from "@/data/user";
-import { createVideoList } from "@/data/videoList";
-import { generateVerificationToken } from "@/lib/generateToken";
-import { sendVerificationEmail } from "@/lib/sendEmail";
+import { auth } from "@/auth";
+import { headers } from "next/headers";
 import { env } from "@/env";
 
 /**
- * Validates the form values from a new registered user.
- * Used for user registration.
- * Creates a new user, video list, and verification token.
- * Sends a verification email to the user.
+ * Validates the form values and signs up a new user using Better Auth's signUpEmail API.
+ * Better Auth handles user creation, password hashing, and email verification automatically.
+ * The video list creation is handled by the after hook in auth.ts.
  * Returns a success or error message.
  */
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
@@ -26,56 +22,38 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
   }
 
   const { name, email, password } = validatedFields.data;
-  const existingUser = await getUserByEmail(email);
 
-  // Handle error cases from getUserByEmail
-  if (existingUser instanceof Error) {
-    return { error: existingUser.message };
-  }
+  try {
+    // Use Better Auth's signUpEmail API
+    // Better Auth handles user creation, password hashing, and email verification
+    await auth.api.signUpEmail({
+      body: {
+        name,
+        email,
+        password,
+        callbackURL: `${env.BETTER_AUTH_URL}/`,
+      },
+      headers: headers(),
+    });
 
-  if (existingUser) {
     return {
-      error: "Email already in use!",
+      success: "Confirmation email sent!",
     };
+  } catch (error) {
+    // Better Auth will throw an error if email already exists or validation fails
+    if (error instanceof Error) {
+      // Check for common error messages
+      if (
+        error.message.includes("email") &&
+        (error.message.includes("already") || error.message.includes("exists"))
+      ) {
+        return { error: "Email already in use!" };
+      }
+      if (error.message.includes("password")) {
+        return { error: "Password does not meet requirements." };
+      }
+      return { error: error.message };
+    }
+    return { error: "Failed to create account. Please try again." };
   }
-
-  const hashPassword = await bcrypt.hash(password, 10);
-  const newUser = await createNewUser(name, email, hashPassword);
-
-  // Handle error cases from createNewUser
-  if (newUser instanceof Error) {
-    return { error: newUser.message };
-  }
-
-  if (!newUser?.[0]?.id) {
-    return { error: "Error creating user!" };
-  }
-
-  const userId = newUser[0].id;
-
-  await createVideoList(userId, "watchlist");
-
-  const verificationToken = await generateVerificationToken(email);
-
-  // Handle error case from generateVerificationToken
-  if (verificationToken instanceof Error) {
-    return { error: verificationToken.message };
-  }
-
-  if (!verificationToken?.[0]?.token || !verificationToken?.[0]?.email) {
-    return { error: "Error generating verification token!" };
-  }
-
-  // Legacy code path: construct URL from token for backward compatibility
-  // TODO: Migrate to Better Auth's signUp API which handles email verification automatically
-  const verificationUrl = `${env.APP_DOMAIN || env.BETTER_AUTH_URL}/auth/new-verification?token=${verificationToken[0].token}`;
-  await sendVerificationEmail({
-    user: { email: verificationToken[0].email },
-    url: verificationUrl,
-    token: verificationToken[0].token,
-  });
-
-  return {
-    success: "Confirmation email sent!",
-  };
 };
