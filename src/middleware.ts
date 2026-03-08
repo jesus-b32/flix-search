@@ -1,4 +1,3 @@
-import { auth } from "@/auth";
 import {
   protectedRoutes,
   authRoutes,
@@ -12,16 +11,17 @@ import type { NextRequest } from "next/server";
  * Middleware checks if a user is logged in or not.
  * If the user is not logged in and tries to access protectedRoutes, it will redirect the user to the login page.
  * If the user is logged in and tries to access authRoutes, it will redirect the user to the home page.
+ *
+ * Uses a lightweight cookie check instead of the full auth API because
+ * middleware runs in the Edge Runtime, which doesn't support the Node.js
+ * modules that better-auth depends on. Full session validation happens in
+ * server components and server actions (Node.js runtime).
  */
 export async function middleware(req: NextRequest) {
   const { nextUrl } = req;
 
-  // Get session using Better Auth
-  const session = await auth.api.getSession({
-    headers: req.headers,
-  });
-
-  const isLoggedIn = !!session?.session;
+  const sessionCookie = req.cookies.get("better-auth.session_token");
+  const isLoggedIn = !!sessionCookie?.value;
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
   const isProtectedRoute =

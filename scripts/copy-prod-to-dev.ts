@@ -11,9 +11,7 @@ type SchemaTable =
   | typeof schema.videoLists
   | typeof schema.videosToVideoLists
   | typeof schema.verificationTokens
-  | typeof schema.passwordResetTokens
-  | typeof schema.twoFactorTokens
-  | typeof schema.twoFactorConfirmations;
+  | typeof schema.twoFactor;
 
 /**
  * Script to copy all tables and data from production database to development database.
@@ -72,10 +70,8 @@ const tables = [
   { name: "account", table: schema.accounts },
   { name: "session", table: schema.sessions },
   { name: "video_lists", table: schema.videoLists },
-  { name: "two-factor-confirmations", table: schema.twoFactorConfirmations },
   { name: "verification_tokens", table: schema.verificationTokens },
-  { name: "password_reset_tokens", table: schema.passwordResetTokens },
-  { name: "two-factor-tokens", table: schema.twoFactorTokens },
+  { name: "two_factor", table: schema.twoFactor },
   { name: "video_to_video_list", table: schema.videosToVideoLists },
 ] as const;
 

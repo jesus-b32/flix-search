@@ -23,16 +23,8 @@ import {
   sendTwoFactorEmail,
 } from "@/lib/sendEmail";
 
-// Password hashing
-import { scrypt } from "node:crypto";
-import { promisify } from "node:util";
-import bcrypt from "bcryptjs";
-
 // Other imports
 import { env } from "@/env";
-
-// Promisify scrypt for async/await usage
-const scryptAsync = promisify(scrypt);
 
 /**
  * Verify password - supports both scrypt (Better Auth default) and bcrypt (legacy NextAuth)
@@ -45,6 +37,9 @@ const scryptAsync = promisify(scrypt);
  * - This allows gradual migration without forcing password resets
  *
  * Better Auth passes an object with { hash, password }
+ *
+ * crypto and util are dynamically imported to avoid loading Node.js built-ins at
+ * module scope — this file is also imported by middleware which runs in the Edge Runtime.
  */
 async function verifyPassword({
   hash: hashedPassword,
@@ -59,6 +54,9 @@ async function verifyPassword({
     const [hash, salt] = hashedPassword.split(".");
     if (hash && salt) {
       try {
+        const { scrypt } = await import("crypto");
+        const { promisify } = await import("util");
+        const scryptAsync = promisify(scrypt);
         const buf = (await scryptAsync(password, salt, 64)) as Buffer;
         return buf.toString("hex") === hash;
       } catch {
@@ -71,6 +69,7 @@ async function verifyPassword({
   // Bcrypt format: "$2a$10$..." or "$2b$10$..." or "$2y$10$..."
   // This supports legacy passwords that were migrated from users table
   try {
+    const bcrypt = (await import("bcryptjs")).default;
     return await bcrypt.compare(password, hashedPassword);
   } catch {
     return false;
@@ -344,12 +343,7 @@ async function ensurePasswordInAccountTable(email: string) {
 // Export types for use in other files
 export type Session = Awaited<ReturnType<typeof auth.api.getSession>>;
 
-// Extended user type for Better Auth (matches your existing ExtendedUser interface)
-export type ExtendedUser = {
-  id: string;
-  name: string | null;
-  email: string | null;
-  emailVerified: Date | null;
-  image: string | null;
-  twoFactorEnabled: boolean;
-};
+// User type derived from Better Auth's session
+export type ExtendedUser = NonNullable<
+  Awaited<ReturnType<typeof auth.api.getSession>>
+>["user"];

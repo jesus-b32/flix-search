@@ -93,7 +93,7 @@ export default async function TvDetails({
 
   return (
     <div className="flex min-h-screen flex-col items-center">
-      <DetailCard details={TvShow} user={user} />
+      <DetailCard details={TvShow} user={user ?? undefined} />
       <AvailabilityToggle
         providerView={providerView}
         countryView={countryView}

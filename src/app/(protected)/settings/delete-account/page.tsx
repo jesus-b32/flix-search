@@ -1,6 +1,9 @@
 // Next.js
 import { type Metadata } from "next";
 import { currentUser } from "@/lib/currentUser";
+import { db } from "@/server/db";
+import { accounts } from "@/server/db/schema";
+import { eq, and } from "drizzle-orm";
 
 // Custom Components
 import { DeleteAccountForm } from "@/components/form/DeleteAccountForm";
@@ -21,11 +24,22 @@ export const metadata: Metadata = {
 export default async function DeleteAccountPage() {
   const user = await currentUser();
 
+  let isOAuth = true;
+  if (user?.id) {
+    const credentialAccount = await db.query.accounts.findFirst({
+      where: and(
+        eq(accounts.userId, user.id),
+        eq(accounts.provider, "credential"),
+      ),
+    });
+    isOAuth = !credentialAccount?.password;
+  }
+
   return (
     <div className="w-full">
       <h1 className="my-5 text-4xl font-bold">Delete Account</h1>
       <section className="flex w-full flex-col items-start space-y-4 md:w-10/12">
-        {user?.isOAuth ? (
+        {isOAuth ? (
           <p>
             You have just entered the <b>danger zone!</b> If you would like to
             continue and remove your account, you can do so by clicking the
@@ -39,7 +53,7 @@ export default async function DeleteAccountPage() {
           </p>
         )}
         <ProfileEditWrapper buttonName="Delete Account">
-          <DeleteAccountForm isOauth={user?.isOAuth} userId={user?.id ?? ""} />
+          <DeleteAccountForm isOauth={isOAuth} userId={user?.id ?? ""} />
         </ProfileEditWrapper>
       </section>
     </div>

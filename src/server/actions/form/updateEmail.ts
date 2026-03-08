@@ -8,8 +8,8 @@ import { currentUser } from "@/lib/currentUser";
 import { db } from "@/server/db";
 import { accounts } from "@/server/db/schema";
 import { eq, and } from "drizzle-orm";
-import { scrypt } from "node:crypto";
-import { promisify } from "node:util";
+import { scrypt } from "crypto";
+import { promisify } from "util";
 import bcrypt from "bcryptjs";
 
 // Promisify scrypt for async/await usage

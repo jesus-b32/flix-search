@@ -91,7 +91,7 @@ export default async function MovieDetails({
 
   return (
     <div className="flex min-h-screen flex-col items-center">
-      <DetailCard details={movie} user={user} />
+      <DetailCard details={movie} user={user ?? undefined} />
       <AvailabilityToggle
         providerView={providerView}
         countryView={countryView}
